@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Новый профиль",
+    "Projects": [
+      {
+        "Path": "CorporateStarter.Api\\CorporateStarter.Api.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "CorporateStarter.Web\\CorporateStarter.Web.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

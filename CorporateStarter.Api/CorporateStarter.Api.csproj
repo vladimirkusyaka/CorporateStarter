@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>1edb18c6-0df8-4018-a692-699ff45b525f</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="MediatR" Version="14.2.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		  <PrivateAssets>all</PrivateAssets>
+	  </PackageReference>
+	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />	  
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CorporateStarter.Core\CorporateStarter.Core.csproj" />
+    <ProjectReference Include="..\CorporateStarter.Infrastructure\CorporateStarter.Infrastructure.csproj" />
+    <ProjectReference Include="..\CorporateStarter.Shared\CorporateStarter.Shared.csproj" />
+    <ProjectReference Include="..\CorporateStarter.Application\CorporateStarter.Application.csproj" />
+  </ItemGroup>
+
+</Project>

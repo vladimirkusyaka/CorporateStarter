@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="CorporateStarter.Api/CorporateStarter.Api.csproj" />
+  <Project Path="CorporateStarter.Tests.Integration/CorporateStarter.Tests.Integration.csproj" />
+  <Project Path="CorporateStarter.Web/CorporateStarter.Web.csproj" />
+  <Project Path="CorporateStarter.Application/CorporateStarter.Application.csproj" />
+  <Project Path="CorporateStarter.Core/CorporateStarter.Core.csproj" />
+  <Project Path="CorporateStarter.Infrastructure/CorporateStarter.Infrastructure.csproj" />
+  <Project Path="CorporateStarter.Shared/CorporateStarter.Shared.csproj" />
+</Solution>

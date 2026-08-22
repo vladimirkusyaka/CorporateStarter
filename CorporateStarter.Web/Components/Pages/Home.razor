@@ -1,0 +1,52 @@
+﻿@page "/"
+
+<PageTitle>Dashboard</PageTitle>
+
+<MudStack Spacing="3">
+    <MudStack Row="true" AlignItems="AlignItems.Center">
+        <MudStack Spacing="0">
+            <MudText Typo="Typo.h4">Dashboard</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Operational overview
+            </MudText>
+        </MudStack>
+
+        <MudSpacer />
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Refresh">
+            Refresh
+        </MudButton>
+    </MudStack>
+
+    <MudGrid>
+        <MudItem xs="12" sm="6" lg="3">
+            <MudPaper Class="cs-metric" Elevation="0">
+                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Companies</MudText>
+                <MudText Typo="Typo.h5">Ready</MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" lg="3">
+            <MudPaper Class="cs-metric" Elevation="0">
+                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Persons</MudText>
+                <MudText Typo="Typo.h5">Ready</MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" lg="3">
+            <MudPaper Class="cs-metric" Elevation="0">
+                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Security</MudText>
+                <MudText Typo="Typo.h5">Protected</MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" lg="3">
+            <MudPaper Class="cs-metric" Elevation="0">
+                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Audit</MudText>
+                <MudText Typo="Typo.h5">Enabled</MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudStack>

@@ -1,0 +1,308 @@
+.cs-shell {
+    color: #111827;
+    font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+}
+
+/* ---------- Top bar ---------- */
+
+.cs-topbar {
+    min-height: 36px;
+    height: 36px;
+    border-bottom: 1px solid #d7dde5;
+    background: #ffffff;
+    padding-left: 0;
+}
+
+.cs-app-switcher {
+    width: 36px;
+    height: 36px;
+    border-radius: 0;
+    background: #111827;
+    color: #ffffff;
+}
+
+    .cs-app-switcher:hover {
+        background: #1f2937;
+    }
+
+.cs-menu-toggle {
+    margin-left: 4px;
+}
+
+.cs-brand {
+    font-weight: 700;
+    color: #111827;
+    margin-left: 4px;
+}
+
+.cs-topbar-status {
+    height: 100%;
+    color: #111827;
+    padding-right: 4px;
+}
+
+.cs-version {
+    color: #6b7280;
+    letter-spacing: 0.02em;
+}
+
+.cs-user-avatar {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #cfd6df;
+    background: #f4f5f7;
+    color: #6b7280;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.cs-user-name {
+    font-weight: 600;
+}
+
+/* ---------- Drawer / navigation ---------- */
+
+.cs-drawer {
+    border-right: 1px solid #d7dde5;
+    background: #ffffff;
+}
+
+.cs-drawer-header {
+    height: 36px;
+    padding: 8px 10px;
+    border-bottom: 1px solid #d7dde5;
+    background: #111827;
+    color: #ffffff;
+    overflow: hidden;
+}
+
+.cs-drawer-brand {
+    color: #ffffff;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.cs-drawer-header-icon {
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.cs-nav {
+    padding-top: 4px;
+}
+
+.cs-nav-link,
+.cs-nav-group {
+    color: #111827;
+}
+
+/* ---------- Main content ---------- */
+
+.cs-main {
+    background: #f4f5f7;
+    min-height: 100vh;
+}
+
+.cs-page {
+    padding: 16px;
+}
+
+/* ---------- Login overlay ---------- */
+
+.cs-auth-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+    display: grid;
+    place-items: center;
+    background: rgba(31, 41, 55, 0.42);
+    backdrop-filter: blur(1px);
+}
+
+.cs-login-dialog {
+    width: min(640px, calc(100vw - 32px));
+    padding: 0;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    overflow: hidden;
+    animation: cs-login-in 180ms ease-out;
+}
+
+@keyframes cs-login-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.cs-login-form {
+    width: 100%;
+}
+
+.cs-login-side {
+    width: 200px;
+    flex: 0 0 200px;
+    padding: 40px 24px;
+    background: #f4f5f7;
+    border-right: 1px solid #e2e5ea;
+    text-align: center;
+}
+
+.cs-login-avatar {
+    width: 52px;
+    height: 52px;
+}
+
+.cs-login-title {
+    font-weight: 700;
+    color: #111827;
+}
+
+.cs-login-fields {
+    flex: 1 1 auto;
+    padding: 40px 40px 32px;
+}
+
+.cs-login-field {
+    max-width: 100%;
+}
+
+.cs-login-actions {
+    margin-top: 4px;
+    padding-bottom: 4px;
+}
+
+@media (max-width: 480px) {
+    .cs-login-form {
+        flex-direction: column;
+    }
+
+    .cs-login-side {
+        width: 100%;
+        flex: none;
+        padding: 24px;
+        border-right: none;
+        border-bottom: 1px solid #e2e5ea;
+    }
+
+    .cs-login-fields {
+        padding: 24px;
+    }
+}
+
+.cs-login-button {
+    min-width: 120px;
+    height: 38px;
+    border-radius: 5px;
+    text-transform: none;
+    font-weight: 600;
+}
+
+.cs-login-spinner {
+    color: inherit;
+}
+
+.cs-login-error {
+    margin-top: -6px;
+}
+
+/* ---------- Deep overrides ---------- */
+
+::deep .cs-nav .mud-nav-link {
+    min-height: 36px;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: #111827;
+    font-size: 0.875rem;
+}
+
+    ::deep .cs-nav .mud-nav-link.active,
+    ::deep .cs-nav .mud-nav-link:hover {
+        background: #0d6efd;
+        color: #ffffff;
+    }
+
+        ::deep .cs-nav .mud-nav-link.active .mud-icon-root,
+        ::deep .cs-nav .mud-nav-link:hover .mud-icon-root {
+            color: #ffffff;
+        }
+
+::deep .cs-nav .mud-nav-group .mud-nav-link {
+    padding-left: 14px;
+}
+
+/* Mini (collapsed) drawer state: icon-only rail, matches the collapsed
+   sidebar in the reference design. Expands automatically on hover via
+   OpenMiniOnHover on the MudDrawer. */
+
+::deep .mud-drawer--mini.cs-drawer {
+    background: #f4f5f7;
+}
+
+    ::deep .mud-drawer--mini.cs-drawer .cs-drawer-brand {
+        opacity: 0;
+    }
+
+    ::deep .mud-drawer--mini.cs-drawer .mud-nav-link-text,
+    ::deep .mud-drawer--mini.cs-drawer .mud-nav-group-text {
+        display: none;
+    }
+
+    ::deep .mud-drawer--mini.cs-drawer .mud-nav-link,
+    ::deep .mud-drawer--mini.cs-drawer .mud-nav-group .mud-nav-link.mud-nav-group-title {
+        justify-content: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+/* Login field styling: label above input, blue focus glow, matches
+   the reference login screenshot exactly. */
+
+::deep .cs-login-field {
+    margin-bottom: 2px;
+}
+
+    ::deep .cs-login-field .mud-input-control-input-container {
+        margin-top: 4px;
+    }
+
+    ::deep .cs-login-field .mud-input-label {
+        color: #111827;
+        font-size: 0.95rem;
+        font-weight: 400;
+        transition: color 120ms ease, font-size 120ms ease, font-weight 120ms ease;
+    }
+
+        ::deep .cs-login-field .mud-input-label.mud-shrink {
+            color: #111827;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+    ::deep .cs-login-field .mud-input-outlined-border {
+        border-color: #cfd6df;
+        border-radius: 5px;
+        transition: border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    ::deep .cs-login-field .mud-input.mud-input-outlined {
+        background: #ffffff;
+        min-height: 38px;
+    }
+
+    ::deep .cs-login-field .mud-input.mud-focused .mud-input-outlined-border {
+        border-color: #60a5fa;
+        box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.35);
+    }
+
+    ::deep .cs-login-field .mud-input > input.mud-input-root {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        font-size: 0.95rem;
+    }
