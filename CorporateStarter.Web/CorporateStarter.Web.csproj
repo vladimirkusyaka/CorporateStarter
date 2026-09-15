@@ -2,10 +2,14 @@
 
   <ItemGroup>
     <PackageReference Include="MudBlazor" Version="9.7.0" />
+	<PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CorporateStarter.Client.Core\CorporateStarter.Client.Core.csproj" />
     <ProjectReference Include="..\CorporateStarter.Shared\CorporateStarter.Shared.csproj" />
+	<ProjectReference Include="..\CorporateStarter.Client.Browser\CorporateStarter.Client.Browser.csproj" />
+	  <ProjectReference Include="..\CorporateStarter.Client.Core\CorporateStarter.Client.Core.csproj" />	  
   </ItemGroup>
 
   <PropertyGroup>

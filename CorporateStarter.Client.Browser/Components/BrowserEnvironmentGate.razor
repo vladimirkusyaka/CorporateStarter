@@ -1,0 +1,36 @@
+﻿@namespace CorporateStarter.Client.Browser.Components
+@using Microsoft.AspNetCore.Components.Web
+
+@if (_status == GateStatus.Ready)
+{
+    @ChildContent
+}
+else
+{
+    <section class="browser-gate" aria-label="Проверка браузера">
+        <div role="status" aria-live="polite">
+            @switch (_status)
+            {
+                case GateStatus.Checking:
+                    <p>Проверяем возможности браузера…</p>
+                    break;
+
+                case GateStatus.Unsupported:
+                    <p>Для работы приложения требуется безопасный контекст и поддержка Web Locks.</p>
+                    <p>Откройте приложение по HTTPS в актуальном корпоративном браузере.</p>
+                    break;
+
+                case GateStatus.Unavailable:
+                    <p>Не удалось проверить браузер. Проверьте соединение и повторите попытку.</p>
+                    break;
+            }
+        </div>
+
+        @if (_status == GateStatus.Unavailable)
+        {
+            <button type="button" @onclick="RetryAsync">
+                Повторить проверку
+            </button>
+        }
+    </section>
+}

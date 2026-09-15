@@ -1,9 +1,12 @@
 <Solution>
   <Project Path="CorporateStarter.Api/CorporateStarter.Api.csproj" />
-  <Project Path="CorporateStarter.Tests.Integration/CorporateStarter.Tests.Integration.csproj" />
-  <Project Path="CorporateStarter.Web/CorporateStarter.Web.csproj" />
   <Project Path="CorporateStarter.Application/CorporateStarter.Application.csproj" />
+  <Project Path="CorporateStarter.Client.Abstractions/CorporateStarter.Client.Abstractions.csproj" Id="50229005-e4b1-4284-8346-eb04568c1e72" />
+  <Project Path="CorporateStarter.Client.Browser/CorporateStarter.Client.Browser.csproj" Id="de1e5adf-27bb-4f62-963c-e45d59e6e4da" />
+  <Project Path="CorporateStarter.Client.Core/CorporateStarter.Client.Core.csproj" Id="0c8991ec-89e0-4140-aad4-0f638d605516" />
   <Project Path="CorporateStarter.Core/CorporateStarter.Core.csproj" />
   <Project Path="CorporateStarter.Infrastructure/CorporateStarter.Infrastructure.csproj" />
   <Project Path="CorporateStarter.Shared/CorporateStarter.Shared.csproj" />
+  <Project Path="CorporateStarter.Tests.Integration/CorporateStarter.Tests.Integration.csproj" />
+  <Project Path="CorporateStarter.Web/CorporateStarter.Web.csproj" />
 </Solution>

@@ -12,21 +12,25 @@ namespace CorporateStarter.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
+[ServiceFilter(typeof(AuthOperationContentionFilter))]
 public sealed class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly RefreshTokenCookieHelper _refreshTokenCookieHelper;
     private readonly CsrfCookieHelper _csrfCookieHelper;
     private readonly CsrfTokenService _csrfTokenService;
+    private readonly AuthOperationExecutor _authOperationExecutor;
 
     public AuthController(IAuthService authService, RefreshTokenCookieHelper refreshTokenCookieHelper,
                     CsrfCookieHelper csrfCookieHelper,
-                    CsrfTokenService csrfTokenService)
+                    CsrfTokenService csrfTokenService,
+                    AuthOperationExecutor authOperationExecutor)
     {
         _authService = authService;
         _refreshTokenCookieHelper = refreshTokenCookieHelper;
         _csrfCookieHelper = csrfCookieHelper;
         _csrfTokenService = csrfTokenService;
+        _authOperationExecutor = authOperationExecutor;
 
     }
 
@@ -63,7 +67,10 @@ public sealed class AuthController : ControllerBase
             session.RefreshTokenExpiresAtUtc);
 
         var csrfToken = _csrfTokenService.GenerateToken();
-        _csrfCookieHelper.Append(Response, csrfToken);
+        _csrfCookieHelper.Append(
+            Response,
+            csrfToken,
+            session.RefreshTokenExpiresAtUtc);
 
         return Ok(session.Response);
     }
@@ -74,6 +81,7 @@ public sealed class AuthController : ControllerBase
     [HttpPost("refresh")]
     [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status503ServiceUnavailable)]
     public async Task<ActionResult> Refresh(
         CancellationToken cancellationToken)
     {
@@ -82,10 +90,12 @@ public sealed class AuthController : ControllerBase
         if (string.IsNullOrWhiteSpace(refreshToken))
             return Unauthorized();
 
-        var result = await _authService.RefreshAsync(
-            refreshToken,
-            HttpContext.Connection.RemoteIpAddress?.ToString(),
-            Request.Headers.UserAgent.ToString(),
+        var result = await _authOperationExecutor.ExecuteAsync(
+            (service, token) => service.RefreshAsync(
+                refreshToken,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                Request.Headers.UserAgent.ToString(),
+                token),
             cancellationToken);
 
         if (result is null)
@@ -100,7 +110,10 @@ public sealed class AuthController : ControllerBase
             result.RefreshTokenExpiresAtUtc);
 
         var csrfToken = _csrfTokenService.GenerateToken();
-        _csrfCookieHelper.Append(Response, csrfToken);
+        _csrfCookieHelper.Append(
+            Response,
+            csrfToken,
+            result.RefreshTokenExpiresAtUtc);
 
         return Ok(result.Response);
     }
@@ -130,13 +143,16 @@ public sealed class AuthController : ControllerBase
     [AllowAnonymous]
     [HttpPost("logout")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status503ServiceUnavailable)]
     public async Task<IActionResult> Logout(CancellationToken cancellationToken)
     {
         var refreshToken = _refreshTokenCookieHelper.Read(Request);
 
-        await _authService.LogoutAsync(
-            refreshToken,
-            HttpContext.Connection.RemoteIpAddress?.ToString(),
+        await _authOperationExecutor.ExecuteAsync(
+            (service, token) => service.LogoutAsync(
+                refreshToken,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                token),
             cancellationToken);
 
         _refreshTokenCookieHelper.Delete(Response);
@@ -151,6 +167,7 @@ public sealed class AuthController : ControllerBase
     [HttpPost("logout-all")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status503ServiceUnavailable)]
     public async Task<IActionResult> LogoutAll(CancellationToken cancellationToken)
     {
         var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -158,9 +175,11 @@ public sealed class AuthController : ControllerBase
         if (!Guid.TryParse(userIdValue, out var userId))
             return Unauthorized();
 
-        await _authService.LogoutAllAsync(
-            userId,
-            HttpContext.Connection.RemoteIpAddress?.ToString(),
+        await _authOperationExecutor.ExecuteAsync(
+            (service, token) => service.LogoutAllAsync(
+                userId,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                token),
             cancellationToken);
 
         _refreshTokenCookieHelper.Delete(Response);
@@ -195,6 +214,7 @@ public sealed class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status503ServiceUnavailable)]
     public async Task<IActionResult> RevokeSession(
         Guid authSessionId,
         CancellationToken cancellationToken)
@@ -206,11 +226,13 @@ public sealed class AuthController : ControllerBase
             return Unauthorized();
         }
 
-        var revoked = await _authService.RevokeSessionAsync(
-            userId,
-            authSessionId,
-            HttpContext.Connection.RemoteIpAddress?.ToString(),
-            Request.Headers.UserAgent.ToString(),
+        var revoked = await _authOperationExecutor.ExecuteAsync(
+            (service, token) => service.RevokeSessionAsync(
+                userId,
+                authSessionId,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                Request.Headers.UserAgent.ToString(),
+                token),
             cancellationToken);
 
         return revoked ? NoContent() : NotFound();

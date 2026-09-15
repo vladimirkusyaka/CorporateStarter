@@ -45,5 +45,12 @@ namespace CorporateStarter.Application.Common.Interfaces.Repositories.Auth
             CancellationToken cancellationToken);
 
         Task SaveChangesAsync(CancellationToken cancellationToken);
+
+        Task<bool> TryConsumeAsync(
+            string tokenHash,
+            string replacementTokenHash,
+            DateTime nowUtc,
+            string? ipAddress,
+            CancellationToken cancellationToken);
     }
 }

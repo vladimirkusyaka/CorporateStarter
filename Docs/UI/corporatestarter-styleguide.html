@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>CorporateStarter — Style Guide v3</title>
+<style>
+  :root {
+    --blue: #2883EE;
+    --blue-hover: #1A6BD1;
+    --white: #FFFFFF;
+    --text: #1E293B;
+    --error: #DC2626;
+    --error-hover: #B91C1C;
+
+    /* тональные производные — не новые цвета сами по себе */
+    --line: rgba(30, 41, 59, 0.12);
+    --line-strong: rgba(30, 41, 59, 0.22);
+    --text-muted: rgba(30, 41, 59, 0.6);
+    --blue-tint: rgba(40, 131, 238, 0.08);
+    --blue-tint-strong: rgba(40, 131, 238, 0.14);
+    --error-tint: rgba(220, 38, 38, 0.08);
+
+    --radius: 6px;
+    --shadow-sm: 0 1px 2px rgba(30, 41, 59, 0.06);
+    --shadow-md: 0 4px 16px rgba(30, 41, 59, 0.14);
+    --shadow-lg: 0 12px 32px rgba(30, 41, 59, 0.22);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+    background: var(--white);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  svg.icon { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
+  ::selection { background: var(--blue-tint-strong); }
+
+  /* ===== TOPBAR ===== */
+  .topbar {
+    height: 58px;
+    background: var(--white);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 16px;
+    position: relative;
+    z-index: 10;
+  }
+  .topbar .hamburger {
+    width: 38px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--text);
+  }
+  .topbar .hamburger:hover { background: var(--blue-tint); color: var(--blue); }
+  .topbar .title { font-weight: 600; font-size: 17px; }
+  .topbar .org-indicator {
+    font-size: 13.5px; color: var(--text-muted);
+    padding: 5px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .topbar .org-indicator svg { width: 14px; height: 14px; stroke: var(--text-muted); fill: none; stroke-width: 2; }
+  .topbar .spacer { flex: 1; }
+  .topbar .user { font-size: 14px; color: var(--text-muted); }
+  .topbar-right { display: flex; align-items: center; gap: 6px; }
+
+  /* bell + popover */
+  .bell-wrap { position: relative; }
+  .bell-btn {
+    width: 38px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--text);
+    position: relative;
+  }
+  .bell-btn:hover { background: var(--blue-tint); color: var(--blue); }
+  .bell-badge {
+    position: absolute; top: 4px; right: 4px;
+    min-width: 15px; height: 15px; padding: 0 3px;
+    background: var(--error);
+    color: var(--white);
+    font-size: 10px; font-weight: 600;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+  .bell-popover {
+    position: absolute; top: 46px; right: 0;
+    width: 300px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    z-index: 50;
+    display: none;
+    overflow: hidden;
+  }
+  .bell-popover.open { display: block; }
+  .bell-popover .bp-header { padding: 12px 14px; font-weight: 600; font-size: 14px; border-bottom: 1px solid var(--line); }
+  .bell-popover .bp-item { padding: 11px 14px; font-size: 13.5px; border-bottom: 1px solid var(--line); color: var(--text); }
+  .bell-popover .bp-item:last-child { border-bottom: none; }
+  .bell-popover .bp-item .bp-time { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .bell-popover .bp-empty { padding: 24px 14px; text-align: center; font-size: 13.5px; color: var(--text-muted); }
+
+  /* ===== LAYOUT ===== */
+  .layout { display: flex; min-height: calc(100vh - 58px); }
+
+  /* ===== DRAWER ===== */
+  .drawer {
+    width: 250px;
+    background: var(--white);
+    border-right: 1px solid var(--line);
+    overflow-y: visible;
+    flex-shrink: 0;
+    transition: width .15s;
+  }
+  .drawer.collapsed { width: 64px; overflow: visible; }
+  .nav-group { border-bottom: 1px solid var(--line); position: relative; }
+  .nav-group-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 16px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text);
+    font-size: 15px;
+  }
+  .drawer.collapsed .nav-group-header { justify-content: center; padding: 13px 0; }
+  .drawer.collapsed .nav-group-header .label,
+  .drawer.collapsed .nav-group-header .chev { display: none; }
+  .nav-group-header:hover { background: var(--blue-tint); }
+  .nav-group-header.active { color: var(--blue); }
+  .nav-group-header .chev { margin-left: auto; font-size: 11px; color: var(--text-muted); transition: transform .15s; }
+  .nav-group.open .chev { transform: rotate(90deg); }
+
+  .drawer:not(.collapsed) .nav-group.open .nav-sub { display: block; }
+  .nav-sub { display: none; }
+  .drawer:not(.collapsed) .nav-sub { padding: 4px 0 10px 42px; }
+  .nav-sub a {
+    display: block; padding: 7px 8px; font-size: 14.5px;
+    color: var(--text-muted); text-decoration: none; border-radius: var(--radius);
+  }
+  .nav-sub a:hover { background: var(--blue-tint); color: var(--blue); }
+  .nav-sub a.active { background: var(--blue-tint-strong); color: var(--blue); font-weight: 500; }
+
+  .drawer.collapsed .nav-group:hover .nav-sub {
+    display: block; position: absolute; left: 64px; top: 0;
+    min-width: 210px; background: var(--white); border: 1px solid var(--line);
+    border-radius: var(--radius); box-shadow: var(--shadow-md); padding: 6px 0; z-index: 30;
+  }
+  .drawer.collapsed .nav-sub a { padding: 9px 16px; }
+
+  /* ===== MAIN ===== */
+  .main { flex: 1; padding: 28px; position: relative; }
+  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .page-header h1 { font-size: 24px; font-weight: 600; margin: 0; }
+  .page-search { position: relative; }
+  .page-search svg {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    width: 16px; height: 16px; stroke: var(--text-muted); fill: none; stroke-width: 2;
+  }
+  .page-search input {
+    height: 38px; border: 1.5px solid var(--line-strong); border-radius: var(--radius);
+    padding: 0 12px 0 38px; font-size: 14.5px; width: 260px; font-family: inherit; color: var(--text);
+  }
+  .page-search input:focus { outline: none; border-color: var(--blue); }
+
+  /* ===== TABS ===== */
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 18px; overflow-x: auto; }
+  .tab {
+    padding: 11px 4px; margin-right: 22px;
+    font-size: 14.5px; font-weight: 500; color: var(--text-muted);
+    cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab-panel { display: none; font-size: 14.5px; color: var(--text-muted); padding: 4px 0 8px; }
+  .tab-panel.active { display: block; }
+
+  /* ===== TOOLBAR ===== */
+  .grid-toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .icon-btn {
+    width: 38px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1.5px solid var(--blue);
+    background: var(--white);
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--blue);
+  }
+  .icon-btn:hover { background: var(--blue-tint); }
+  .icon-btn.is-disabled { opacity: .35; pointer-events: none; }
+  .grid-toolbar .find-spacer { flex: 1; }
+  .find-input { display: flex; align-items: center; gap: 8px; }
+  .find-input label { font-size: 14px; color: var(--text-muted); }
+  .find-input input {
+    height: 38px; border: 1.5px solid var(--line-strong); border-radius: var(--radius);
+    padding: 0 12px; font-size: 14.5px; width: 210px; font-family: inherit; color: var(--text);
+  }
+  .find-input input:focus { outline: none; border-color: var(--blue); }
+
+  /* export dropdown menu */
+  .menu-wrap { position: relative; }
+  .menu-popover {
+    position: absolute; top: 44px; left: 0;
+    min-width: 180px;
+    background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow-md); z-index: 40; display: none; overflow: hidden; padding: 6px 0;
+  }
+  .menu-popover.open { display: block; }
+  .menu-popover .mp-item {
+    padding: 9px 14px; font-size: 14px; color: var(--text); cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .menu-popover .mp-item svg { width: 15px; height: 15px; stroke: var(--text-muted); fill: none; stroke-width: 2; }
+  .menu-popover .mp-item:hover { background: var(--blue-tint); color: var(--blue); }
+  .menu-popover .mp-item:hover svg { stroke: var(--blue); }
+
+  /* ===== GRID ===== */
+  .grid-wrap { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  thead th { background: var(--blue); color: var(--white); text-align: left; padding: 11px 16px; font-weight: 500; white-space: nowrap; user-select: none; }
+  thead th .sort { opacity: .8; margin-left: 4px; font-size: 11px; }
+  thead th .th-inner { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  thead th .filter-icon { display: flex; align-items: center; cursor: pointer; opacity: .8; }
+  thead th .filter-icon:hover { opacity: 1; }
+  thead th .filter-icon svg { width: 14px; height: 14px; stroke: var(--white); fill: none; stroke-width: 2; }
+  tbody td { padding: 9px 16px; border-bottom: 1px solid var(--line); color: var(--text); user-select: none; }
+  tbody tr:hover td { background: var(--blue-tint); }
+  tbody tr.selected td { background: var(--blue-tint-strong); }
+  .status { font-size: 13.5px; font-weight: 500; }
+  .status.on { color: var(--blue); }
+  .status.off { color: var(--text-muted); }
+  .grid-footer { display: flex; align-items: center; justify-content: flex-end; gap: 16px; padding: 9px 16px; font-size: 13px; color: var(--text-muted); border-top: 1px solid var(--line); }
+  .pagination { display: flex; align-items: center; gap: 4px; }
+  .pagination button { width: 28px; height: 28px; border: 1px solid var(--line); background: var(--white); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); font-size: 13px; font-family: inherit; }
+  .pagination button:hover:not(:disabled) { background: var(--blue-tint); color: var(--blue); border-color: var(--blue); }
+  .pagination button.active { background: var(--blue); color: var(--white); border-color: var(--blue); }
+  .pagination button:disabled { opacity: .4; cursor: not-allowed; }
+  .pagination svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .hint-row { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
+
+  /* ===== TOOLTIPS ===== */
+  .tooltip { position: relative; }
+  .tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    background: var(--text); color: var(--white); font-size: 12.5px; padding: 5px 9px;
+    border-radius: 4px; white-space: nowrap; opacity: 0; pointer-events: none;
+    transition: opacity .12s ease .1s; z-index: 50;
+  }
+  .tooltip:hover::after { opacity: 1; }
+  .tooltip.tooltip-left::after { left: 0; transform: none; }
+
+  /* small info icon w/ tooltip, next to labels */
+  .info-icon { display: inline-flex; color: var(--text-muted); cursor: help; vertical-align: -2px; margin-left: 4px; }
+  .info-icon svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .info-icon:hover { color: var(--blue); }
+
+  /* ===== LOADING ===== */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner { width: 15px; height: 15px; border: 2px solid var(--blue-tint-strong); border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; }
+  .btn.is-loading { display: flex; align-items: center; justify-content: center; gap: 8px; opacity: .85; cursor: default; }
+  .btn.is-loading .spinner { border-color: rgba(255,255,255,.35); border-top-color: var(--white); }
+  .btn-outline.is-loading .spinner { border-color: var(--blue-tint-strong); border-top-color: var(--blue); }
+  @keyframes shimmer { 0% { background-position: -300px 0; } 100% { background-position: 300px 0; } }
+  .skel { background: linear-gradient(90deg, var(--line) 25%, var(--blue-tint-strong) 37%, var(--line) 63%); background-size: 600px 100%; animation: shimmer 1.4s infinite linear; border-radius: 4px; height: 12px; }
+
+  /* ===== SIDESHEET ===== */
+  .sidesheet { position: fixed; top: 58px; right: 0; bottom: 0; width: 380px; background: var(--white); border-left: 1px solid var(--line); box-shadow: var(--shadow-md); display: flex; flex-direction: column; z-index: 20; }
+  .sidesheet-header { padding: 18px 22px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+  .sidesheet-header h2 { font-size: 18px; font-weight: 600; margin: 0; }
+  .sidesheet-header .close { cursor: pointer; color: var(--text-muted); }
+  .sidesheet-header .close:hover { color: var(--blue); }
+  .sidesheet-body { padding: 18px 22px; flex: 1; overflow-y: auto; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13.5px; color: var(--text-muted); margin-bottom: 5px; }
+  .required-mark { color: var(--error); margin-left: 2px; }
+  .field input[type=text], .field input[type=password], .field select {
+    width: 100%; height: 40px; border: 1.5px solid var(--line-strong); border-radius: var(--radius);
+    padding: 0 12px; font-size: 15px; font-family: inherit; color: var(--text); background: var(--white);
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--blue); }
+  .field.has-error input, .field.has-error select { border-color: var(--error); }
+  .field-error { display: flex; align-items: center; gap: 5px; font-size: 13px; color: var(--error); margin-top: 5px; }
+  .field-error svg { width: 13px; height: 13px; stroke: var(--error); fill: none; stroke-width: 2; flex-shrink: 0; }
+
+  /* read-only field */
+  .field.readonly .ro-value {
+    height: 40px; display: flex; align-items: center;
+    padding: 0 12px; font-size: 15px; color: var(--text);
+    background: var(--blue-tint); border-radius: var(--radius);
+  }
+
+  .field.checkbox { display: flex; align-items: center; gap: 8px; }
+  .field.checkbox label { margin: 0; font-size: 15px; color: var(--text); }
+  .field.checkbox input[type=checkbox] {
+    appearance: none; -webkit-appearance: none; width: 14px; height: 14px;
+    border: 1.5px solid var(--blue); border-radius: 3px; background: transparent;
+    position: relative; cursor: pointer; margin: 0; flex-shrink: 0;
+  }
+  .field.checkbox input[type=checkbox]:checked::after {
+    content: ""; position: absolute; left: 3px; top: 0px; width: 4px; height: 8px;
+    border: solid var(--blue); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg);
+  }
+
+  .sidesheet-footer { padding: 16px 22px; border-top: 1px solid var(--line); display: flex; flex-direction: row; gap: 10px; }
+  .sidesheet-footer .btn { flex: 1; }
+  .btn { height: 42px; border-radius: var(--radius); font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; border: none; }
+  .btn-primary { background: var(--blue); color: var(--white); border: 1.5px solid var(--blue); }
+  .btn-primary:hover { background: var(--blue-hover); border-color: var(--blue-hover); }
+  .btn-outline { background: var(--white); color: var(--blue); border: 1.5px solid var(--blue); }
+  .btn-outline:hover { background: var(--blue-tint); }
+  .btn-danger { background: var(--error); color: var(--white); border: 1.5px solid var(--error); }
+  .btn-danger:hover { background: var(--error-hover); border-color: var(--error-hover); }
+  .btn:disabled { opacity: .38; cursor: not-allowed; pointer-events: none; }
+
+  /* ===== INLINE BANNER ===== */
+  .banner { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: var(--radius); font-size: 14px; margin-bottom: 16px; border: 1px solid; }
+  .banner svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; margin-top: 1px; }
+  .banner-info { background: var(--blue-tint); border-color: var(--blue-tint-strong); color: var(--blue-hover); }
+  .banner-critical { background: var(--error-tint); border-color: rgba(220,38,38,0.22); color: var(--error-hover); }
+
+  /* ===== TOASTS ===== */
+  .toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 100; width: 320px; }
+  .toast {
+    background: var(--text); color: var(--white);
+    border-radius: var(--radius); box-shadow: var(--shadow-md);
+    padding: 12px 14px; font-size: 14px;
+    display: flex; align-items: flex-start; gap: 10px;
+    animation: toast-in .18s ease;
+  }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .toast svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; margin-top: 1px; }
+  .toast.toast-success svg { stroke: #5A9FF3; }
+  .toast.toast-error svg { stroke: #F87171; }
+  .toast .toast-body { flex: 1; }
+  .toast .toast-action { color: #5A9FF3; font-weight: 600; cursor: pointer; margin-left: 8px; white-space: nowrap; }
+  .toast .toast-close { cursor: pointer; opacity: .6; }
+  .toast .toast-close:hover { opacity: 1; }
+
+  /* ===== CONFIRM DIALOG ===== */
+  .confirm-overlay { position: fixed; inset: 0; background: rgba(30, 41, 59, 0.45); display: flex; align-items: center; justify-content: center; z-index: 60; }
+  .confirm-dialog { width: 380px; background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; }
+  .confirm-dialog .confirm-body { padding: 24px 22px 8px; }
+  .confirm-dialog .confirm-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--error-tint); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+  .confirm-dialog .confirm-icon svg { width: 20px; height: 20px; stroke: var(--error); fill: none; stroke-width: 2; }
+  .confirm-dialog h3 { font-size: 17px; font-weight: 600; margin: 0 0 8px; }
+  .confirm-dialog p { font-size: 14.5px; color: var(--text-muted); margin: 0 0 20px; }
+  .confirm-dialog .confirm-footer { display: flex; gap: 10px; padding: 16px 22px; border-top: 1px solid var(--line); }
+  .confirm-dialog .confirm-footer .btn { flex: 1; }
+
+  /* ===== LOGIN PAGE ===== */
+  .login-page {
+    position: fixed; inset: 0; z-index: 200;
+    display: none;
+    background: var(--white);
+  }
+  .login-page.open { display: flex; }
+  .login-brand {
+    width: 44%; min-width: 360px;
+    background: linear-gradient(155deg, var(--blue) 0%, var(--blue-hover) 100%);
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 48px; color: var(--white); position: relative; overflow: hidden;
+  }
+  .login-brand .lb-logo { font-size: 20px; font-weight: 700; letter-spacing: .3px; z-index: 2; }
+  .login-brand .lb-quote { font-size: 22px; font-weight: 500; line-height: 1.4; max-width: 380px; z-index: 2; }
+  .login-brand .lb-sub { font-size: 14px; opacity: .8; z-index: 2; }
+  .login-brand svg.deco { position: absolute; opacity: .18; }
+  .login-form-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px; }
+  .login-form { width: 100%; max-width: 340px; }
+  .login-form h1 { font-size: 24px; font-weight: 600; margin: 0 0 6px; }
+  .login-form .login-sub { font-size: 14.5px; color: var(--text-muted); margin-bottom: 28px; }
+  .login-form .field { margin-bottom: 16px; }
+  .login-form .btn-primary { width: 100%; margin-top: 6px; }
+  .login-form .login-meta { display: flex; justify-content: space-between; align-items: center; margin: -4px 0 20px; font-size: 13.5px; }
+  .login-form .login-meta a { color: var(--blue); text-decoration: none; }
+  .login-close { position: absolute; top: 18px; right: 22px; cursor: pointer; color: var(--text-muted); z-index: 5; }
+
+  /* ===== TOKENS SECTION ===== */
+  .tokens-section { padding: 44px 28px; max-width: 1100px; margin: 0 auto; }
+  .tokens-section h2 { font-size: 18px; font-weight: 600; margin: 44px 0 18px; }
+  .tokens-section h2:first-child { margin-top: 0; }
+  .swatch-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .swatch { width: 130px; }
+  .swatch-color { height: 64px; border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 6px; }
+  .swatch-name { font-size: 13px; font-weight: 500; }
+  .swatch-hex { font-size: 12px; color: var(--text-muted); font-family: monospace; }
+  .type-row { display: flex; align-items: baseline; gap: 18px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .type-label { width: 80px; font-size: 12px; color: var(--text-muted); font-family: monospace; flex-shrink: 0; }
+  .btn-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .btn-row .btn { width: auto; padding: 0 20px; }
+</style>
+</head>
+<body>
+
+  <!-- ===== TOPBAR ===== -->
+  <div class="topbar">
+    <div class="hamburger" id="drawer-toggle">
+      <svg class="icon" viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </div>
+    <div class="title">CorporateStarter</div>
+    <div class="org-indicator">
+      <svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1"/></svg>
+      Meter Shop NW · Northwest
+    </div>
+    <div class="spacer"></div>
+    <div class="topbar-right">
+      <div class="bell-wrap">
+        <div class="bell-btn" id="bell-btn">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+          <span class="bell-badge">3</span>
+        </div>
+        <div class="bell-popover" id="bell-popover">
+          <div class="bp-header">Уведомления</div>
+          <div class="bp-item">Калибровка #4471 просрочена<div class="bp-time">12 мин назад</div></div>
+          <div class="bp-item">Новая партия принята на MM3-IN-29489<div class="bp-time">1 час назад</div></div>
+          <div class="bp-item">Запись «93» изменена другим пользователем<div class="bp-time">вчера</div></div>
+        </div>
+      </div>
+      <div class="user">mm3-IN-29489 &nbsp;·&nbsp; mm</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- ===== DRAWER ===== -->
+    <div class="drawer">
+      <div class="nav-group">
+        <div class="nav-group-header active">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+          <span class="label">Main</span>
+        </div>
+      </div>
+      <div class="nav-group open">
+        <div class="nav-group-header">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1h.1a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+          <span class="label">Configuration</span> <span class="chev">▶</span>
+        </div>
+        <div class="nav-sub">
+          <a href="#" class="active">Areas</a>
+          <a href="#">Audio Notifications</a>
+          <a href="#">Calibrations</a>
+          <a href="#">Channel Types</a>
+          <a href="#">Container Types</a>
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-header">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+          <span class="label">Resources</span> <span class="chev">▶</span>
+        </div>
+        <div class="nav-sub"><a href="#">Users</a><a href="#">Roles</a></div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-header">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="1"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+          <span class="label">Security</span> <span class="chev">▶</span>
+        </div>
+        <div class="nav-sub"><a href="#">Permissions</a><a href="#">Audit Log</a></div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-header">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/></svg>
+          <span class="label">Inventory</span> <span class="chev">▶</span>
+        </div>
+        <div class="nav-sub"><a href="#">Items</a><a href="#">Transfers</a></div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-header">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h9l5 5v13a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M9 13h6M9 17h6"/></svg>
+          <span class="label">Reports</span> <span class="chev">▶</span>
+        </div>
+        <div class="nav-sub"><a href="#">Standard Reports</a><a href="#">Custom Reports</a></div>
+      </div>
+    </div>
+
+    <!-- ===== MAIN ===== -->
+    <div class="main">
+      <div class="page-header">
+        <h1>Areas</h1>
+        <div class="page-search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Search areas...">
+        </div>
+      </div>
+
+      <div class="banner banner-info">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <div>Показаны только активные записи. Неактивные скрыты фильтром по умолчанию.</div>
+      </div>
+
+      <div class="grid-toolbar">
+        <div class="icon-btn tooltip" data-tooltip="Add" id="add-trigger"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="icon-btn tooltip" data-tooltip="Edit" id="edit-trigger"><svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+        <div class="icon-btn tooltip" data-tooltip="Delete" id="delete-trigger"><svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2"/><path d="M6 6l1 14a1 1 0 001 1h8a1 1 0 001-1l1-14"/></svg></div>
+        <div class="icon-btn tooltip" data-tooltip="Refresh" id="refresh-trigger"><svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 4v6h-6"/></svg></div>
+        <div class="menu-wrap">
+          <div class="icon-btn tooltip" data-tooltip="More" id="more-trigger"><svg class="icon" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg></div>
+          <div class="menu-popover" id="more-menu">
+            <div class="mp-item" onclick="toast('success','Экспорт CSV запущен')"><svg viewBox="0 0 24 24"><path d="M14 3v5h5"/><path d="M6 3h8l5 5v13H6z"/></svg>Export CSV</div>
+            <div class="mp-item" onclick="toast('success','Экспорт Excel запущен')"><svg viewBox="0 0 24 24"><path d="M14 3v5h5"/><path d="M6 3h8l5 5v13H6z"/></svg>Export Excel</div>
+          </div>
+        </div>
+        <div class="find-spacer"></div>
+        <div class="find-input"><label>Find</label><input type="text" placeholder="Name"></div>
+      </div>
+
+      <div class="grid-wrap" id="grid-real-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th><div class="th-inner"><span>Name <span class="sort">↑</span></span><span class="filter-icon"><svg viewBox="0 0 24 24"><path d="M4 5h16l-6 8v6l-4 2v-8L4 5z"/></svg></span></div></th>
+              <th><div class="th-inner"><span>MeterShop</span><span class="filter-icon"><svg viewBox="0 0 24 24"><path d="M4 5h16l-6 8v6l-4 2v-8L4 5z"/></svg></span></div></th>
+              <th><div class="th-inner"><span>Operating Area</span><span class="filter-icon"><svg viewBox="0 0 24 24"><path d="M4 5h16l-6 8v6l-4 2v-8L4 5z"/></svg></span></div></th>
+              <th><div class="th-inner"><span>Status</span><span class="filter-icon"><svg viewBox="0 0 24 24"><path d="M4 5h16l-6 8v6l-4 2v-8L4 5z"/></svg></span></div></th>
+            </tr>
+          </thead>
+          <tbody id="grid-body">
+            <tr onclick="selectRow(this,event)" ondblclick="openSidesheet()"><td>91</td><td>Meter Shop NW</td><td>Northwest</td><td><span class="status on">Active</span></td></tr>
+            <tr onclick="selectRow(this,event)" ondblclick="openSidesheet()"><td>92</td><td>Meter Shop NW</td><td>Northwest</td><td><span class="status on">Active</span></td></tr>
+            <tr class="selected" onclick="selectRow(this,event)" ondblclick="openSidesheet()"><td>93</td><td>Meter Shop NW</td><td>Northwest</td><td><span class="status on">Active</span></td></tr>
+            <tr onclick="selectRow(this,event)" ondblclick="openSidesheet()"><td>Broward Area</td><td>Meter Shop FPL</td><td>FPL</td><td><span class="status on">Active</span></td></tr>
+            <tr onclick="selectRow(this,event)" ondblclick="openSidesheet()"><td>East Area</td><td>Meter Shop FPL</td><td>FPL</td><td><span class="status off">Inactive</span></td></tr>
+            <tr onclick="selectRow(this,event)" ondblclick="openSidesheet()"><td>North Area</td><td>Meter Shop FPL</td><td>FPL</td><td><span class="status on">Active</span></td></tr>
+            <tr onclick="selectRow(this,event)" ondblclick="openSidesheet()"><td>South Area</td><td>Meter Shop FPL</td><td>FPL</td><td><span class="status on">Active</span></td></tr>
+          </tbody>
+        </table>
+        <div class="grid-footer">
+          <span>1–7 of 9 items</span>
+          <div class="pagination">
+            <button disabled title="Prev"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button title="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-wrap" id="grid-empty-demo" style="display:none;">
+        <div style="padding:48px 24px; text-align:center;">
+          <svg class="icon" viewBox="0 0 24 24" style="width:32px;height:32px;color:var(--text-muted);margin-bottom:12px;"><rect x="3" y="4" width="18" height="16" rx="1"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <div style="font-weight:500; margin-bottom:4px;">Ничего не найдено</div>
+          <div style="font-size:14.5px; color:var(--text-muted);">Попробуйте изменить условия поиска или сбросить фильтры</div>
+        </div>
+      </div>
+
+      <div class="hint-row">Ctrl/Cmd+клик — добавить строку к выделению. Shift+клик — выделить диапазон. Двойной клик — открыть запись.</div>
+
+      <h2 style="font-size:16px; margin:36px 0 12px;">Tabs — вложенные данные записи</h2>
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab(this,'tp1')">Item Fields</div>
+        <div class="tab" onclick="switchTab(this,'tp2')">Ancillary Devices</div>
+        <div class="tab" onclick="switchTab(this,'tp3')">Tests</div>
+        <div class="tab" onclick="switchTab(this,'tp4')">History</div>
+        <div class="tab" onclick="switchTab(this,'tp5')">Photos</div>
+        <div class="tab" onclick="switchTab(this,'tp6')">Notes</div>
+        <div class="tab" onclick="switchTab(this,'tp7')">Attachments</div>
+      </div>
+      <div class="tab-panel active" id="tp1">Основные поля записи — та же форма, что и в sidesheet, но развёрнута на всю ширину для сложных сущностей.</div>
+      <div class="tab-panel" id="tp2">Список связанных устройств.</div>
+      <div class="tab-panel" id="tp3">Результаты тестов по записи.</div>
+      <div class="tab-panel" id="tp4">Журнал изменений записи.</div>
+      <div class="tab-panel" id="tp5">Прикреплённые фотографии.</div>
+      <div class="tab-panel" id="tp6">Заметки оператора.</div>
+      <div class="tab-panel" id="tp7">Прикреплённые файлы и документы.</div>
+    </div>
+
+    <!-- ===== SIDESHEET ===== -->
+    <div class="sidesheet" style="display:none;">
+      <div class="sidesheet-header">
+        <h2>93</h2>
+        <div class="close" onclick="document.querySelector('.sidesheet').style.display='none';"><svg class="icon" viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg></div>
+      </div>
+      <div class="sidesheet-body">
+        <div class="field">
+          <label>Name<span class="required-mark">*</span></label>
+          <input type="text" value="93">
+        </div>
+        <div class="field has-error">
+          <label>MeterShop<span class="required-mark">*</span>
+            <span class="info-icon tooltip" data-tooltip="Точка обслуживания, к которой привязана область"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+          </label>
+          <select><option value="">— не выбрано —</option></select>
+          <div class="field-error"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Поле обязательно для заполнения</div>
+        </div>
+        <div class="field"><label>Operating Area<span class="required-mark">*</span></label><select><option>Northwest</option></select></div>
+        <div class="field readonly">
+          <label>Created By</label>
+          <div class="ro-value">mm3-IN-29489 · 2026-08-14</div>
+        </div>
+        <div class="field checkbox"><input type="checkbox" checked id="active-cb"><label for="active-cb">Active</label></div>
+      </div>
+      <div class="sidesheet-footer">
+        <button class="btn btn-outline" onclick="document.querySelector('.sidesheet').style.display='none';">Cancel</button>
+        <button class="btn btn-primary" id="save-btn" onclick="toast('success','Изменения сохранены')">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CONFIRM DIALOG ===== -->
+  <div class="confirm-overlay" id="confirm-overlay" style="display:none;">
+    <div class="confirm-dialog">
+      <div class="confirm-body">
+        <div class="confirm-icon"><svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2"/><path d="M6 6l1 14a1 1 0 001 1h8a1 1 0 001-1l1-14"/></svg></div>
+        <h3 id="confirm-title">Удалить выбранные записи?</h3>
+        <p>Это действие необратимо. Записи будут удалены из системы без возможности восстановления.</p>
+      </div>
+      <div class="confirm-footer">
+        <button class="btn btn-outline" id="confirm-cancel">Cancel</button>
+        <button class="btn btn-danger" id="confirm-delete">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOASTS ===== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ===== LOGIN PAGE ===== -->
+  <div class="login-page" id="login-page">
+    <div class="login-close" onclick="document.getElementById('login-page').classList.remove('open');" title="Закрыть демо">
+      <svg class="icon" viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+    </div>
+    <div class="login-brand">
+      <svg class="deco" width="420" height="420" style="top:-80px; right:-100px;" viewBox="0 0 200 200"><circle cx="100" cy="100" r="100" fill="white"/></svg>
+      <svg class="deco" width="260" height="260" style="bottom:-60px; left:-60px;" viewBox="0 0 200 200"><rect x="0" y="0" width="200" height="200" rx="24" fill="white"/></svg>
+      <div class="lb-logo">CorporateStarter</div>
+      <div class="lb-quote">Единая система управления жизненным циклом приборов учёта.</div>
+      <div class="lb-sub">© 2026 CorporateStarter</div>
+    </div>
+    <div class="login-form-wrap">
+      <div class="login-form">
+        <h1>Вход в систему</h1>
+        <div class="login-sub">Введите учётные данные для продолжения</div>
+        <div class="field"><label>Логин</label><input type="text" placeholder="mm3-IN-29489"></div>
+        <div class="field"><label>Пароль</label><input type="password" placeholder="••••••••"></div>
+        <div class="login-meta"><label style="display:flex;align-items:center;gap:6px;color:var(--text-muted);"><input type="checkbox" style="width:14px;height:14px;"> Запомнить меня</label><a href="#">Забыли пароль?</a></div>
+        <button class="btn btn-primary" onclick="toast('success','Вход выполнен')">Войти</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOKENS REFERENCE ===== -->
+  <div class="tokens-section">
+
+    <h2>Цвета (4: 3 базовых + 1 семантический)</h2>
+    <div class="swatch-row">
+      <div class="swatch"><div class="swatch-color" style="background:#2883EE"></div><div class="swatch-name">Blue</div><div class="swatch-hex">#2883EE</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#FFFFFF;border:1px solid var(--line)"></div><div class="swatch-name">White</div><div class="swatch-hex">#FFFFFF</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1E293B"></div><div class="swatch-name">Text</div><div class="swatch-hex">#1E293B</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#DC2626"></div><div class="swatch-name">Error</div><div class="swatch-hex">#DC2626</div></div>
+    </div>
+    <div style="font-size:14px; color:var(--text-muted); margin-top:10px; max-width:640px;">Error — только для удаления/невалидных полей/критичных баннеров. Inline-баннеры имеют 2 состояния: info (синий) и critical (красный) — без жёлтого/зелёного.</div>
+
+    <h2>Баннеры</h2>
+    <div class="banner banner-info" style="margin-bottom:10px;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><div>Info — нейтральное сообщение, к сведению</div></div>
+    <div class="banner banner-critical"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div>Critical — требует внимания/действия</div></div>
+
+    <h2>Типографика</h2>
+    <div class="type-row"><div class="type-label">H1 / 24px</div><div style="font-size:24px; font-weight:600;">Заголовок страницы</div></div>
+    <div class="type-row"><div class="type-label">H2 / 18px</div><div style="font-size:18px; font-weight:600;">Заголовок панели / диалога</div></div>
+    <div class="type-row"><div class="type-label">Body / 16px</div><div style="font-size:16px;">Основной текст интерфейса, значения полей</div></div>
+    <div class="type-row"><div class="type-label">Small / 14.5px</div><div style="font-size:14.5px; color:var(--text-muted);">Подписи полей, вспомогательный текст</div></div>
+
+    <h2>Кнопки и состояния</h2>
+    <div class="btn-row">
+      <button class="btn btn-primary">Save</button>
+      <button class="btn btn-outline">Cancel</button>
+      <button class="btn btn-danger">Delete</button>
+      <button class="btn btn-primary" disabled>Save</button>
+      <button class="btn btn-primary is-loading" disabled><span class="spinner"></span>Saving…</button>
+    </div>
+
+    <h2>Пустое состояние грида</h2>
+    <div class="grid-wrap" style="max-width:500px;">
+      <div style="padding:48px 24px; text-align:center;">
+        <svg class="icon" viewBox="0 0 24 24" style="width:32px;height:32px;color:var(--text-muted);margin-bottom:12px;"><rect x="3" y="4" width="18" height="16" rx="1"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <div style="font-weight:500; margin-bottom:4px;">Ничего не найдено</div>
+        <div style="font-size:14.5px; color:var(--text-muted);">Попробуйте изменить условия поиска или сбросить фильтры</div>
+      </div>
+    </div>
+
+    <h2>Скелетон-загрузка грида</h2>
+    <div class="grid-wrap" style="max-width:600px;">
+      <div style="padding:16px;">
+        <div class="skel" style="width:90%; margin-bottom:14px;"></div>
+        <div class="skel" style="width:75%; margin-bottom:14px;"></div>
+        <div class="skel" style="width:85%; margin-bottom:14px;"></div>
+        <div class="skel" style="width:60%;"></div>
+      </div>
+    </div>
+
+    <h2>Демо-триггеры</h2>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="toast('success','Запись сохранена')">Toast: success</button>
+      <button class="btn btn-outline" onclick="toast('error','Не удалось сохранить запись')">Toast: error</button>
+      <button class="btn btn-outline" onclick="toast('undo','Запись удалена')">Toast: undo</button>
+      <button class="btn btn-outline" onclick="toast('warn','Запись изменена другим пользователем')">Toast: конфликт</button>
+      <button class="btn btn-outline" id="toggle-empty-grid">Показать пустой грид</button>
+      <button class="btn btn-outline" onclick="document.getElementById('login-page').classList.add('open');">Показать форму логина</button>
+    </div>
+
+  </div>
+
+  <script>
+    // drawer
+    document.getElementById('drawer-toggle').addEventListener('click', function () {
+      document.querySelector('.drawer').classList.toggle('collapsed');
+    });
+
+    // bell popover
+    document.getElementById('bell-btn').addEventListener('click', function (e) {
+      e.stopPropagation();
+      document.getElementById('bell-popover').classList.toggle('open');
+    });
+
+    // export menu
+    document.getElementById('more-trigger').addEventListener('click', function (e) {
+      e.stopPropagation();
+      document.getElementById('more-menu').classList.toggle('open');
+    });
+    document.addEventListener('click', function () {
+      document.getElementById('bell-popover').classList.remove('open');
+      document.getElementById('more-menu').classList.remove('open');
+    });
+
+    // sidesheet
+    function openSidesheet() { document.querySelector('.sidesheet').style.display = 'flex'; }
+    document.getElementById('edit-trigger').addEventListener('click', function () {
+      if (this.classList.contains('is-disabled')) return;
+      openSidesheet();
+    });
+    document.getElementById('add-trigger').addEventListener('click', function () { openSidesheet(); });
+
+    // confirm dialog
+    var overlay = document.getElementById('confirm-overlay');
+    document.getElementById('delete-trigger').addEventListener('click', function () {
+      if (this.classList.contains('is-disabled')) return;
+      var n = document.querySelectorAll('#grid-body tr.selected').length;
+      document.getElementById('confirm-title').textContent = n > 1 ? ('Удалить выбранные записи (' + n + ')?') : 'Удалить запись?';
+      overlay.style.display = 'flex';
+    });
+    document.getElementById('confirm-cancel').addEventListener('click', function () { overlay.style.display = 'none'; });
+    document.getElementById('confirm-delete').addEventListener('click', function () {
+      overlay.style.display = 'none';
+      toast('undo', 'Запись удалена');
+    });
+
+    // multiselect: click / ctrl+click / shift+click
+    var lastSelectedIndex = null;
+    function selectRow(tr, evt) {
+      var rows = Array.prototype.slice.call(document.querySelectorAll('#grid-body tr'));
+      var idx = rows.indexOf(tr);
+      if (evt.shiftKey && lastSelectedIndex !== null) {
+        var from = Math.min(lastSelectedIndex, idx), to = Math.max(lastSelectedIndex, idx);
+        rows.forEach(function (r, i) { if (i >= from && i <= to) r.classList.add('selected'); });
+      } else if (evt.ctrlKey || evt.metaKey) {
+        tr.classList.toggle('selected');
+        lastSelectedIndex = idx;
+      } else {
+        rows.forEach(function (r) { r.classList.remove('selected'); });
+        tr.classList.add('selected');
+        lastSelectedIndex = idx;
+      }
+      updateToolbarState();
+    }
+    function updateToolbarState() {
+      var selected = document.querySelectorAll('#grid-body tr.selected');
+      var edit = document.getElementById('edit-trigger');
+      var del = document.getElementById('delete-trigger');
+      edit.classList.toggle('is-disabled', selected.length !== 1);
+      del.classList.toggle('is-disabled', selected.length === 0);
+    }
+    updateToolbarState();
+
+    // empty grid demo toggle
+    document.getElementById('toggle-empty-grid').addEventListener('click', function () {
+      var wrap = document.getElementById('grid-real-wrap');
+      var empty = document.getElementById('grid-empty-demo');
+      var isEmpty = wrap.style.display === 'none';
+      wrap.style.display = isEmpty ? '' : 'none';
+      empty.style.display = isEmpty ? 'none' : '';
+      var edit = document.getElementById('edit-trigger');
+      var del = document.getElementById('delete-trigger');
+      if (isEmpty) { updateToolbarState(); }
+      else { edit.classList.add('is-disabled'); del.classList.add('is-disabled'); }
+    });
+
+    // tabs
+    function switchTab(el, panelId) {
+      document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+      document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+      el.classList.add('active');
+      document.getElementById(panelId).classList.add('active');
+    }
+
+    // toasts
+    function toast(type, message) {
+      var container = document.getElementById('toast-container');
+      var el = document.createElement('div');
+      el.className = 'toast toast-' + (type === 'undo' || type === 'warn' ? 'success' : type);
+      var icon = '';
+      if (type === 'success') icon = '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>';
+      if (type === 'error') icon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+      if (type === 'undo' || type === 'warn') icon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+      var actionLabel = type === 'undo' ? 'Отменить' : (type === 'warn' ? 'Обновить' : '');
+      el.innerHTML = icon + '<div class="toast-body">' + message + '</div>' + (actionLabel ? '<div class="toast-action">' + actionLabel + '</div>' : '') + '<div class="toast-close">✕</div>';
+      container.appendChild(el);
+      el.querySelector('.toast-close').addEventListener('click', function () { el.remove(); });
+      var actionEl = el.querySelector('.toast-action');
+      if (actionEl) actionEl.addEventListener('click', function () { el.remove(); });
+      setTimeout(function () { if (el.parentNode) el.remove(); }, 5000);
+    }
+  </script>
+
+</body>
+</html>

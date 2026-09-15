@@ -25,12 +25,12 @@ using CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Positi
 using CorporateStarter.Infrastructure.Persistence.Repositories.Security;
 using CorporateStarter.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
+using System.Net;
 using System.Text;
 using System.Threading.RateLimiting;
 
@@ -182,7 +182,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
 
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.FromMinutes(1)
+            ClockSkew = TimeSpan.FromSeconds(15)
         };
 
         if (builder.Environment.IsEnvironment("Testing"))
@@ -244,6 +244,8 @@ builder.Services.AddScoped<IUserReadRepository, UserReadRepository>();
 builder.Services.AddScoped<IUserWriteRepository, UserWriteRepository>();
 builder.Services.AddScoped<IPermissionReadRepository, PermissionReadRepository>();
 builder.Services.AddScoped<ISecurityEventRepository, SecurityEventRepository>();
+builder.Services.AddScoped<AuthOperationExecutor>();
+builder.Services.AddScoped<AuthOperationContentionFilter>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserAuthRepository, UserAuthRepository>();
@@ -255,6 +257,7 @@ builder.Services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IAuthTransactionFactory, AuthTransactionFactory>();
 
 builder.Services
     .AddOptions<CsrfOptions>()
@@ -346,8 +349,25 @@ builder.Services.AddSingleton(sp =>
 builder.Services.AddSingleton(sp =>
     sp.GetRequiredService<IOptions<CsrfOptions>>().Value);
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor |
+        ForwardedHeaders.XForwardedProto;
+
+    options.ForwardLimit = 1;
+
+    options.KnownIPNetworks.Clear();
+    options.KnownProxies.Clear();
+
+    options.KnownProxies.Add(IPAddress.Loopback);
+    options.KnownProxies.Add(IPAddress.IPv6Loopback);
+    options.KnownProxies.Add(IPAddress.Loopback.MapToIPv6());
+});
 
 var app = builder.Build();
+
+app.UseForwardedHeaders();
 
 app.UseMiddleware<CorrelationIdMiddleware>();
 

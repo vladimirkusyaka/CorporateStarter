@@ -1,34 +1,55 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using CorporateStarter.Client.Abstractions.Auth;
+using CorporateStarter.Client.Core.Auth;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using MudBlazor;
 
 namespace CorporateStarter.Web.Components.Layout
 {
-    public partial class MainLayout
+    public partial class MainLayout : IDisposable
     {
-        protected const string PageTitle = "CorporateStarter";
+        [Inject]
+        private IClientAuthState AuthState { get; set; } = default!;
 
+        [Inject]
+        private ClientSessionCoordinator Session { get; set; } = default!;
+
+        protected const string PageTitle = "CorporateStarter";
         protected const string BuildVersion = "DEV 1.0.0.0";
 
         protected bool DrawerOpen { get; set; } = true;
 
-        protected bool IsAuthenticated { get; set; }
+        protected bool IsAuthenticated =>
+            _snapshot.Status == ClientAuthStatus.Authenticated;
 
-        private MudTextField<string>? _usernameField;
+        protected bool ShowLogin =>
+            !Session.IsLogoutPending &&
+            (_snapshot.Status == ClientAuthStatus.Anonymous ||
+            (IsSigningIn &&
+            _snapshot.Status == ClientAuthStatus.Revalidating));
 
         protected bool IsSigningIn { get; set; }
-
         protected string Login { get; set; } = string.Empty;
-
         protected string Password { get; set; } = string.Empty;
-
         protected string? SignInError { get; set; }
 
-        protected string CurrentUserName { get; set; } = "guest";
+        protected string CurrentUserName =>
+            _snapshot.UserId is null ? "guest" : "Signed in";
 
-        protected string CurrentUserInitials { get; set; } = "G";
+        protected string CurrentUserInitials =>
+            _snapshot.UserId is null ? "G" : "U";
 
         protected int UnreadNotifications { get; set; } = 1;
+
+        private ClientAuthSnapshot _snapshot = ClientAuthSnapshot.Initial;
+        private readonly CancellationTokenSource _lifetime = new();
+        private MudTextField<string>? _usernameField;
+        private RenderFragment? _authorizedBody;
+        private bool _restoreInProgress;
+        private bool _focusLogin;
+        private bool _disposed;
+        private bool _signingOut;
 
         protected MudTheme AppTheme { get; } = new()
         {
@@ -51,53 +72,153 @@ namespace CorporateStarter.Web.Components.Layout
             }
         };
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
-            await CheckSessionAsync();
+            AuthState.StateChanged += OnAuthStateChanged;
+            ApplyCurrentState();
+        }
+
+        protected override void OnParametersSet()
+        {
+            if (IsAuthenticated)
+                _authorizedBody = Body;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender && !IsAuthenticated && _usernameField is not null)
+            if (firstRender &&
+                _snapshot.Status == ClientAuthStatus.Initializing)
             {
-                await _usernameField.FocusAsync();
+                await RestoreSessionAsync();
+            }
+
+            if (!_disposed && _focusLogin && ShowLogin &&
+                !IsSigningIn && _usernameField is not null)
+            {
+                _focusLogin = false;
+
+                try
+                {
+                    await _usernameField.FocusAsync();
+                }
+                catch (JSDisconnectedException)
+                {
+                }
             }
         }
 
-        protected void ToggleDrawer()
+        private void OnAuthStateChanged(
+            object? sender,
+            ClientAuthStateChangedEventArgs args)
         {
-            DrawerOpen = !DrawerOpen;
+            if (_disposed)
+                return;
+
+            _ = InvokeAsync(() =>
+            {
+                if (_disposed)
+                    return;
+
+                ApplyCurrentState();
+                StateHasChanged();
+            });
         }
 
-        protected async Task OnLoginKeyDown(KeyboardEventArgs args)
+        private void ApplyCurrentState()
         {
-            if (args.Key == "Enter")
+            var next = AuthState.Current;
+
+            if (next.SessionGeneration != _snapshot.SessionGeneration)
             {
-                await SignInAsync();
+                Login = string.Empty;
+                Password = string.Empty;
+                SignInError = null;
+                _authorizedBody = null;
+            }
+
+            if (next.Status == ClientAuthStatus.Anonymous &&
+                _snapshot.Status != ClientAuthStatus.Anonymous)
+            {
+                _focusLogin = true;
+            }
+
+            _snapshot = next;
+
+            if (IsAuthenticated)
+                _authorizedBody = Body;
+            else if (_snapshot.UserId is null)
+                _authorizedBody = null;
+        }
+
+        protected async Task RestoreSessionAsync()
+        {
+            if (_disposed || _restoreInProgress || IsSigningIn)
+                return;
+
+            _restoreInProgress = true;
+
+            try
+            {
+                await Session.RestoreAsync(_lifetime.Token);
+            }
+            catch (OperationCanceledException)
+                when (_lifetime.IsCancellationRequested)
+            {
+            }
+            finally
+            {
+                _restoreInProgress = false;
+
+                if (!_disposed)
+                {
+                    ApplyCurrentState();
+                    StateHasChanged();
+                }
             }
         }
 
         protected async Task SignInAsync()
         {
-            SignInError = null;
-
-            if (string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password))
+            if (_disposed || IsSigningIn ||
+                AuthState.Current.Status != ClientAuthStatus.Anonymous)
             {
-                SignInError = "Enter username and password.";
                 return;
             }
 
+            SignInError = null;
             IsSigningIn = true;
+
+            var password = Password;
+            Password = string.Empty;
 
             try
             {
-                // Visual scaffold only. Wire this to the real auth flow before production use.
-                await Task.Delay(250);
+                var result = await Session.LoginAsync(Login, password);
 
-                IsAuthenticated = true;
-                CurrentUserName = Login.Trim();
-                CurrentUserInitials = BuildInitials(CurrentUserName);
-                Password = string.Empty;
+                if (_disposed || result is null)
+                    return;
+
+                ApplyCurrentState();
+
+                if (_snapshot.Status == ClientAuthStatus.Anonymous)
+                {
+                    SignInError = result.Status switch
+                    {
+                        ClientLoginStatus.Rejected =>
+                            "Sign-in failed. Check your credentials or try again later.",
+
+                        ClientLoginStatus.InvalidInput =>
+                            "Enter username and password.",
+
+                        ClientLoginStatus.RateLimited =>
+                            "Too many attempts. Try again later.",
+
+                        ClientLoginStatus.MfaRequired =>
+                            "Additional verification is required. This sign-in screen does not support it yet.",
+
+                        _ => null
+                    };
+                }
             }
             finally
             {
@@ -105,39 +226,55 @@ namespace CorporateStarter.Web.Components.Layout
             }
         }
 
+        protected void ToggleDrawer() => DrawerOpen = !DrawerOpen;
+
+        protected Task OnLoginKeyDown(KeyboardEventArgs args) =>
+            args.Key == "Enter"
+                ? SignInAsync()
+                : Task.CompletedTask;
+
         protected async Task SignOutAsync()
         {
-            // Visual scaffold only. Later: call API logout and clear server-side UI session state.
-            await Task.CompletedTask;
+            if (_disposed || _signingOut ||
+                _restoreInProgress || IsSigningIn)
+            {
+                return;
+            }
 
-            IsAuthenticated = false;
-            CurrentUserName = "guest";
-            CurrentUserInitials = "G";
+            _signingOut = true;
+
+            try
+            {
+                await Session.LogoutAsync();
+            }
+            finally
+            {
+                _signingOut = false;
+
+                if (!_disposed)
+                {
+                    ApplyCurrentState();
+                    StateHasChanged();
+                }
+            }
+        }
+
+        protected Task RetrySessionAsync() =>
+            Session.IsLogoutPending
+                ? SignOutAsync()
+                : RestoreSessionAsync();
+
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+            AuthState.StateChanged -= OnAuthStateChanged;
+            _authorizedBody = null;
             Password = string.Empty;
-        }
-
-        private async Task CheckSessionAsync()
-        {
-            // Later: call refresh/me flow. If it fails, leave the shell locked.
-            await Task.CompletedTask;
-
-            IsAuthenticated = false;
-        }
-
-        private static string BuildInitials(string value)
-        {
-            var trimmed = value.Trim();
-
-            if (string.IsNullOrWhiteSpace(trimmed))
-                return "U";
-
-            var parts = trimmed
-                .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-            if (parts.Length >= 2)
-                return string.Concat(parts[0][0], parts[1][0]).ToUpperInvariant();
-
-            return trimmed[0].ToString().ToUpperInvariant();
+            _lifetime.Cancel();
+            _lifetime.Dispose();
         }
     }
 }

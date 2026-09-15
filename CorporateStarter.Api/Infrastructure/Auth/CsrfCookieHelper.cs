@@ -26,12 +26,15 @@ namespace CorporateStarter.Api.Infrastructure.Auth
                 : null;
         }
 
-        public void Append(HttpResponse response, string csrfToken)
+        public void Append(
+            HttpResponse response,
+            string csrfToken,
+            DateTimeOffset expiresAtUtc)
         {
             response.Cookies.Append(
                 _options.CookieName,
                 csrfToken,
-                BuildCookieOptions(DateTimeOffset.UtcNow.AddDays(1)));
+                BuildCookieOptions(expiresAtUtc));
         }
 
         public void Delete(HttpResponse response)

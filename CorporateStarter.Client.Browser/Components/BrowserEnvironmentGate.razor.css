@@ -1,0 +1,28 @@
+﻿.browser-gate {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    box-sizing: border-box;
+    text-align: center;
+    color: #111827;
+    background: #f4f5f7;
+    font-family: system-ui, sans-serif;
+}
+
+.browser-gate button {
+    padding: 0.65rem 1rem;
+    border: 1px solid #0d6efd;
+    border-radius: 5px;
+    background: #0d6efd;
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+}
+
+.browser-gate button:focus-visible {
+    outline: 3px solid #111827;
+    outline-offset: 3px;
+}

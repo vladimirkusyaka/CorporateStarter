@@ -1,9 +1,8 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using CorporateStarter.Application.Common.Interfaces.Repositories.Auth;
+﻿using CorporateStarter.Application.Common.Interfaces.Repositories.Auth;
 using CorporateStarter.Core.Entities.Security;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
 
 namespace CorporateStarter.Infrastructure.Persistence.Repositories.Auth
 {
@@ -131,6 +130,74 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Auth
         public Task SaveChangesAsync(CancellationToken cancellationToken)
         {
             return _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<bool> TryConsumeAsync(
+            string tokenHash,
+            string replacementTokenHash,
+            DateTime nowUtc,
+            string? ipAddress,
+            CancellationToken cancellationToken)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(tokenHash);
+            ArgumentException.ThrowIfNullOrWhiteSpace(replacementTokenHash);
+
+            if (string.Equals(
+                tokenHash,
+                replacementTokenHash,
+                StringComparison.Ordinal))
+            {
+                throw new ArgumentException(
+                    "Replacement must differ from the consumed token.",
+                    nameof(replacementTokenHash));
+            }
+
+            if (nowUtc.Kind != DateTimeKind.Utc)
+            {
+                throw new ArgumentException(
+                    "UTC timestamp is required.",
+                    nameof(nowUtc));
+            }
+
+            var transaction = _dbContext.Database.CurrentTransaction;
+
+            if (transaction is null ||
+                transaction.GetDbTransaction().IsolationLevel
+                    != IsolationLevel.Serializable)
+            {
+                throw new InvalidOperationException(
+                    "Refresh token consumption requires an active Serializable transaction.");
+            }
+
+            var affectedRows = await _dbContext.RefreshTokens
+                .Where(x =>
+                    x.TokenHash == tokenHash &&
+                    x.RevokedAtUtc == null &&
+                    x.ReplacedByTokenHash == null &&
+                    x.ExpiresAtUtc > nowUtc &&
+                    x.User.IsActive &&
+                    x.AuthSession.RevokedAtUtc == null &&
+                    x.RefreshTokenFamily.RevokedAtUtc == null)
+                .ExecuteUpdateAsync(
+                    setters => setters
+                        .SetProperty(
+                            x => x.RevokedAtUtc,
+                            (DateTime?)nowUtc)
+                        .SetProperty(
+                            x => x.RevokedByIp,
+                            ipAddress)
+                        .SetProperty(
+                            x => x.ReplacedByTokenHash,
+                            replacementTokenHash),
+                    cancellationToken);
+
+            return affectedRows switch
+            {
+                0 => false,
+                1 => true,
+                _ => throw new InvalidOperationException(
+                    "Refresh token hash uniqueness invariant was violated.")
+            };
         }
     }
 }

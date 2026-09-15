@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using CorporateStarter.Client.Abstractions.Auth
+
+@inherits LayoutComponentBase
 
 <MudThemeProvider Theme="@AppTheme" />
 <MudPopoverProvider />
@@ -49,20 +51,24 @@
                                Size="Size.Small" />
             </MudTooltip>
 
-            <MudMenu AnchorOrigin="Origin.BottomRight"
+            <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown"
+                     Color="Color.Inherit"
+                     Size="Size.Small"
+                     AnchorOrigin="Origin.BottomRight"
                      TransformOrigin="Origin.TopRight"
-                     Dense="true">
-                <ActivatorContent>
-                    <MudIconButton Icon="@Icons.Material.Filled.ArrowDropDown"
-                                   Color="Color.Inherit"
-                                   Size="Size.Small" />
-                </ActivatorContent>
+                     Dense="true"
+                     AriaLabel="User menu">
+                
 
                 <ChildContent>
                     <MudMenuItem Icon="@Icons.Material.Filled.Person">Profile</MudMenuItem>
                     <MudMenuItem Icon="@Icons.Material.Filled.Settings">Preferences</MudMenuItem>
                     <MudDivider Class="my-1" />
-                    <MudMenuItem Icon="@Icons.Material.Filled.Logout" OnClick="@SignOutAsync">Logout</MudMenuItem>
+                    <MudMenuItem Icon="@Icons.Material.Filled.Logout"
+                                 Disabled="@(!IsAuthenticated || _signingOut)"
+                                 OnClick="SignOutAsync">
+                        Logout
+                    </MudMenuItem>
                 </ChildContent>
             </MudMenu>
         </MudStack>
@@ -123,11 +129,20 @@
 
     <MudMainContent Class="cs-main">
         <MudContainer MaxWidth="MaxWidth.False" Class="cs-page">
-            @Body
+            @if (_snapshot.UserId is not null && _authorizedBody is not null)
+            {
+                <div @key="_snapshot.SessionGeneration"
+                     hidden="@(!IsAuthenticated)"
+                     inert="@(!IsAuthenticated)">
+                    <SessionContent CanRender="@IsAuthenticated">
+                        @_authorizedBody
+                    </SessionContent>
+                </div>
+            }
         </MudContainer>
     </MudMainContent>
 
-    @if (!IsAuthenticated)
+    @if (ShowLogin)
     {
         <div class="cs-auth-mask">
             <MudPaper Elevation="10" Class="cs-login-dialog">
@@ -151,7 +166,7 @@
                                           Disabled="@IsSigningIn"
                                           Class="cs-login-field"
                                           OnKeyDown="@OnLoginKeyDown"
-                                          AutoComplete="username" />
+                                          autocomplete="username" />
 
                             <MudTextField @bind-Value="Password"
                                           Label="Password"
@@ -163,7 +178,7 @@
                                           InputType="InputType.Password"
                                           Class="cs-login-field"
                                           OnKeyDown="@OnLoginKeyDown"
-                                          AutoComplete="current-password" />
+                                          autocomplete="current-password" />
 
                             @if (!string.IsNullOrWhiteSpace(SignInError))
                             {
@@ -192,6 +207,43 @@
                         </MudStack>
                     </MudStack>
                 </MudStack>
+            </MudPaper>
+        </div>
+    }
+    else if (!IsAuthenticated)
+    {
+        <div class="cs-auth-mask">
+            <MudPaper Class="pa-6" Elevation="10">
+                <div role="status" aria-live="polite">
+                    @if (_snapshot.Status == ClientAuthStatus.Unavailable)
+                    {
+                        <p>
+                            @(Session.IsLogoutPending
+                                ? "Sign-out could not be confirmed. Retry to finish signing out."
+                                : "Session verification is unavailable.")
+                        </p>
+
+                        <MudButton OnClick="RetrySessionAsync"
+                                   Disabled="@(_restoreInProgress || _signingOut)">
+                            Retry
+                        </MudButton>
+                    }
+                    else if (_snapshot.Status ==
+                             ClientAuthStatus.UnsupportedEnvironment)
+                    {
+                        <p>
+                            A secure context and Web Locks support are required.
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            @(Session.IsLogoutPending
+                                ? "Signing out…"
+                                : "Checking session…")
+                        </p>
+                    }
+                </div>
             </MudPaper>
         </div>
     }

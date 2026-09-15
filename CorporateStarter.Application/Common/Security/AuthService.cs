@@ -26,6 +26,7 @@ namespace CorporateStarter.Application.Common.Security
         private readonly IMfaChallengeService _mfaChallengeService;
 
         private readonly ICorrelationIdProvider _correlationIdProvider;
+        private readonly IAuthTransactionFactory _authTransactionFactory;
 
         public AuthService(
             IUserAuthRepository userRepository,
@@ -39,7 +40,8 @@ namespace CorporateStarter.Application.Common.Security
             LoginAttemptOptions loginAttemptOptions,
             IMfaPolicyService mfaPolicyService,
             IMfaChallengeService mfaChallengeService,
-            ICorrelationIdProvider correlationIdProvider)
+            ICorrelationIdProvider correlationIdProvider,
+            IAuthTransactionFactory authTransactionFactory)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
@@ -53,6 +55,7 @@ namespace CorporateStarter.Application.Common.Security
             _loginAttemptOptions = loginAttemptOptions;
             _mfaPolicyService = mfaPolicyService;
             _mfaChallengeService = mfaChallengeService;
+            _authTransactionFactory = authTransactionFactory;
         }
 
         public async Task<AuthLoginResult?> LoginAsync(
@@ -315,6 +318,28 @@ namespace CorporateStarter.Application.Common.Security
             string? userAgent,
             CancellationToken cancellationToken)
         {
+            await using var transaction =
+                await _authTransactionFactory.BeginSerializableAsync(
+                    cancellationToken);
+
+            var result = await RefreshCoreAsync(
+                refreshToken,
+                ipAddress,
+                userAgent,
+                cancellationToken);
+
+            // Rejection can also persist revocations and security events.
+            await transaction.CommitAsync(cancellationToken);
+
+            return result;
+        }
+
+        public async Task<AuthSessionResult?> RefreshCoreAsync(
+            string refreshToken,
+            string? ipAddress,
+            string? userAgent,
+            CancellationToken cancellationToken)
+        {
             var refreshTokenHash = _refreshTokenService.HashToken(refreshToken);
             var existingToken = await _refreshTokenRepository.GetByTokenHashAsync(
                 refreshTokenHash,
@@ -396,9 +421,15 @@ namespace CorporateStarter.Application.Common.Security
             var refreshTokenExpiresAtUtc = now.AddDays(
                 _refreshTokenOptions.LifetimeDays);
 
-            existingToken.RevokedAtUtc = now;
-            existingToken.RevokedByIp = ipAddress;
-            existingToken.ReplacedByTokenHash = newRefreshTokenHash;
+            var consumed = await _refreshTokenRepository.TryConsumeAsync(
+                refreshTokenHash,
+                newRefreshTokenHash,
+                now,
+                ipAddress,
+                cancellationToken);
+
+            if (!consumed)
+                return null;
 
             existingToken.AuthSession.LastSeenAtUtc = now;
             existingToken.AuthSession.CurrentJwtId = jwtToken.JwtId;
@@ -447,7 +478,7 @@ namespace CorporateStarter.Application.Common.Security
             };
         }
 
-        public async Task LogoutAsync(
+        public async Task LogoutCoreAsync(
                 string? refreshToken,
                 string? ipAddress,
                 CancellationToken cancellationToken)
@@ -490,7 +521,27 @@ namespace CorporateStarter.Application.Common.Security
             await _refreshTokenRepository.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task LogoutAllAsync(
+        public async Task LogoutAsync(
+                string? refreshToken,
+                string? ipAddress,
+                CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(refreshToken))
+                return;
+
+            await using var transaction =
+                await _authTransactionFactory.BeginSerializableAsync(
+                    cancellationToken);
+
+            await LogoutCoreAsync(
+                refreshToken,
+                ipAddress,
+                cancellationToken);
+
+            await transaction.CommitAsync(cancellationToken);
+        }
+
+        public async Task LogoutAllCoreAsync(
                 Guid userId,
                 string? ipAddress,
                 CancellationToken cancellationToken)
@@ -514,6 +565,23 @@ namespace CorporateStarter.Application.Common.Security
                 cancellationToken);
 
             await _refreshTokenRepository.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task LogoutAllAsync(
+                Guid userId,
+                string? ipAddress,
+                CancellationToken cancellationToken)
+        {
+            await using var transaction =
+                await _authTransactionFactory.BeginSerializableAsync(
+                    cancellationToken);
+
+            await LogoutAllCoreAsync(
+                userId,
+                ipAddress,
+                cancellationToken);
+
+            await transaction.CommitAsync(cancellationToken);
         }
 
         public async Task<UserProfileDto?> GetCurrentUserAsync(
@@ -622,7 +690,30 @@ namespace CorporateStarter.Application.Common.Security
             }
         }
 
-    private async Task RevokeAllSessionsForUserAsync(
+        public async Task<bool> RevokeSessionAsync(
+            Guid userId,
+            Guid authSessionId,
+            string? ipAddress,
+            string? userAgent,
+            CancellationToken cancellationToken)
+        {
+            await using var transaction =
+                await _authTransactionFactory.BeginSerializableAsync(
+                    cancellationToken);
+
+            var revoked = await RevokeSessionCoreAsync(
+                userId,
+                authSessionId,
+                ipAddress,
+                userAgent,
+                cancellationToken);
+
+            await transaction.CommitAsync(cancellationToken);
+
+            return revoked;
+        }
+
+        private async Task RevokeAllSessionsForUserAsync(
                 Guid userId,
                 string? ipAddress,
                 CancellationToken cancellationToken)
@@ -779,7 +870,7 @@ namespace CorporateStarter.Application.Common.Security
                 .ToList();
         }
 
-        public async Task<bool> RevokeSessionAsync(
+        public async Task<bool> RevokeSessionCoreAsync(
             Guid userId,
             Guid authSessionId,
             string? ipAddress,
