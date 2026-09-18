@@ -27,6 +27,7 @@ namespace CorporateStarter.Application.Common.Security
 
         private readonly ICorrelationIdProvider _correlationIdProvider;
         private readonly IAuthTransactionFactory _authTransactionFactory;
+        private readonly SessionIdlePolicy _idlePolicy;
 
         public AuthService(
             IUserAuthRepository userRepository,
@@ -41,7 +42,8 @@ namespace CorporateStarter.Application.Common.Security
             IMfaPolicyService mfaPolicyService,
             IMfaChallengeService mfaChallengeService,
             ICorrelationIdProvider correlationIdProvider,
-            IAuthTransactionFactory authTransactionFactory)
+            IAuthTransactionFactory authTransactionFactory,
+            SessionIdlePolicy idlePolicy)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
@@ -56,6 +58,7 @@ namespace CorporateStarter.Application.Common.Security
             _mfaPolicyService = mfaPolicyService;
             _mfaChallengeService = mfaChallengeService;
             _authTransactionFactory = authTransactionFactory;
+            _idlePolicy = idlePolicy;
         }
 
         public async Task<AuthLoginResult?> LoginAsync(
@@ -233,6 +236,7 @@ namespace CorporateStarter.Application.Common.Security
                 UserId = user.Id,
                 CreatedAtUtc = now,
                 LastSeenAtUtc = now,
+                LastUserActivityAtUtc = now,
                 CreatedByIp = ipAddress,
                 UserAgent = userAgent
             };
@@ -381,6 +385,10 @@ namespace CorporateStarter.Application.Common.Security
 
                 return null;
             }
+
+            if (_idlePolicy.IsExpired(
+                    existingToken.AuthSession.LastUserActivityAtUtc, DateTime.UtcNow))
+                return null;
 
             var profile = await GetCurrentUserAsync(existingToken.UserId, cancellationToken);
 

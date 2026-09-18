@@ -64,6 +64,17 @@ builder.Services.AddRateLimiter(options =>
             });
     });
 
+    options.AddPolicy("SessionActivity", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 6000,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            }));
+
     options.AddPolicy("AuthIp", context =>
     {
         var ip = RateLimitPartitionKeyHelper.GetClientIp(context);
@@ -185,18 +196,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.FromSeconds(15)
         };
 
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async context =>
+            {
+                var principal = context.Principal;
+                if (!Guid.TryParse(principal?.FindFirst("auth_session_id")?.Value, out var sid) ||
+                    !Guid.TryParse(principal?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value,
+                        out var uid) ||
+                    !await context.HttpContext.RequestServices.GetRequiredService<SessionIdleGuard>()
+                        .IsActiveAsync(sid, uid, context.HttpContext.RequestAborted))
+                    context.Fail("Session is no longer active.");
+            }
+        };
+
         if (builder.Environment.IsEnvironment("Testing"))
         {
-            options.Events = new JwtBearerEvents
+            options.Events.OnAuthenticationFailed = context =>
             {
-                OnAuthenticationFailed = context =>
-                {
-                    context.Response.Headers.Append(
-                        "X-Test-Auth-Failed",
-                        context.Exception.GetType().Name + ": " + context.Exception.Message);
+                context.Response.Headers.Append(
+                    "X-Test-Auth-Failed",
+                    context.Exception.GetType().Name + ": " + context.Exception.Message);
 
-                    return Task.CompletedTask;
-                }
+                return Task.CompletedTask;
             };
         }
 
@@ -244,6 +266,17 @@ builder.Services.AddScoped<IUserReadRepository, UserReadRepository>();
 builder.Services.AddScoped<IUserWriteRepository, UserWriteRepository>();
 builder.Services.AddScoped<IPermissionReadRepository, PermissionReadRepository>();
 builder.Services.AddScoped<ISecurityEventRepository, SecurityEventRepository>();
+builder.Services.AddOptions<SessionIdleOptions>()
+    .Bind(builder.Configuration.GetSection(SessionIdleOptions.SectionName))
+    .Validate(options => options.IsValid(),
+        "SessionIdle:TimeoutMinutes must be between 1 and 1440.")
+    .ValidateOnStart();
+
+builder.Services.AddSingleton(services => new SessionIdlePolicy(
+    services.GetRequiredService<IOptions<SessionIdleOptions>>().Value));
+
+builder.Services.AddScoped<SessionIdleGuard>();
+
 builder.Services.AddScoped<AuthOperationExecutor>();
 builder.Services.AddScoped<AuthOperationContentionFilter>();
 

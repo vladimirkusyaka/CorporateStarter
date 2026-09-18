@@ -14,6 +14,8 @@ namespace CorporateStarter.Core.Entities.Security
 
         public DateTime LastSeenAtUtc { get; set; }
 
+        public DateTime LastUserActivityAtUtc { get; set; }
+
         public DateTime? RevokedAtUtc { get; set; }
 
         public string? RevokedByIp { get; set; }

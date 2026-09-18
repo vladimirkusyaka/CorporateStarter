@@ -15,6 +15,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddMudServices();
 builder.Services.AddScoped<BrowserCapabilityProbe>();
 builder.Services.AddScoped<BrowserLoginTransport>();
+builder.Services.AddTransient<BrowserIdleMonitor>();
 
 builder.Services.AddScoped<IClientLoginTransport>(services =>
     services.GetRequiredService<BrowserLoginTransport>());

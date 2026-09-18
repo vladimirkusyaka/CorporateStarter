@@ -52,6 +52,7 @@ public sealed class CorporateStarterApiFactory : WebApplicationFactory<Program>,
                 ["Jwt:Issuer"] = "CorporateStarter",
                 ["Jwt:Audience"] = "CorporateStarter.Web",
                 ["Jwt:ExpirationMinutes"] = "5",
+                ["SessionIdle:TimeoutMinutes"] = "30",
                 ["Jwt:Secret"] = "LEGACY_TEST_SECRET_32_BYTES_MINIMUM",
 
                 ["JwtSigningKeys:ActiveKeyId"] = "test-2026-08",

@@ -7,13 +7,16 @@ using MudBlazor;
 
 namespace CorporateStarter.Web.Components.Layout
 {
-    public partial class MainLayout : IDisposable
+    public partial class MainLayout : IAsyncDisposable
     {
         [Inject]
         private IClientAuthState AuthState { get; set; } = default!;
 
         [Inject]
         private ClientSessionCoordinator Session { get; set; } = default!;
+
+        [Inject]
+        private CorporateStarter.Client.Browser.Auth.BrowserIdleMonitor IdleMonitor { get; set; } = default!;
 
         protected const string PageTitle = "CorporateStarter";
         protected const string BuildVersion = "DEV 1.0.0.0";
@@ -86,6 +89,9 @@ namespace CorporateStarter.Web.Components.Layout
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            if (firstRender)
+                await IdleMonitor.StartAsync(() => InvokeAsync(RestoreSessionAsync));
+
             if (firstRender &&
                 _snapshot.Status == ClientAuthStatus.Initializing)
             {
@@ -264,7 +270,7 @@ namespace CorporateStarter.Web.Components.Layout
                 ? SignOutAsync()
                 : RestoreSessionAsync();
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
             if (_disposed)
                 return;
@@ -275,6 +281,7 @@ namespace CorporateStarter.Web.Components.Layout
             Password = string.Empty;
             _lifetime.Cancel();
             _lifetime.Dispose();
+            await IdleMonitor.DisposeAsync();
         }
     }
 }

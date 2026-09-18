@@ -1,4 +1,5 @@
-﻿using CorporateStarter.Application.Common.Interfaces.Repositories.Auth;
+﻿using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Application.Common.Interfaces.Repositories.Auth;
 using CorporateStarter.Core.Entities.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -9,10 +10,12 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Auth
     public sealed class RefreshTokenRepository : IRefreshTokenRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly SessionIdlePolicy _idlePolicy;
 
-        public RefreshTokenRepository(AppDbContext dbContext)
+        public RefreshTokenRepository(AppDbContext dbContext, SessionIdlePolicy idlePolicy)
         {
             _dbContext = dbContext;
+            _idlePolicy = idlePolicy;
         }
 
         public async Task AddAuthSessionAsync(
@@ -56,11 +59,13 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Auth
                         Guid userId,
                         CancellationToken cancellationToken)
         {
+            var cutoff = DateTime.UtcNow - _idlePolicy.Timeout;
             return await _dbContext.AuthSessions
                 .Include(x => x.RefreshTokenFamilies)
                 .Where(x =>
                     x.UserId == userId &&
-                    x.RevokedAtUtc == null)
+                    x.RevokedAtUtc == null &&
+                    x.LastUserActivityAtUtc > cutoff)
                 .OrderByDescending(x => x.LastSeenAtUtc)
                 .ToListAsync(cancellationToken);
         }
