@@ -330,15 +330,31 @@ async function checkIdleSession(lease) {
                 return;
             }
             const payload = await response.json();
-            if (payload?.userId?.toLowerCase() !== userId.toLowerCase() ||
-                !Number.isFinite(payload.remainingMilliseconds) ||
-                payload.remainingMilliseconds <= 0) {
+            const remaining = payload?.remainingMilliseconds;
+
+            const validUser =
+                typeof payload?.userId === "string" &&
+                payload.userId.toLowerCase() === userId.toLowerCase();
+
+            const idleDisabled = remaining === null;
+
+            const validRemaining =
+                idleDisabled ||
+                (Number.isFinite(remaining) && remaining > 0);
+
+            if (!validUser || !validRemaining) {
                 revalidate = true;
                 return;
             }
+
             idlePendingActivity = Math.max(0, idlePendingActivity - activity);
             idleLastReport = started;
-            idleNextCheck = started + Math.min(idleReportInterval, payload.remainingMilliseconds);
+
+            const nextCheckDelay = idleDisabled
+                ? idleReportInterval
+                : Math.min(idleReportInterval, remaining);
+
+            idleNextCheck = started + nextCheckDelay;
             // Rotation keeps an active session alive, but never updates user activity.
             if (accessTokenExpiresAt <= Date.now() + 30_000)
                 revalidate = true;

@@ -27,7 +27,6 @@ public sealed class SessionIdleOptionsTests
 
     [Theory]
     [InlineData(-1)]
-    [InlineData(0)]
     [InlineData(1441)]
     public void InvalidConfiguration_FailsStartup(int minutes)
     {
@@ -45,6 +44,21 @@ public sealed class SessionIdleOptionsTests
             provider.GetRequiredService<SessionIdlePolicy>().Timeout);
     }
 
+    [Fact]
+    public void Zero_DisablesIdleTimeout()
+    {
+        using var provider = Build(0);
+
+        provider.GetRequiredService<IStartupValidator>().Validate();
+
+        var policy = provider.GetRequiredService<SessionIdlePolicy>();
+        var now = DateTime.UtcNow;
+
+        Assert.False(policy.IsEnabled);
+        Assert.Equal(TimeSpan.Zero, policy.Timeout);
+        Assert.False(policy.IsExpired(now.AddYears(-1), now));
+    }
+
     private static ServiceProvider Build(int? minutes)
     {
         var settings = new Dictionary<string, string?>();
@@ -54,7 +68,7 @@ public sealed class SessionIdleOptionsTests
         services.AddOptions<SessionIdleOptions>()
             .Bind(configuration.GetSection(SessionIdleOptions.SectionName))
             .Validate(options => options.IsValid(),
-                "SessionIdle:TimeoutMinutes must be between 1 and 1440.")
+                "SessionIdle:TimeoutMinutes must be between 0 and 1440.")
             .ValidateOnStart();
         services.AddSingleton(sp => new SessionIdlePolicy(
             sp.GetRequiredService<IOptions<SessionIdleOptions>>().Value));

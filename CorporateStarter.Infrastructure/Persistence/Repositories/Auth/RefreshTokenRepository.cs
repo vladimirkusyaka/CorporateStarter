@@ -56,16 +56,24 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Auth
         }
 
         public async Task<IReadOnlyList<AuthSession>> GetActiveSessionsByUserIdAsync(
-                        Guid userId,
-                        CancellationToken cancellationToken)
+            Guid userId,
+            CancellationToken cancellationToken)
         {
-            var cutoff = DateTime.UtcNow - _idlePolicy.Timeout;
-            return await _dbContext.AuthSessions
+            var sessions = _dbContext.AuthSessions
                 .Include(x => x.RefreshTokenFamilies)
                 .Where(x =>
                     x.UserId == userId &&
-                    x.RevokedAtUtc == null &&
-                    x.LastUserActivityAtUtc > cutoff)
+                    x.RevokedAtUtc == null);
+
+            if (_idlePolicy.IsEnabled)
+            {
+                var cutoff = DateTime.UtcNow - _idlePolicy.Timeout;
+
+                sessions = sessions.Where(x =>
+                    x.LastUserActivityAtUtc > cutoff);
+            }
+
+            return await sessions
                 .OrderByDescending(x => x.LastSeenAtUtc)
                 .ToListAsync(cancellationToken);
         }
