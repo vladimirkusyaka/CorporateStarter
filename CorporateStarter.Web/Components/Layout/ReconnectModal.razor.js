@@ -1,6 +1,54 @@
 // Set up event handlers
 const reconnectModal = document.getElementById("components-reconnect-modal");
 reconnectModal.addEventListener("components-reconnect-state-changed", handleReconnectStateChanged);
+reconnectModal.addEventListener("cancel", event => event.preventDefault());
+
+let needsSessionCheck = false;
+let interruptedStamp = null;
+let sessionObserver = null;
+
+function beginReconnect() {
+    needsSessionCheck = true;
+    interruptedStamp = document.getElementById("cs-connection-state")
+        ?.getAttribute("data-connection-stamp") ?? null;
+    sessionObserver?.disconnect();
+    sessionObserver = null;
+    reconnectModal.removeAttribute("data-session-checking");
+}
+
+function finishWhenSessionChecked() {
+    const marker = document.getElementById("cs-connection-state");
+    const stamp = marker?.getAttribute("data-connection-stamp");
+    if (!stamp || stamp === interruptedStamp ||
+        marker.getAttribute("data-connection-ready") !== "true")
+        return;
+
+    sessionObserver?.disconnect();
+    sessionObserver = null;
+    needsSessionCheck = false;
+    reconnectModal.removeAttribute("data-session-checking");
+    reconnectModal.close();
+}
+
+function waitForSessionCheck() {
+    if (!needsSessionCheck) {
+        reconnectModal.close();
+        return;
+    }
+
+    reconnectModal.setAttribute("data-session-checking", "");
+    if (!reconnectModal.open)
+        reconnectModal.showModal();
+
+    sessionObserver ??= new MutationObserver(finishWhenSessionChecked);
+    sessionObserver.observe(document.body, {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        attributeFilter: ["data-connection-stamp", "data-connection-ready"]
+    });
+    finishWhenSessionChecked();
+}
 
 const retryButton = document.getElementById("components-reconnect-button");
 retryButton.addEventListener("click", retry);
@@ -10,9 +58,10 @@ resumeButton.addEventListener("click", resume);
 
 function handleReconnectStateChanged(event) {
     if (event.detail.state === "show") {
+        beginReconnect();
         reconnectModal.showModal();
     } else if (event.detail.state === "hide") {
-        reconnectModal.close();
+        waitForSessionCheck();
     } else if (event.detail.state === "failed") {
         document.addEventListener("visibilitychange", retryWhenDocumentBecomesVisible);
     } else if (event.detail.state === "rejected") {
@@ -21,6 +70,8 @@ function handleReconnectStateChanged(event) {
 }
 
 async function retry() {
+    if (!needsSessionCheck)
+        beginReconnect();
     document.removeEventListener("visibilitychange", retryWhenDocumentBecomesVisible);
 
     try {
@@ -36,8 +87,10 @@ async function retry() {
             if (!resumeSuccessful) {
                 location.reload();
             } else {
-                reconnectModal.close();
+                waitForSessionCheck();
             }
+        } else {
+            waitForSessionCheck();
         }
     } catch (err) {
         // We got an exception, server is currently unavailable
@@ -46,10 +99,14 @@ async function retry() {
 }
 
 async function resume() {
+    if (!needsSessionCheck)
+        beginReconnect();
     try {
         const successful = await Blazor.resumeCircuit();
         if (!successful) {
             location.reload();
+        } else {
+            waitForSessionCheck();
         }
     } catch {
         reconnectModal.classList.replace("components-reconnect-paused", "components-reconnect-resume-failed");

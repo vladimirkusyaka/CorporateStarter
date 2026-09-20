@@ -6,6 +6,8 @@ using CorporateStarter.Client.Browser.Auth;
 using MudBlazor.Services;
 using CorporateStarter.Client.Abstractions.Auth;
 using CorporateStarter.Client.Core.Auth;
+using CorporateStarter.Web.Services.Auth;
+using Microsoft.AspNetCore.Components.Server.Circuits;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +52,12 @@ builder.Services
 
 builder.Services.AddScoped<IClientLogoutTransport>(services =>
     services.GetRequiredService<BrowserLoginTransport>());
+builder.Services.AddTransient<BrowserSessionMonitor>();
+
+builder.Services.AddScoped<CircuitConnectionMonitor>();
+
+builder.Services.AddScoped<CircuitHandler>(services =>
+    services.GetRequiredService<CircuitConnectionMonitor>());
 
 var app = builder.Build();
 

@@ -18,6 +18,24 @@ function result(status, id = null) {
     return { status, userId: id };
 }
 
+async function notifySessionChanged() {
+    let channel;
+
+    try {
+        const { createSessionChannel } =
+            await import("./session-channel.js");
+
+        channel = createSessionChannel(() => { });
+        channel.notifyChanged();
+    }
+    catch {
+        console.warn("Session change notification could not be sent.");
+    }
+    finally {
+        channel?.dispose();
+    }
+}
+
 export async function login(loginName, password) {
     if (globalThis.isSecureContext !== true ||
         typeof globalThis.navigator?.locks?.request !== "function") {
@@ -66,7 +84,12 @@ export async function login(loginName, password) {
             if (response.status !== 200)
                 return result("unavailable");
 
-            return acceptSession(await response.json());
+            const loginResult = acceptSession(await response.json());
+
+            if (loginResult.status === "authenticated")
+                await notifySessionChanged();
+
+            return loginResult;
         });
     }
     catch {
@@ -219,9 +242,12 @@ export async function logout() {
                 }
             });
 
-            return result(response.status === 204
-                ? "signed_out"
-                : "unavailable");
+            if (response.status !== 204)
+                return result("unavailable");
+
+            await notifySessionChanged();
+
+            return result("signed_out");
         });
     }
     catch {

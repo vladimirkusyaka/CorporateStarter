@@ -13,6 +13,20 @@ namespace CorporateStarter.Client.Core.Auth
             Guid? userId,
             ClientSessionInvalidationReason? reason)
         {
+            if (reason == ClientSessionInvalidationReason.ExternalSessionChanged)
+            {
+                if (next != ClientAuthStatus.Revalidating || userId is not null)
+                    throw new InvalidOperationException(
+                        "An external session change requires verification without a previous identity.");
+
+                return;
+            }
+
+            if (next == ClientAuthStatus.Unavailable && reason is null && userId == current.UserId)
+            {
+                return;
+            }
+
             var allowed = current.Status switch
             {
                 ClientAuthStatus.Initializing => next is
@@ -24,6 +38,7 @@ namespace CorporateStarter.Client.Core.Auth
                 ClientAuthStatus.Authenticated => next is
                     ClientAuthStatus.Revalidating or ClientAuthStatus.Anonymous,
                 ClientAuthStatus.Revalidating => next is
+                    ClientAuthStatus.Revalidating or
                     ClientAuthStatus.Authenticated or ClientAuthStatus.Anonymous or
                     ClientAuthStatus.Unavailable or ClientAuthStatus.UnsupportedEnvironment,
                 ClientAuthStatus.Unavailable => next is

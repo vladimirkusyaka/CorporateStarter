@@ -8,6 +8,7 @@ namespace CorporateStarter.Client.Abstractions.Auth
     {
         SignedOut = 1,
         SessionRejected = 2,
-        IdentityChanged = 3
+        IdentityChanged = 3,
+        ExternalSessionChanged = 4
     }
 }

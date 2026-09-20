@@ -122,6 +122,20 @@
             animation-delay: -0.5s;
         }
 
+.cs-session-check-visible {
+    display: none;
+}
+
+#components-reconnect-modal[data-session-checking]
+.components-reconnect-container > * {
+    display: none;
+}
+
+#components-reconnect-modal[data-session-checking]
+.cs-session-check-visible {
+    display: block;
+}
+
 @keyframes components-rejoining-animation {
     0% {
         top: 40px;

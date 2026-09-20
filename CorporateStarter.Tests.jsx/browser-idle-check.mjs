@@ -21,7 +21,24 @@ const context=vm.createContext({
   return {status:nextStatus,json:async()=>({userId:uid,remainingMilliseconds})};
  }
 });
-const module=new vm.SourceTextModule(source,{context});await module.link(()=>{});await module.evaluate();
+
+const module = new vm.SourceTextModule(source, {
+    context,
+
+    importModuleDynamically(specifier) {
+        if (specifier !== "./session-channel.js")
+            throw new Error(`Unexpected test import: ${specifier}`);
+
+        return import(new URL(
+            "../CorporateStarter.Client.Browser/wwwroot/auth/session-channel.js",
+            import.meta.url
+        ));
+    }
+});
+
+await module.link(() => {});
+await module.evaluate();
+
 const api=module.namespace;
 await api.login('user','password');calls=[];
 const lease=api.startIdleMonitor({invokeMethodAsync:async()=>{notifications++;}});

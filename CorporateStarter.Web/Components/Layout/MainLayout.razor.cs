@@ -17,6 +17,9 @@ namespace CorporateStarter.Web.Components.Layout
 
         [Inject]
         private CorporateStarter.Client.Browser.Auth.BrowserIdleMonitor IdleMonitor { get; set; } = default!;
+        [Inject]
+        private CorporateStarter.Client.Browser.Auth.BrowserSessionMonitor SessionMonitor { get; set; } = default!;
+
 
         protected const string PageTitle = "CorporateStarter";
         protected const string BuildVersion = "DEV 1.0.0.0";
@@ -24,9 +27,11 @@ namespace CorporateStarter.Web.Components.Layout
         protected bool DrawerOpen { get; set; } = true;
 
         protected bool IsAuthenticated =>
+            IsConnectionReady &&
             _snapshot.Status == ClientAuthStatus.Authenticated;
 
         protected bool ShowLogin =>
+            IsConnectionReady &&
             !Session.IsLogoutPending &&
             (_snapshot.Status == ClientAuthStatus.Anonymous ||
             (IsSigningIn &&
@@ -77,6 +82,7 @@ namespace CorporateStarter.Web.Components.Layout
 
         protected override void OnInitialized()
         {
+            InitializeConnectionMonitoring();
             AuthState.StateChanged += OnAuthStateChanged;
             ApplyCurrentState();
         }
@@ -90,9 +96,25 @@ namespace CorporateStarter.Web.Components.Layout
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
-                await IdleMonitor.StartAsync(() => InvokeAsync(RestoreSessionAsync));
+            {
+                await SessionMonitor.StartAsync(
+                    () => InvokeAsync(HandleExternalSessionChangeAsync));
 
-            if (firstRender &&
+                if (_disposed)
+                    return;
+
+                await IdleMonitor.StartAsync(
+                    () => InvokeAsync(RestoreSessionAsync));
+
+                if (_disposed)
+                    return;
+
+                _browserReady = true;
+                if (!IsConnectionReady && Connection.Current.IsConnected)
+                    await RevalidateConnectionAsync(Connection.Current.Revision);
+            }
+
+            if (!_disposed && firstRender &&
                 _snapshot.Status == ClientAuthStatus.Initializing)
             {
                 await RestoreSessionAsync();
@@ -158,7 +180,7 @@ namespace CorporateStarter.Web.Components.Layout
 
         protected async Task RestoreSessionAsync()
         {
-            if (_disposed || _restoreInProgress || IsSigningIn)
+            if (_disposed || !IsConnectionReady || _restoreInProgress || IsSigningIn)
                 return;
 
             _restoreInProgress = true;
@@ -185,7 +207,7 @@ namespace CorporateStarter.Web.Components.Layout
 
         protected async Task SignInAsync()
         {
-            if (_disposed || IsSigningIn ||
+            if (_disposed || !IsConnectionReady || IsSigningIn ||
                 AuthState.Current.Status != ClientAuthStatus.Anonymous)
             {
                 return;
@@ -241,7 +263,7 @@ namespace CorporateStarter.Web.Components.Layout
 
         protected async Task SignOutAsync()
         {
-            if (_disposed || _signingOut ||
+            if (_disposed || !IsConnectionReady || _signingOut ||
                 _restoreInProgress || IsSigningIn)
             {
                 return;
@@ -276,12 +298,52 @@ namespace CorporateStarter.Web.Components.Layout
                 return;
 
             _disposed = true;
+            Connection.Changed -= OnConnectionChanged;
             AuthState.StateChanged -= OnAuthStateChanged;
             _authorizedBody = null;
             Password = string.Empty;
             _lifetime.Cancel();
-            _lifetime.Dispose();
-            await IdleMonitor.DisposeAsync();
+
+            try
+            {
+                await SessionMonitor.DisposeAsync();
+            }
+            finally
+            {
+                try
+                {
+                    await IdleMonitor.DisposeAsync();
+                }
+                finally
+                {
+                    _lifetime.Dispose();
+                }
+            }
+        }
+
+        private async Task HandleExternalSessionChangeAsync()
+        {
+            if (_disposed)
+                return;
+
+            var cancellationToken = _lifetime.Token;
+
+            try
+            {
+                await Session.HandleSessionChangedAsync(cancellationToken);
+            }
+            catch (OperationCanceledException)
+                when (cancellationToken.IsCancellationRequested)
+            {
+            }
+            finally
+            {
+                if (!_disposed)
+                {
+                    ApplyCurrentState();
+                    StateHasChanged();
+                }
+            }
         }
     }
 }

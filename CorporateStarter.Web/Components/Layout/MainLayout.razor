@@ -7,6 +7,10 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
+<span id="cs-connection-state" hidden
+      data-connection-stamp="@ConnectionStamp"
+      data-connection-ready="@(CanDismissReconnect ? "true" : "false")"></span>
+
 <MudLayout Class="cs-shell">
     <MudAppBar Elevation="0" Dense="true" Class="cs-topbar">
         <MudTooltip Text="Applications">
@@ -58,8 +62,8 @@
                      TransformOrigin="Origin.TopRight"
                      Dense="true"
                      AriaLabel="User menu">
-                
 
+                
                 <ChildContent>
                     <MudMenuItem Icon="@Icons.Material.Filled.Person">Profile</MudMenuItem>
                     <MudMenuItem Icon="@Icons.Material.Filled.Settings">Preferences</MudMenuItem>
@@ -224,7 +228,7 @@
                         </p>
 
                         <MudButton OnClick="RetrySessionAsync"
-                                   Disabled="@(_restoreInProgress || _signingOut)">
+                                   Disabled="@(!IsConnectionReady || _restoreInProgress || _signingOut)">
                             Retry
                         </MudButton>
                     }
