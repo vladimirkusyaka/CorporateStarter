@@ -1,0 +1,337 @@
+﻿.countries-page {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    gap: 16px;
+}
+
+.countries-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+    .countries-heading h1 {
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 1.3;
+        margin: 0;
+        color: #1e293b;
+    }
+
+.countries-category {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.countries-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+    .countries-toolbar ::deep .countries-refresh {
+        width: 38px;
+        height: 38px;
+        border-radius: 6px;
+        border-width: 1.5px;
+    }
+
+.countries-search {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 14.5px;
+    color: #64748b;
+}
+
+    .countries-search input {
+        height: 38px;
+        width: 230px;
+        max-width: 100%;
+        padding: 0 12px;
+        border: 1.5px solid rgba(30,41,59,.22);
+        border-radius: 6px;
+        background: white;
+        color: #1e293b;
+        font: inherit;
+    }
+
+        .countries-search input:focus-visible {
+            outline: 2px solid #2883ee;
+            outline-offset: 2px;
+        }
+
+.countries-table, .countries-feedback {
+    flex: 1;
+    min-height: 0;
+    background: white;
+    border: 1px solid #e4e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.countries-table {
+    display: flex;
+    flex-direction: column;
+}
+
+    .countries-table ::deep .mud-table {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        border-radius: 0;
+    }
+
+    .countries-table ::deep .mud-table-container {
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
+    }
+
+    .countries-table ::deep .mud-table-pagination {
+        flex-shrink: 0;
+        border-top: 1px solid #e4e7eb;
+    }
+
+    .countries-table ::deep .mud-table-head .mud-table-cell {
+        background: #2883ee;
+        color: white;
+        font-weight: 500;
+        padding: 11px 16px;
+    }
+
+    .countries-table ::deep .mud-table-sort-label, .countries-table ::deep .mud-table-sort-label .mud-icon-root {
+        color: inherit;
+    }
+
+    .countries-table ::deep .mud-table-body .mud-table-cell {
+        padding: 9px 16px;
+        font-size: 14.5px;
+        border-bottom-color: #e4e7eb;
+    }
+
+    .countries-table ::deep .mud-table-body .mud-table-row:hover {
+        background: rgba(40,131,238,.08);
+    }
+
+    .countries-table ::deep .mud-table-pagination-toolbar {
+        font-size: 13px;
+        min-height: 48px;
+    }
+
+.country-code {
+    font-weight: 600;
+}
+
+.country-active {
+    color: #2883ee;
+}
+
+.country-inactive {
+    color: #64748b;
+}
+
+.countries-feedback {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+    color: #64748b;
+    overflow: auto;
+    text-align: center;
+}
+
+    .countries-feedback p {
+        margin: 0;
+        max-width: 480px;
+    }
+
+.countries-loading {
+    justify-content: flex-start;
+    align-items: stretch;
+    text-align: left;
+}
+
+@media (max-width: 599px) {
+    .countries-category {
+        display: none;
+    }
+
+    .countries-search {
+        min-width: 0;
+    }
+
+        .countries-search span {
+            display: none;
+        }
+
+        .countries-search input {
+            width: 200px;
+        }
+
+    .countries-table ::deep .mud-table-pagination-toolbar {
+        padding: 4px;
+        flex-wrap: wrap;
+    }
+}
+
+.countries-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.countries-table ::deep .mud-table-body .mud-table-row.country-row-selected,
+.countries-table ::deep .mud-table-body .mud-table-row.country-row-selected:hover {
+    background-color: rgba(40, 131, 238, .14);
+}
+
+.countries-table ::deep .mud-table-body .mud-table-row {
+    cursor: pointer;
+    user-select: none;
+}
+
+.country-row-select {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .country-row-select:focus-visible {
+        outline: 2px solid #2883ee;
+        outline-offset: 3px;
+    }
+
+.country-column-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.country-sort, .country-filter {
+    border: 0;
+    color: inherit;
+    background: transparent;
+    cursor: pointer;
+}
+
+.country-sort {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    padding: 0;
+    text-align: left;
+    font: inherit;
+}
+
+.country-filter {
+    display: flex;
+    padding: 4px;
+    opacity: .8;
+    border-radius: 3px;
+}
+
+    .country-filter:hover {
+        opacity: 1;
+    }
+
+    .country-filter.is-active {
+        opacity: 1;
+        background: rgba(255,255,255,.25);
+        outline: 1px solid white;
+    }
+
+    .country-filter svg {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+    }
+
+    .country-sort:focus-visible, .country-filter:focus-visible {
+        outline: 2px solid white;
+        outline-offset: 3px;
+    }
+
+.countries-query-status {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+    .countries-query-status button {
+        color: #1769c2;
+        cursor: pointer;
+        background: none;
+        border: 0;
+        text-decoration: underline;
+    }
+
+@media (max-width: 700px) {
+    .countries-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .countries-search {
+        flex: 1;
+    }
+
+        .countries-search input {
+            flex: 1;
+            min-width: 80px;
+        }
+}
+
+/* Title and arrow stay together on the left; filter is anchored at the right edge. */
+.country-column-header {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.country-sort {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.country-filter {
+    flex: 0 0 auto;
+    margin-left: auto;
+}
+
+.country-server-pager {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+}
+
+    .country-server-pager button, .country-server-pager select {
+        padding: 5px 8px;
+        border: 1px solid #cbd5e1;
+        background: white;
+        border-radius: 4px;
+    }
+
+        .country-server-pager button:disabled {
+            opacity: .45;
+        }

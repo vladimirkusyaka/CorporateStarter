@@ -50,6 +50,8 @@ namespace CorporateStarter.Web.Components.Layout
 
         protected int UnreadNotifications { get; set; } = 1;
 
+        protected bool AppSwitcherVisible => false;
+
         private ClientAuthSnapshot _snapshot = ClientAuthSnapshot.Initial;
         private readonly CancellationTokenSource _lifetime = new();
         private MudTextField<string>? _usernameField;
@@ -61,22 +63,27 @@ namespace CorporateStarter.Web.Components.Layout
 
         protected MudTheme AppTheme { get; } = new()
         {
+            Typography = new Typography
+            {
+                Default = new DefaultTypography { FontFamily = ["Inter", "Segoe UI", "Roboto", "sans-serif"] }
+            },
             PaletteLight = new PaletteLight
             {
-                Primary = "#0d6efd",
-                Secondary = "#6b7280",
+                Primary = "#2883EE",
+                Secondary = "#64748B",
                 AppbarBackground = "#ffffff",
-                AppbarText = "#111827",
+                AppbarText = "#1E293B",
                 DrawerBackground = "#ffffff",
                 Background = "#f4f5f7",
                 Surface = "#ffffff",
-                TextPrimary = "#111827",
-                TextSecondary = "#6b7280",
-                Divider = "#d7dde5"
+                TextPrimary = "#1E293B",
+                TextSecondary = "#64748B",
+                Divider = "#E4E7EB"
             },
             LayoutProperties = new LayoutProperties
             {
-                DefaultBorderRadius = "5px"
+                DefaultBorderRadius = "6px",
+                AppbarHeight = "58px"
             }
         };
 
@@ -176,6 +183,8 @@ namespace CorporateStarter.Web.Components.Layout
                 _authorizedBody = Body;
             else if (_snapshot.UserId is null)
                 _authorizedBody = null;
+
+            UpdateSessionFeedback();
         }
 
         protected async Task RestoreSessionAsync()
@@ -298,6 +307,7 @@ namespace CorporateStarter.Web.Components.Layout
                 return;
 
             _disposed = true;
+            CancelSessionFeedback();
             Connection.Changed -= OnConnectionChanged;
             AuthState.StateChanged -= OnAuthStateChanged;
             _authorizedBody = null;

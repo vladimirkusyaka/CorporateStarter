@@ -286,6 +286,9 @@ builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<CorporateStarter.Application.Common.Security.ICountryAccess, CorporateStarter.Api.Security.CountryAccess>();
+builder.Services.AddScoped<CorporateStarter.Application.Common.Interfaces.Repositories.MasterData.Countries.ICountryTableRepository,
+    CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Countries.CountryTableRepository>();
 builder.Services.AddScoped<ICorrelationIdProvider, CorrelationIdProvider>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();

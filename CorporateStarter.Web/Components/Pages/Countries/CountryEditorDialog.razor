@@ -1,0 +1,72 @@
+﻿@using MudBlazor
+
+<MudDialog Class="cs-country-create-panel">
+    <TitleContent>
+        <div class="country-create-heading">
+            <MudText Typo="Typo.h6">@(IsEditing ? "Edit country" : "Add country")</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Close" OnClick="CloseAsync"
+                           Disabled="@_saving" Size="Size.Small" aria-label="Close country editor" />
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <div class="country-create-fields">
+            @if (_loadingDetails)
+            {
+                <MudProgressLinear Indeterminate="true" Color="Color.Primary" aria-label="Loading country" />
+            }
+            <MudForm @ref="_form">
+                <label class="country-field-label" for="country-create-code">Code</label>
+                <MudTextField @bind-Value="_model.Code" InputId="country-create-code" MaxLength="2" aria-required="true" Variant="Variant.Outlined"
+                              Margin="Margin.Dense" Immediate="true" Disabled="@Blocked"
+                              Validation="@(new Func<string, string?>(ValidateCode))" />
+                <label class="country-field-label" for="country-create-name">Name</label>
+                <MudTextField @bind-Value="_model.Name" InputId="country-create-name" aria-required="true" Variant="Variant.Outlined"
+                              Margin="Margin.Dense" Immediate="true" Disabled="@Blocked"
+                              Validation="@(new Func<string, string?>(Required))" />
+                <label class="country-field-label" for="country-create-native-name">Native name</label>
+                <MudTextField @bind-Value="_model.NativeName" InputId="country-create-native-name" Variant="Variant.Outlined"
+                              Margin="Margin.Dense" Immediate="true" Disabled="@Blocked" />
+                <label class="country-field-label" for="country-create-phone-code">Phone code</label>
+                <MudTextField @bind-Value="_model.PhoneCode" InputId="country-create-phone-code" Variant="Variant.Outlined"
+                              Margin="Margin.Dense" Immediate="true" Disabled="@Blocked" />
+                @if (IsEditing && CanChangeActive)
+                {
+                    <MudSwitch @bind-Value="ActiveValue" Color="Color.Primary" Disabled="@Blocked" Label="Active" />
+                }
+            </MudForm>
+            @if (_error is not null)
+            {
+                <MudAlert Severity="Severity.Error" role="alert">@_error</MudAlert>
+            }
+            @if (!_loaded && !_loadingDetails && _sessionReady)
+            {
+                <MudButton OnClick="LoadDetailsAsync" Color="Color.Primary">Retry loading</MudButton>
+            }
+            @if (!_sessionReady)
+            {
+                <MudAlert Severity="Severity.Info" role="status">Waiting for session verification…</MudAlert>
+            }
+            @if (_confirmDiscard)
+            {
+                <div class="country-discard" role="alert">
+                    <p>Discard unsaved changes?</p>
+                    <MudButton OnClick="KeepEditing">Keep editing</MudButton>
+                    <MudButton Color="Color.Error" OnClick="Discard">Discard</MudButton>
+                </div>
+            }
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="CloseAsync" Disabled="@_saving">
+            @(_uncertain ? "Close and check list" : "Cancel")
+        </MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="SaveAsync"
+                   Disabled="@(Blocked || _confirmDiscard)">
+            @if (_saving)
+            {
+                <MudProgressCircular Indeterminate="true" Size="Size.Small" Class="mr-2" />
+            }
+            Save
+        </MudButton>
+    </DialogActions>
+</MudDialog>

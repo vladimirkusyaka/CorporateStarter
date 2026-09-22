@@ -11,10 +11,11 @@ using CorporateStarter.Shared.Dtos.MasterData.Countries;
 namespace CorporateStarter.Api.Controllers.MasterData;
 
 [ApiController]
+[CountryRequestErrors]
 [Authorize]
 [Route("api/[controller]")]
 [Produces("application/json")]
-public sealed class CountriesController : ControllerBase
+public sealed partial class CountriesController : ControllerBase
 {
     private readonly IMediator _mediator;
 

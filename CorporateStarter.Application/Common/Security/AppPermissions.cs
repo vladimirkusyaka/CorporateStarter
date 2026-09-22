@@ -21,6 +21,8 @@ namespace CorporateStarter.Application.Common.Security
         public const string CountriesRead = "countries.read";
         public const string CountriesCreate = "countries.create";
         public const string CountriesUpdate = "countries.update";
+        public const string CountriesViewInactive = "countries.view_inactive";
+        public const string CountriesRestore = "countries.restore";
         public const string CountriesDelete = "countries.delete";
 
         public const string CitiesRead = "cities.read";
@@ -64,6 +66,8 @@ namespace CorporateStarter.Application.Common.Security
         new(CountriesRead, "Read countries", "Countries"),
         new(CountriesCreate, "Create countries", "Countries"),
         new(CountriesUpdate, "Update countries", "Countries"),
+        new(CountriesViewInactive, "View inactive countries", "Countries"),
+        new(CountriesRestore, "Restore countries", "Countries"),
         new(CountriesDelete, "Delete countries", "Countries"),
 
         new(CitiesRead, "Read cities", "Cities"),

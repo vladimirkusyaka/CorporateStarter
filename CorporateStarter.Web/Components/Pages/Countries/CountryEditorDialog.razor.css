@@ -1,0 +1,41 @@
+﻿.country-create-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.country-create-note {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.country-create-fields ::deep .mud-input-control {
+    margin-bottom: 16px;
+}
+
+.country-discard {
+    padding: 16px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 6px;
+}
+
+    .country-discard p {
+        margin: 0 0 8px;
+    }
+
+.country-create-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.country-field-label {
+    display: block;
+    margin: 0 0 6px;
+    color: #1e293b;
+    font-size: 14px;
+    font-weight: 500;
+}

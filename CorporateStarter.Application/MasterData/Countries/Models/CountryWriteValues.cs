@@ -18,7 +18,7 @@ namespace CorporateStarter.Application.MasterData.Countries.Models
 
         public string? PhoneCode { get; set; }
 
-        public bool IsActive { get; set; }
+        public bool? IsActive { get; set; }
 
         public void Normalize()
         {

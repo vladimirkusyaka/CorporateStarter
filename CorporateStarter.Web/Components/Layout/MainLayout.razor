@@ -11,210 +11,246 @@
       data-connection-stamp="@ConnectionStamp"
       data-connection-ready="@(CanDismissReconnect ? "true" : "false")"></span>
 
-<MudLayout Class="cs-shell">
-    <MudAppBar Elevation="0" Dense="true" Class="cs-topbar">
-        <MudTooltip Text="Applications">
-            <MudIconButton Icon="@Icons.Material.Filled.Apps"
-                           Class="cs-app-switcher"
-                           Size="Size.Small" />
-        </MudTooltip>
+<div class="cs-layout-root">
+    @if (!ShowLogin)
+    {
+        <MudLayout Class="cs-shell">
+            <MudAppBar Elevation="0" Dense="true" Class="cs-topbar">
+                @if (AppSwitcherVisible)
+                {
+                    <MudTooltip Text="Applications">
+                        <MudIconButton Icon="@Icons.Material.Filled.Apps"
+                                       Class="cs-app-switcher"
+                                       Size="Size.Small" />
+                    </MudTooltip>
+                }
 
-        <MudIconButton Icon="@Icons.Material.Filled.Menu"
-                       Color="Color.Inherit"
-                       Edge="Edge.Start"
-                       Size="Size.Small"
-                       Class="cs-menu-toggle"
-                       OnClick="@ToggleDrawer" />
-
-        <MudText Typo="Typo.subtitle1" Class="cs-brand">@PageTitle</MudText>
-
-        <MudSpacer />
-
-        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="cs-topbar-status">
-            <MudText Typo="Typo.caption" Class="cs-version">@BuildVersion</MudText>
-
-            <MudDivider Vertical="true" FlexItem="true" />
-
-            <MudBadge Content="@UnreadNotifications"
-                      Visible="@(UnreadNotifications > 0)"
-                      Color="Color.Primary"
-                      Overlap="true"
-                      Bordered="true">
-                <MudAvatar Size="Size.Small" Class="cs-user-avatar">
-                    @(CurrentUserInitials)
-                </MudAvatar>
-            </MudBadge>
-
-            <MudText Typo="Typo.body2" Class="cs-user-name">
-                @CurrentUserName
-            </MudText>
-
-            <MudTooltip Text="Notifications">
-                <MudIconButton Icon="@Icons.Material.Filled.NotificationsNone"
+                <MudIconButton Icon="@Icons.Material.Filled.Menu"
                                Color="Color.Inherit"
-                               Size="Size.Small" />
-            </MudTooltip>
+                               Edge="Edge.Start"
+                               Size="Size.Small"
+                               Class="cs-menu-toggle"
+                               OnClick="@ToggleDrawer" />
 
-            <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown"
-                     Color="Color.Inherit"
-                     Size="Size.Small"
-                     AnchorOrigin="Origin.BottomRight"
-                     TransformOrigin="Origin.TopRight"
-                     Dense="true"
-                     AriaLabel="User menu">
+                <MudText Typo="Typo.subtitle1" Class="cs-brand">@PageTitle</MudText>
+
+                <MudSpacer />
+
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="cs-topbar-status">
+                    <MudText Typo="Typo.caption" Class="cs-version">@BuildVersion</MudText>
+
+                    <MudDivider Vertical="true" FlexItem="true" />
+
+                    <MudBadge Content="@UnreadNotifications"
+                              Visible="@(UnreadNotifications > 0)"
+                              Color="Color.Primary"
+                              Overlap="true"
+                              Bordered="true">
+                        <MudAvatar Size="Size.Small" Class="cs-user-avatar">
+                            @(CurrentUserInitials)
+                        </MudAvatar>
+                    </MudBadge>
+
+                    <MudText Typo="Typo.body2" Class="cs-user-name">
+                        @CurrentUserName
+                    </MudText>
+
+                    <MudTooltip Text="Notifications">
+                        <MudIconButton Icon="@Icons.Material.Filled.NotificationsNone"
+                                       Color="Color.Inherit"
+                                       Size="Size.Small" />
+                    </MudTooltip>
+
+                    <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown"
+                             Color="Color.Inherit"
+                             Size="Size.Small"
+                             AnchorOrigin="Origin.BottomRight"
+                             TransformOrigin="Origin.TopRight"
+                             Dense="true"
+                             AriaLabel="User menu">
 
                 
-                <ChildContent>
-                    <MudMenuItem Icon="@Icons.Material.Filled.Person">Profile</MudMenuItem>
-                    <MudMenuItem Icon="@Icons.Material.Filled.Settings">Preferences</MudMenuItem>
-                    <MudDivider Class="my-1" />
-                    <MudMenuItem Icon="@Icons.Material.Filled.Logout"
-                                 Disabled="@(!IsAuthenticated || _signingOut)"
-                                 OnClick="SignOutAsync">
-                        Logout
-                    </MudMenuItem>
-                </ChildContent>
-            </MudMenu>
-        </MudStack>
-    </MudAppBar>
+                        <ChildContent>
+                            <MudMenuItem Icon="@Icons.Material.Filled.Person">Profile</MudMenuItem>
+                            <MudMenuItem Icon="@Icons.Material.Filled.Settings">Preferences</MudMenuItem>
+                            <MudDivider Class="my-1" />
+                            <MudMenuItem Icon="@Icons.Material.Filled.Logout"
+                                         Disabled="@(!IsAuthenticated || _signingOut)"
+                                         OnClick="SignOutAsync">
+                                Logout
+                            </MudMenuItem>
+                        </ChildContent>
+                    </MudMenu>
+                </MudStack>
+            </MudAppBar>
 
-    <MudDrawer @bind-Open="DrawerOpen"
-               Variant="DrawerVariant.Mini"
-               OpenMiniOnHover="true"
-               Width="256px"
-               MiniWidth="56px"
-               Elevation="0"
-               ClipMode="DrawerClipMode.Always"
-               Class="cs-drawer">
-        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="cs-drawer-header">
-            <MudText Typo="Typo.subtitle2" Class="cs-drawer-brand">@PageTitle</MudText>
-            <MudIcon Icon="@Icons.Material.Filled.GridView" Size="Size.Small" Class="cs-drawer-header-icon" />
-        </MudStack>
+            <MudDrawer @bind-Open="DrawerOpen"
+                       Variant="DrawerVariant.Mini"
+                       OpenMiniOnHover="false"
+                       Width="250px"
+                       MiniWidth="64px"
+                       Elevation="0"
+                       ClipMode="DrawerClipMode.Always"
+                       Class="cs-drawer">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="cs-drawer-header">
+                    <MudText Typo="Typo.subtitle2" Class="cs-drawer-brand">@PageTitle</MudText>
+                    <MudIcon Icon="@Icons.Material.Filled.GridView" Size="Size.Small" Class="cs-drawer-header-icon" />
+                </MudStack>
 
-        <MudNavMenu Dense="true" Class="cs-nav">
-            <MudNavLink Href="/"
-                        Match="NavLinkMatch.All"
-                        Icon="@Icons.Material.Filled.Dashboard"
-                        Class="cs-nav-link">
-                Dashboard
-            </MudNavLink>
+                <MudNavMenu Dense="true" Class="cs-nav">
+                    <MudNavLink Href="/"
+                                Match="NavLinkMatch.All"
+                                Icon="@Icons.Material.Filled.Dashboard"
+                                Class="cs-nav-link">
+                        Dashboard
+                    </MudNavLink>
 
-            <MudNavGroup Title="Directory"
-                         Icon="@Icons.Material.Filled.Business"
-                         Expanded="true"
-                         Class="cs-nav-group">
-                <MudNavLink Href="/companies" Icon="@Icons.Material.Filled.Apartment">Companies</MudNavLink>
-                <MudNavLink Href="/persons" Icon="@Icons.Material.Filled.People">Persons</MudNavLink>
-            </MudNavGroup>
+                    @if (DrawerOpen)
+                    {
+                        <MudNavGroup Title="Directory"
+                                     Icon="@Icons.Material.Filled.Business"
+                                     Expanded="true"
+                                     Class="cs-nav-group">
+                            <MudNavLink Href="/companies" Icon="@Icons.Material.Filled.Apartment">Companies</MudNavLink>
+                            <MudNavLink Href="/persons" Icon="@Icons.Material.Filled.People">Persons</MudNavLink>
+                        </MudNavGroup>
+                    }
+                    else
+                    {
+                        <MudMenu Icon="@Icons.Material.Filled.Business" AriaLabel="Directory"
+                                 ActivationEvent="MouseEvent.MouseOver"
+                                 AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopLeft"
+                                 Dense="true" Class="cs-nav-flyout" PopoverClass="cs-nav-popup">
+                            <ChildContent>
+                                <div class="cs-nav-popup-title">Directory</div>
+                                <MudMenuItem Href="/companies" Icon="@Icons.Material.Filled.Apartment">Companies</MudMenuItem>
+                                <MudMenuItem Href="/persons" Icon="@Icons.Material.Filled.People">Persons</MudMenuItem>
+                            </ChildContent>
+                        </MudMenu>
+                    }
 
-            <MudNavGroup Title="Master Data"
-                         Icon="@Icons.Material.Filled.Storage"
-                         Class="cs-nav-group">
-                <MudNavLink Href="/countries" Icon="@Icons.Material.Filled.Public">Countries</MudNavLink>
-                <MudNavLink Href="/cities" Icon="@Icons.Material.Filled.LocationCity">Cities</MudNavLink>
-                <MudNavLink Href="/positions" Icon="@Icons.Material.Filled.Badge">Positions</MudNavLink>
-            </MudNavGroup>
+                    @if (DrawerOpen)
+                    {
+                        <MudNavGroup Title="Master Data"
+                                     Icon="@Icons.Material.Filled.Storage"
+                                     Class="cs-nav-group">
+                            <MudNavLink Href="/countries" Icon="@Icons.Material.Filled.Public">Countries</MudNavLink>
+                            <MudNavLink Href="/cities" Icon="@Icons.Material.Filled.LocationCity">Cities</MudNavLink>
+                            <MudNavLink Href="/positions" Icon="@Icons.Material.Filled.Badge">Positions</MudNavLink>
+                        </MudNavGroup>
+                    }
+                    else
+                    {
+                        <MudMenu Icon="@Icons.Material.Filled.Storage" AriaLabel="Master Data"
+                                 ActivationEvent="MouseEvent.MouseOver"
+                                 AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopLeft"
+                                 Dense="true" Class="cs-nav-flyout" PopoverClass="cs-nav-popup">
+                            <ChildContent>
+                                <div class="cs-nav-popup-title">Master Data</div>
+                                <MudMenuItem Href="/countries" Icon="@Icons.Material.Filled.Public">Countries</MudMenuItem>
+                                <MudMenuItem Href="/cities" Icon="@Icons.Material.Filled.LocationCity">Cities</MudMenuItem>
+                                <MudMenuItem Href="/positions" Icon="@Icons.Material.Filled.Badge">Positions</MudMenuItem>
+                            </ChildContent>
+                        </MudMenu>
+                    }
 
-            <MudNavGroup Title="Security"
-                         Icon="@Icons.Material.Filled.Security"
-                         Class="cs-nav-group">
-                <MudNavLink Href="/users" Icon="@Icons.Material.Filled.ManageAccounts">Users</MudNavLink>
-                <MudNavLink Href="/roles" Icon="@Icons.Material.Filled.AdminPanelSettings">Roles</MudNavLink>
-                <MudNavLink Href="/permissions" Icon="@Icons.Material.Filled.Key">Permissions</MudNavLink>
-            </MudNavGroup>
+                    @if (DrawerOpen)
+                    {
+                        <MudNavGroup Title="Security"
+                                     Icon="@Icons.Material.Filled.Security"
+                                     Class="cs-nav-group">
+                            <MudNavLink Href="/users" Icon="@Icons.Material.Filled.ManageAccounts">Users</MudNavLink>
+                            <MudNavLink Href="/roles" Icon="@Icons.Material.Filled.AdminPanelSettings">Roles</MudNavLink>
+                            <MudNavLink Href="/permissions" Icon="@Icons.Material.Filled.Key">Permissions</MudNavLink>
+                        </MudNavGroup>
+                    }
+                    else
+                    {
+                        <MudMenu Icon="@Icons.Material.Filled.Security" AriaLabel="Security"
+                                 ActivationEvent="MouseEvent.MouseOver"
+                                 AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopLeft"
+                                 Dense="true" Class="cs-nav-flyout" PopoverClass="cs-nav-popup">
+                            <ChildContent>
+                                <div class="cs-nav-popup-title">Security</div>
+                                <MudMenuItem Href="/users" Icon="@Icons.Material.Filled.ManageAccounts">Users</MudMenuItem>
+                                <MudMenuItem Href="/roles" Icon="@Icons.Material.Filled.AdminPanelSettings">Roles</MudMenuItem>
+                                <MudMenuItem Href="/permissions" Icon="@Icons.Material.Filled.Key">Permissions</MudMenuItem>
+                            </ChildContent>
+                        </MudMenu>
+                    }
 
-            <MudNavLink Href="/audit"
-                        Icon="@Icons.Material.Filled.History"
-                        Class="cs-nav-link">
-                Audit
-            </MudNavLink>
-        </MudNavMenu>
-    </MudDrawer>
+                    <MudNavLink Href="/audit"
+                                Icon="@Icons.Material.Filled.History"
+                                Class="cs-nav-link">
+                        Audit
+                    </MudNavLink>
+                </MudNavMenu>
+            </MudDrawer>
 
-    <MudMainContent Class="cs-main">
-        <MudContainer MaxWidth="MaxWidth.False" Class="cs-page">
-            @if (_snapshot.UserId is not null && _authorizedBody is not null)
-            {
-                <div @key="_snapshot.SessionGeneration"
-                     hidden="@(!IsAuthenticated)"
-                     inert="@(!IsAuthenticated)">
-                    <SessionContent CanRender="@IsAuthenticated">
-                        @_authorizedBody
-                    </SessionContent>
-                </div>
-            }
-        </MudContainer>
-    </MudMainContent>
+            <MudMainContent Class="cs-main">
+                <MudContainer MaxWidth="MaxWidth.False" Class="cs-page">
+                    @if (_snapshot.UserId is not null && _authorizedBody is not null)
+                    {
+                        <div class="cs-page-content" @key="_snapshot.SessionGeneration"
+                             hidden="@(!ShowAuthorizedContent)"
+                             inert="@(!IsAuthenticated && !IsQuietSessionCheck)">
+                            <SessionContent CanRender="@IsAuthenticated">
+                                @_authorizedBody
+                            </SessionContent>
+                        </div>
+                    }
+                </MudContainer>
+            </MudMainContent>
 
+        </MudLayout>
+    }
     @if (ShowLogin)
     {
-        <div class="cs-auth-mask">
-            <MudPaper Elevation="10" Class="cs-login-dialog">
-                <MudStack Row="true" Spacing="0" Class="cs-login-form" AlignItems="AlignItems.Stretch">
-                    <MudStack Class="cs-login-side" AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="3">
-                        <MudAvatar Class="cs-login-avatar" Size="Size.Large" Color="Color.Primary">
-                            <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Medium" />
-                        </MudAvatar>
-                        <MudText Typo="Typo.h6" Class="cs-login-title">Sign in</MudText>
-                    </MudStack>
-
-                    <MudStack Spacing="5" Class="cs-login-fields">
-                        <MudStack Spacing="4">
-                            <MudTextField @ref="_usernameField"
-                                          @bind-Value="Login"
-                                          Label="Username"
-                                          Variant="Variant.Outlined"
-                                          Margin="Margin.Dense"
-                                          FullWidth="true"
-                                          Immediate="true"
-                                          Disabled="@IsSigningIn"
-                                          Class="cs-login-field"
-                                          OnKeyDown="@OnLoginKeyDown"
-                                          autocomplete="username" />
-
-                            <MudTextField @bind-Value="Password"
-                                          Label="Password"
-                                          Variant="Variant.Outlined"
-                                          Margin="Margin.Dense"
-                                          FullWidth="true"
-                                          Immediate="true"
-                                          Disabled="@IsSigningIn"
-                                          InputType="InputType.Password"
-                                          Class="cs-login-field"
-                                          OnKeyDown="@OnLoginKeyDown"
-                                          autocomplete="current-password" />
-
-                            @if (!string.IsNullOrWhiteSpace(SignInError))
-                            {
-                                <MudAlert Severity="Severity.Error" Dense="true" Class="cs-login-error">
-                                    @SignInError
-                                </MudAlert>
-                            }
-                        </MudStack>
-
-                        <MudStack Row="true" Justify="Justify.FlexEnd" Class="cs-login-actions">
-                            <MudButton Variant="Variant.Filled"
-                                       Color="Color.Primary"
-                                       Disabled="@IsSigningIn"
-                                       OnClick="@SignInAsync"
-                                       StartIcon="@(IsSigningIn ? null : Icons.Material.Filled.Login)"
-                                       Class="cs-login-button">
-                                @if (IsSigningIn)
-                                {
-                                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="cs-login-spinner" />
-                                }
-                                else
-                                {
-                                    @:Login
-                                }
-                            </MudButton>
-                        </MudStack>
-                    </MudStack>
-                </MudStack>
-            </MudPaper>
-        </div>
+        <main class="cs-login-page">
+            <aside class="cs-login-brand" aria-label="CorporateStarter">
+                <div class="cs-login-logo"><MudIcon Icon="@Icons.Material.Filled.Apps" /> CorporateStarter</div>
+                <div class="cs-login-message">
+                    <p class="cs-login-eyebrow">YOUR WORKSPACE</p>
+                    <h2>Everything you need.<br />One place to work.</h2>
+                    <p>A shared workspace for your team, your data and your daily work.</p>
+                </div>
+                <span class="cs-login-version">@BuildVersion</span>
+            </aside>
+            <section class="cs-login-form-wrap" aria-labelledby="login-title">
+                <div class="cs-login-fields">
+                    <h1 id="login-title">Sign in</h1>
+                    <p class="cs-login-subtitle">Enter your credentials to access your workspace.</p>
+                    <MudTextField @ref="_usernameField" @bind-Value="Login"
+                                  Label="Username" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  FullWidth="true" Immediate="true" Disabled="@IsSigningIn"
+                                  Class="cs-login-field" OnKeyDown="@OnLoginKeyDown"
+                                  autocomplete="username" />
+                    <MudTextField @bind-Value="Password" Label="Password"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense" FullWidth="true"
+                                  Immediate="true" Disabled="@IsSigningIn" InputType="InputType.Password"
+                                  Class="cs-login-field" OnKeyDown="@OnLoginKeyDown"
+                                  autocomplete="current-password" />
+                    @if (!string.IsNullOrWhiteSpace(SignInError))
+                    {
+                        <MudAlert Severity="Severity.Error" Dense="true" Class="cs-login-error" role="alert">@SignInError</MudAlert>
+                    }
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true"
+                               Disabled="@IsSigningIn" OnClick="@SignInAsync" Class="cs-login-button">
+                        @if (IsSigningIn)
+                        {
+                            <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                            <span>Signing in…</span>
+                        }
+                        else
+                        {
+                            @:Sign in
+                        }
+                    </MudButton>
+                </div>
+            </section>
+        </main>
     }
-    else if (!IsAuthenticated)
+    else if (ShowSessionOverlay)
     {
         <div class="cs-auth-mask">
             <MudPaper Class="pa-6" Elevation="10">
@@ -251,4 +287,4 @@
             </MudPaper>
         </div>
     }
-</MudLayout>
+</div>

@@ -27,6 +27,8 @@ namespace CorporateStarter.Application.MasterData.Countries.Handlers
             UpdateCountryCommand request,
             CancellationToken cancellationToken)
         {
+            if (await _countryReadRepository.GetByIdAsync(request.Id, cancellationToken) is null)
+                return CommandResult<CountryDetailsDto>.Failure("country.not_found", "Country was not found.");
             var values = request.Request.Adapt<CountryWriteValues>();
             values.Id = request.Id;
             values.Normalize();
@@ -72,13 +74,15 @@ namespace CorporateStarter.Application.MasterData.Countries.Handlers
 
             await _countryWriteRepository.SaveChangesAsync(cancellationToken);
 
-            var dto = await _countryReadRepository.GetByIdAsync(
-                request.Id,
-                cancellationToken);
-
-            return dto is null
-    ? CommandResult<CountryDetailsDto>.Failure("country.not_found", "Country was not found.")
-    : CommandResult<CountryDetailsDto>.Success(dto);
+            return CommandResult<CountryDetailsDto>.Success(new CountryDetailsDto
+            {
+                Id = request.Id,
+                Code = values.Code,
+                Name = values.Name,
+                NativeName = values.NativeName,
+                PhoneCode = values.PhoneCode,
+                IsActive = values.IsActive!.Value
+            });
         }
     }
 }

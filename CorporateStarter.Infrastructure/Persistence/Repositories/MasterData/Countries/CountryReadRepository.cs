@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using CorporateStarter.Application.Common.Security;
 using Mapster;
 using CorporateStarter.Application.Common.Interfaces.Repositories.MasterData.Countries;
 using CorporateStarter.Shared.Dtos.MasterData.Countries;
@@ -9,9 +10,11 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Co
     {
         private readonly AppDbContext _dbContext;
 
-        public CountryReadRepository(AppDbContext dbContext)
+        private readonly ICountryAccess _access;
+        public CountryReadRepository(AppDbContext dbContext, ICountryAccess access)
         {
             _dbContext = dbContext;
+            _access = access;
         }
 
         public async Task<IReadOnlyList<CountryListItemDto>> GetListAsync(
@@ -19,6 +22,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Co
         {
             return await _dbContext.Countries
                 .AsNoTracking()
+                .Where(x => x.IsActive || _access.Capabilities.ViewInactive)
                 .OrderBy(x => x.Name)
                 .ProjectToType<CountryListItemDto>()
                 .ToListAsync(cancellationToken);
@@ -30,7 +34,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Co
         {
             return await _dbContext.Countries
                 .AsNoTracking()
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == id && (x.IsActive || _access.Capabilities.ViewInactive))
                 .ProjectToType<CountryDetailsDto>()
                 .FirstOrDefaultAsync(cancellationToken);
         }
@@ -41,7 +45,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Co
         {
             return await _dbContext.Countries
                 .AsNoTracking()
-                .AnyAsync(x => x.Id == id, cancellationToken);
+                .AnyAsync(x => x.Id == id && (x.IsActive || _access.Capabilities.ViewInactive), cancellationToken);
         }
 
         public async Task<bool> ExistsByCodeAsync(

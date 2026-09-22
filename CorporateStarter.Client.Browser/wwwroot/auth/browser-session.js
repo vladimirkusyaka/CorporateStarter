@@ -399,3 +399,137 @@ async function checkIdleSession(lease) {
         catch { /* A new circuit reattaches a receiver on its first render. */ }
     }
 }
+
+// Business API requests. No refresh or automatic retries occur here.
+const clientApiRequests = new Map();
+const clientApiMaxResponseBytes = 4 * 1024 * 1024;
+
+export async function sendApiRequest(request) {
+    const guid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const route = /^\/api\/Countries(?:\/(?:query|find|filter-values|capabilities)|\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?$/i;
+    const methods = ["GET", "POST", "PUT", "DELETE"];
+
+    if (!request || typeof request.id !== "string" || !guid.test(request.id) ||
+        clientApiRequests.has(request.id) || !methods.includes(request.method) ||
+        typeof request.relativePath !== "string" || !route.test(request.relativePath) ||
+        typeof request.expectedUserId !== "string" || !guid.test(request.expectedUserId) ||
+        request.expectedUserId === "00000000-0000-0000-0000-000000000000" ||
+        (request.jsonBody != null && typeof request.jsonBody !== "string") ||
+        (request.method === "GET" && request.jsonBody != null) ||
+        !Number.isInteger(request.timeoutMilliseconds) ||
+        request.timeoutMilliseconds < 1 || request.timeoutMilliseconds > 120_000) {
+        return { kind: "invalid_request" };
+    }
+
+    if (globalThis.isSecureContext !== true)
+        return { kind: "unavailable" };
+
+    if (sessionOperationInProgress)
+        return { kind: "busy" };
+
+    if (userId === null || accessToken === null)
+        return { kind: "session_required" };
+
+    if (userId.toLowerCase() !== request.expectedUserId.toLowerCase())
+        return { kind: "session_changed" };
+
+    if (accessTokenExpiresAt <= Date.now())
+        return { kind: "session_required" };
+
+    const tokenAtStart = accessToken;
+    const userAtStart = userId;
+    const controller = new AbortController();
+    let timedOut = false;
+    clientApiRequests.set(request.id, controller);
+    const timeout = setTimeout(() => {
+        timedOut = true;
+        controller.abort();
+    }, request.timeoutMilliseconds);
+
+    try {
+        const headers = {
+            "Accept": "application/json",
+            "Authorization": `Bearer ${tokenAtStart}`
+        };
+        if (request.jsonBody != null)
+            headers["Content-Type"] = "application/json";
+
+        const response = await fetch(request.relativePath, {
+            method: request.method,
+            mode: "same-origin",
+            credentials: "omit",
+            cache: "no-store",
+            redirect: "error",
+            signal: controller.signal,
+            headers,
+            body: request.jsonBody ?? undefined
+        });
+
+        const body = await readClientApiBody(response);
+        if (controller.signal.aborted)
+            return { kind: timedOut ? "timeout" : "cancelled" };
+
+        // Rotation also invalidates this result conservatively.
+        if (sessionOperationInProgress || userId !== userAtStart || accessToken !== tokenAtStart)
+            return { kind: "session_changed" };
+
+        return {
+            kind: "response",
+            statusCode: response.status,
+            body: body.length <= 2_048 ? body : null,
+            bodyStream: body.length > 2_048
+                ? DotNet.createJSStreamReference(new TextEncoder().encode(body))
+                : null,
+            contentType: response.headers.get("Content-Type"),
+            retryAfter: response.headers.get("Retry-After")
+        };
+    }
+    catch {
+        return {
+            kind: controller.signal.aborted
+                ? (timedOut ? "timeout" : "cancelled")
+                : "unavailable"
+        };
+    }
+    finally {
+        clearTimeout(timeout);
+        clientApiRequests.delete(request.id);
+    }
+}
+
+export function cancelApiRequest(requestId) {
+    clientApiRequests.get(requestId)?.abort();
+}
+
+async function readClientApiBody(response) {
+    if (response.body === null)
+        return "";
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8", { fatal: true });
+    let bytes = 0;
+    let text = "";
+    let completed = false;
+    try {
+        while (true) {
+            const chunk = await reader.read();
+            if (chunk.done) {
+                text += decoder.decode();
+                completed = true;
+                return text;
+            }
+            bytes += chunk.value.byteLength;
+            if (bytes > clientApiMaxResponseBytes)
+                throw new Error("API response exceeded the size limit.");
+            text += decoder.decode(chunk.value, { stream: true });
+        }
+    }
+    finally {
+        if (!completed) {
+            try { await reader.cancel(); }
+            catch { /* Preserve the original read failure. */ }
+        }
+        reader.releaseLock();
+    }
+}
+

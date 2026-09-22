@@ -1,0 +1,129 @@
+﻿@page "/countries"
+@using CorporateStarter.Shared.Dtos.MasterData.Countries
+
+<PageTitle>Countries</PageTitle>
+
+<section class="countries-page" aria-labelledby="countries-title">
+    <header class="countries-heading">
+        <h1 id="countries-title">Countries</h1>
+    </header>
+    <div class="countries-toolbar">
+        <div class="countries-actions">
+            <MudTooltip Text="Add country">
+                <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Outlined"
+                               Color="Color.Primary" Disabled="@(_loading || _creating || _querying || !_capabilities.CanCreate)"
+                               OnClick="OpenCreateAsync" Class="countries-refresh" aria-label="Add country" />
+            </MudTooltip>
+            <MudTooltip Text="Edit country">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined"
+                               Color="Color.Primary" Disabled="@(!CanEdit)" OnClick="OpenEditAsync"
+                               Class="countries-refresh" aria-label="Edit country" />
+            </MudTooltip>
+            <MudTooltip Text="Delete countries">
+                <MudIconButton Icon="@DeleteIcon" Variant="Variant.Outlined"
+                               Color="Color.Primary" Disabled="@(!CanDelete)" OnClick="OpenDeleteAsync"
+                               Class="countries-refresh" aria-label="Delete countries" />
+            </MudTooltip>
+            <MudTooltip Text="Refresh countries">
+                <MudIconButton Icon="@Icons.Material.Filled.Refresh" Variant="Variant.Outlined"
+                               Color="Color.Primary" Disabled="@(_loading || _creating || _querying)" OnClick="LoadAsync"
+                               Class="countries-refresh" aria-label="Refresh countries" />
+            </MudTooltip>
+        </div>
+        <form class="countries-search" @onsubmit="FindNext" @onsubmit:preventDefault="true">
+            <label for="countries-search">Search</label>
+            <input id="countries-search" type="search" maxlength="200" @bind="_search" @bind:event="oninput"
+                   placeholder="Find in current list" disabled="@(_loading || _creating || _querying)" />
+            <MudIconButton Icon="@Icons.Material.Filled.Search" Color="Color.Primary"
+                           ButtonType="ButtonType.Submit" Disabled="@(_loading || _creating || _querying || string.IsNullOrWhiteSpace(_search))"
+                           title="Find next (Enter)" aria-label="Find next country" />
+        </form>
+    </div>
+    @if (_filters.Count > 0 || _searchMessage is not null)
+    {
+        <div class="countries-query-status">
+            <span role="status" aria-live="polite">@_searchMessage</span>
+            @if (_filters.Count > 0)
+            {
+                <button type="button" @onclick="ClearFilters" disabled="@(_loading || _creating || _querying)">Clear filters (@_filters.Count)</button>
+            }
+        </div>
+    }
+
+    @if (_loading || !_loadStarted)
+    {
+        <div class="countries-feedback countries-loading" role="status" aria-live="polite">
+            <span>Loading countries…</span>
+            @for (var row = 0; row < 8; row++)
+            {
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="32px" />
+            }
+        </div>
+    }
+    else if (_error is not null)
+    {
+        <div class="countries-feedback" role="alert">
+            <MudIcon Icon="@Icons.Material.Outlined.Info" Color="Color.Primary" Size="Size.Large" />
+            <p>@_error</p>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadAsync">Retry</MudButton>
+        </div>
+    }
+    else if (_totalCount == 0 && _filters.Count == 0)
+    {
+        <div class="countries-feedback" role="status">
+            <MudIcon Icon="@Icons.Material.Outlined.Public" Size="Size.Large" />
+            <p>No countries found.</p>
+        </div>
+    }
+    else
+    {
+        <div class="countries-table">
+            <MudTable @ref="_table" OnRowClick="OnCountryRowClick" RowClassFunc="CountryRowClass"
+                      T="CountryListItemDto" Items="@_countries"
+                      Dense="true" Hover="true" Elevation="0" FixedHeader="true" Height="100%"
+                      Breakpoint="Breakpoint.Sm" RowsPerPage="100" CurrentPage="0">
+                <HeaderContent>
+                    @foreach (var column in VisibleColumns)
+                    {
+                        <MudTh aria-sort="@SortAria(column)">
+                            <div class="country-column-header">
+                                <button type="button" class="country-sort" @onclick="@(() => SortBy(column))"
+                                        disabled="@(_loading || _creating || _querying)">
+                                    @ColumnLabel(column) <span aria-hidden="true">@SortArrow(column)</span>
+                                </button>
+                                <button type="button" class="@(_filters.ContainsKey(column) ? "country-filter is-active" : "country-filter")"
+                                        title="@FilterTitle(column)" aria-label="@FilterTitle(column)"
+                                        disabled="@(_loading || _creating || _querying)" @onclick="@(() => OpenFilterAsync(column))">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 8v6l-4 2v-8L4 5z" /></svg>
+                                </button>
+                            </div>
+                        </MudTh>
+                    }
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Code"><button type="button" class="country-row-select" aria-label="@($"Select {context.Name}")"
+                        aria-pressed="@(_selectedIds.Contains(context.Id) ? "true" : "false")"
+                        @onclick="@(e => SelectCountry(context, e))" @onclick:stopPropagation="true">@context.Code</button></MudTd>
+                    <MudTd DataLabel="Name">@context.Name</MudTd>
+                    <MudTd DataLabel="Native name">@(context.NativeName ?? "—")</MudTd>
+                    <MudTd DataLabel="Phone code">@(context.PhoneCode ?? "—")</MudTd>
+                    @if (_capabilities.ViewInactive)
+                    {
+                    <MudTd DataLabel="Status"><span class="@(context.IsActive ? "country-active" : "country-inactive")">@(context.IsActive ? "Active" : "Inactive")</span></MudTd>
+                    }
+                </RowTemplate>
+                <NoRecordsContent><span role="status">No countries match the filters.</span></NoRecordsContent>
+                <PagerContent>
+                    <div class="country-server-pager">
+                        <label>Rows <select value="@RowsPerPage" @onchange="ChangePageSizeAsync" disabled="@(_loading || _querying || _creating)">
+                            @foreach (var size in PageSizes) { <option value="@size">@size</option> }
+                        </select></label>
+                        <span>Page @(CurrentPage + 1) of @TotalPages · @_totalCount records</span>
+                        <button type="button" @onclick="PreviousPageAsync" disabled="@(_loading || _querying || _creating || CurrentPage == 0)">Previous</button>
+                        <button type="button" @onclick="NextPageAsync" disabled="@(_loading || _querying || _creating || CurrentPage + 1 >= TotalPages)">Next</button>
+                    </div>
+                </PagerContent>
+            </MudTable>
+        </div>
+    }
+</section>
