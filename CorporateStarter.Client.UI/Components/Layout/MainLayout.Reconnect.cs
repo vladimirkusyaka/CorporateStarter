@@ -1,13 +1,13 @@
 ﻿using CorporateStarter.Client.Abstractions.Auth;
-using CorporateStarter.Web.Services.Auth;
+using CorporateStarter.Client.Abstractions.Connection;
 using Microsoft.AspNetCore.Components;
 
-namespace CorporateStarter.Web.Components.Layout;
+namespace CorporateStarter.Client.UI.Components.Layout;
 
 public partial class MainLayout
 {
     [Inject]
-    private CircuitConnectionMonitor Connection { get; set; } = default!;
+    private IClientConnectionState Connection { get; set; } = default!;
 
     [Inject]
     private ILogger<MainLayout> Logger { get; set; } = default!;

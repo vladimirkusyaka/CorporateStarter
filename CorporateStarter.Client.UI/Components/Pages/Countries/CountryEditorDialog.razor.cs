@@ -6,7 +6,7 @@ using CorporateStarter.Shared.Dtos.MasterData.Countries;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace CorporateStarter.Web.Components.Pages.Countries;
+namespace CorporateStarter.Client.UI.Components.Pages.Countries;
 
 public partial class CountryEditorDialog : IDisposable
 {

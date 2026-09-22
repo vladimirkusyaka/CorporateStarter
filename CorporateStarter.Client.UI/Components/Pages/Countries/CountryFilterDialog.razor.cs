@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 
-namespace CorporateStarter.Web.Components.Pages.Countries;
+namespace CorporateStarter.Client.UI.Components.Pages.Countries;
 
 // null Values means no choice restriction; an empty array means no selected values.
 public sealed record CountryColumnFilter(string Text = "", string[]? Values = null);

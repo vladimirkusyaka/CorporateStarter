@@ -1,22 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
-  <ItemGroup>
-    <PackageReference Include="MudBlazor" Version="9.7.0" />
-	<PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\CorporateStarter.Client.Core\CorporateStarter.Client.Core.csproj" />
-    <ProjectReference Include="..\CorporateStarter.Shared\CorporateStarter.Shared.csproj" />
-	<ProjectReference Include="..\CorporateStarter.Client.Browser\CorporateStarter.Client.Browser.csproj" />
-	  <ProjectReference Include="..\CorporateStarter.Client.Core\CorporateStarter.Client.Core.csproj" />	  
-  </ItemGroup>
-
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
-  </PropertyGroup>
-
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
+		<ProjectReference Include="..\CorporateStarter.Client.UI\CorporateStarter.Client.UI.csproj" />
+	</ItemGroup>
 </Project>

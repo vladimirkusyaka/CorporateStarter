@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using MudBlazor.Charts;
 
-namespace CorporateStarter.Web.Components.Pages.Countries;
+namespace CorporateStarter.Client.UI.Components.Pages.Countries;
 
 public partial class Countries
 {

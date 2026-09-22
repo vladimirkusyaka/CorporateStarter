@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace CorporateStarter.Web.Components.Layout
+namespace CorporateStarter.Client.UI.Components.Layout
 {
     public partial class SessionContent
     {

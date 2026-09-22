@@ -1,9 +1,9 @@
 ﻿using CorporateStarter.Client.Abstractions.Auth;
-using CorporateStarter.Web.Services.Auth;
+using CorporateStarter.Client.UI.Configuration;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 
-namespace CorporateStarter.Web.Components.Layout;
+namespace CorporateStarter.Client.UI.Components.Layout;
 
 public partial class MainLayout
 {

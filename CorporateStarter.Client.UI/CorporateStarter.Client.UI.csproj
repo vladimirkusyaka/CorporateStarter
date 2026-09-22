@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+		<Using Include="Microsoft.Extensions.Logging" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web"
+						  Version="10.0.11" />
+		<PackageReference Include="MudBlazor"
+						  Version="9.7.0" />
+
+		<ProjectReference Include="..\CorporateStarter.Client.Core\CorporateStarter.Client.Core.csproj" />
+		<ProjectReference Include="..\CorporateStarter.Client.Browser\CorporateStarter.Client.Browser.csproj" />
+	</ItemGroup>
+
+</Project>

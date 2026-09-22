@@ -3,7 +3,7 @@ using CorporateStarter.Client.Core.MasterData.Countries;
 using CorporateStarter.Shared.Dtos.MasterData.Countries;
 using Microsoft.AspNetCore.Components;
 
-namespace CorporateStarter.Web.Components.Pages.Countries;
+namespace CorporateStarter.Client.UI.Components.Pages.Countries;
 
 public partial class Countries : IDisposable
 {

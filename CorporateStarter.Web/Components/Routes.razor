@@ -2,10 +2,11 @@
 
 <BrowserEnvironmentGate>
     <Router AppAssembly="typeof(Program).Assembly"
-            NotFoundPage="typeof(Pages.NotFound)">
+            AdditionalAssemblies="CorporateStarter.Client.UI.ClientUiAssembly.RouteAssemblies"
+            NotFoundPage="typeof(CorporateStarter.Client.UI.Components.Pages.NotFound)">
         <Found Context="routeData">
             <RouteView RouteData="routeData"
-                       DefaultLayout="typeof(Layout.MainLayout)" />
+                       DefaultLayout="typeof(CorporateStarter.Client.UI.Components.Layout.MainLayout)" />
 
             <FocusOnNavigate RouteData="routeData" Selector="h1" />
         </Found>

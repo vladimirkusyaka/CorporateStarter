@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using MudBlazor;
 
-namespace CorporateStarter.Web.Components.Layout
+namespace CorporateStarter.Client.UI.Components.Layout
 {
     public partial class MainLayout : IAsyncDisposable
     {

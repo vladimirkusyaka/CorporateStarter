@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components.Server.Circuits;
+using CorporateStarter.Client.Abstractions.Connection;
 
 namespace CorporateStarter.Web.Services.Auth;
 
-public sealed class CircuitConnectionMonitor : CircuitHandler
+public sealed class CircuitConnectionMonitor : CircuitHandler, IClientConnectionState
 {
     private readonly object _gate = new();
     private bool _isConnected;

@@ -1,4 +1,4 @@
-﻿namespace CorporateStarter.Web.Services.Auth;
+﻿namespace CorporateStarter.Client.UI.Configuration;
 
 public sealed class SessionUiOptions
 {
