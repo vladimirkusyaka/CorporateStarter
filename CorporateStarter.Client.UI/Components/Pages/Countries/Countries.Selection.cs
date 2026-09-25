@@ -1,15 +1,15 @@
 ﻿using CorporateStarter.Shared.Dtos.MasterData.Countries;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
-using MudBlazor.Charts;
+using CorporateStarter.Client.Core.Tables;
 
 namespace CorporateStarter.Client.UI.Components.Pages.Countries;
 
 public partial class Countries
 {
     private MudTable<CountryListItemDto>? _table;
-    private readonly HashSet<Guid> _selectedIds = [];
-    private Guid? _selectionAnchor;
+    private readonly TableSelection<Guid> _selection = new();
+    private IReadOnlySet<Guid> _selectedIds => _selection.SelectedIds;
     private Guid? _pendingSelection;
     private int _currentPage;
     private int _rowsPerPage = 20;
@@ -27,8 +27,7 @@ public partial class Countries
 
     private void ClearSelection()
     {
-        _selectedIds.Clear();
-        _selectionAnchor = null;
+        _selection.Clear();
         _pendingSelection = null;
     }
 
@@ -45,20 +44,7 @@ public partial class Countries
         if (_loading || _creating || _disposed || mouse.Button != 0 || _table is null) return;
         var visible = _table.FilteredItems.Skip(_table.CurrentPage * _table.RowsPerPage)
             .Take(_table.RowsPerPage).Select(x => x.Id).ToList();
-        var clicked = visible.IndexOf(country.Id);
-        if (clicked < 0) return;
-        var anchor = _selectionAnchor is { } id ? visible.IndexOf(id) : -1;
-        _selectedIds.Clear();
-        if (mouse.ShiftKey && anchor >= 0)
-        {
-            for (var i = Math.Min(anchor, clicked); i <= Math.Max(anchor, clicked); i++)
-                _selectedIds.Add(visible[i]);
-        }
-        else
-        {
-            _selectedIds.Add(country.Id);
-            _selectionAnchor = country.Id;
-        }
+        _selection.Select(country.Id, visible, mouse.ShiftKey, mouse.CtrlKey);
     }
 
     private void SelectSavedCountry(Guid id) { _pendingSelection = id; StateHasChanged(); }
@@ -71,9 +57,8 @@ public partial class Countries
         var index = items.FindIndex(x => x.Id == id);
         if (index < 0) return;
 
-        _selectedIds.Clear();
-        _selectedIds.Add(id);
-        _selectionAnchor = id;
+        _selection.SelectOnly(id);
         StateHasChanged();
     }
 }
+

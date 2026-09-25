@@ -53,8 +53,43 @@ public partial class Countries
         if (_disposed || _loading || _creating || _querying) return;
         _sortDescending = _sortColumn == column && !_sortDescending;
         _sortColumn = column;
-        ResetViewPosition();
-        await LoadAsync();
+        await ReloadAfterQueryChangeAsync(filterChanged: false);
+    }
+
+    private async Task ReloadAfterQueryChangeAsync(bool filterChanged)
+    {
+        _querying = true;
+        try
+        {
+            ResetSearchPosition();
+            if (filterChanged || _selectedIds.Count == 0) _currentPage = 0;
+
+            // Find the selected row within the new filters and sort order.
+            if (_selectedIds.Count == 1)
+            {
+                var found = await Client.FindAsync(new()
+                {
+                    Query = BuildQuery(),
+                    LocateId = _selectedIds.Single()
+                }, _lifetime.Token);
+                if (_disposed) return;
+                _currentPage = (found.PageNumber ?? 1) - 1;
+            }
+
+            await LoadAsync(preserveSelection: true, selectFirstIfMissing: filterChanged);
+        }
+        catch (OperationCanceledException) when (_lifetime.IsCancellationRequested) { }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex, "Reloading countries after a query change failed.");
+            if (!_disposed)
+            {
+                ClearSelection();
+                _countries = [];
+                _error = "Could not load countries. Please retry.";
+            }
+        }
+        finally { _querying = false; }
     }
     private Task PreviousPageAsync() => GoToPageAsync(CurrentPage - 1);
     private Task NextPageAsync() => GoToPageAsync(CurrentPage + 1);
@@ -115,7 +150,7 @@ public partial class Countries
     private async Task ClearFilters()
     {
         if (_disposed || _loading || _creating || _querying) return;
-        _filters.Clear(); ResetViewPosition(); await LoadAsync();
+        _filters.Clear(); await ReloadAfterQueryChangeAsync(filterChanged: true);
     }
     private async Task OpenFilterAsync(CountryColumn column)
     {
@@ -146,7 +181,7 @@ public partial class Countries
             if (_disposed || result is null || result.Canceled || result.Data is not CountryColumnFilter filter) return;
             if (filter.Values is null && string.IsNullOrWhiteSpace(filter.Text)) _filters.Remove(column);
             else _filters[column] = filter;
-            ResetViewPosition(); await LoadAsync();
+            await ReloadAfterQueryChangeAsync(filterChanged: true);
         }
         catch (OperationCanceledException) when (_lifetime.IsCancellationRequested) { }
         catch (Exception ex) { Logger.LogWarning(ex, "Country filter failed."); if (!_disposed) Snackbar.Add("Could not load the filter. Please retry.", Severity.Warning); }

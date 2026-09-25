@@ -28,13 +28,16 @@ public partial class Countries : IDisposable
             ApplyPendingSelection();
     }
 
-    protected async Task LoadAsync()
+    protected Task LoadAsync() => LoadAsync(preserveSelection: false);
+
+    private async Task LoadAsync(bool preserveSelection, bool selectFirstIfMissing = false)
     {
         if (_disposed || _loading)
             return;
 
         var cancellationToken = _lifetime.Token;
-        ClearSelection();
+        if (!preserveSelection) ClearSelection();
+        else _pendingSelection = null;
         ResetSearchPosition();
         _loadStarted = true;
         _loading = true;
@@ -96,6 +99,9 @@ public partial class Countries : IDisposable
         }
         finally
         {
+            if (preserveSelection)
+                _selection.RetainVisible(_disposed ? Array.Empty<Guid>() : _countries.Select(x => x.Id),
+                    selectFirstIfEmpty: selectFirstIfMissing && _error is null);
             _loading = false;
             if (!_disposed)
                 StateHasChanged();
