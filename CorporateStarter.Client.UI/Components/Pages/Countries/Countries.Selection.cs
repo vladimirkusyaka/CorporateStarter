@@ -11,18 +11,16 @@ public partial class Countries
     private readonly TableSelection<Guid> _selection = new();
     private IReadOnlySet<Guid> _selectedIds => _selection.SelectedIds;
     private Guid? _pendingSelection;
-    private int _currentPage;
-    private int _rowsPerPage = 20;
     private bool CanEdit => _capabilities.CanUpdate && !_querying && !_loading && !_creating && !_disposed && _selectedIds.Count == 1;
     private int CurrentPage
     {
-        get => _currentPage;
-        set { if (_currentPage == value) return; _currentPage = value; ClearSelection(); }
+        get => _queryState.PageIndex;
+        set { if (_queryState.PageIndex == value) return; _queryState.PageIndex = value; ClearSelection(); }
     }
     private int RowsPerPage
     {
-        get => _rowsPerPage;
-        set { if (_rowsPerPage == value) return; _rowsPerPage = value; ClearSelection(); }
+        get => _queryState.PageSize;
+        set { if (_queryState.PageSize == value) return; _queryState.PageSize = value; ClearSelection(); }
     }
 
     private void ClearSelection()

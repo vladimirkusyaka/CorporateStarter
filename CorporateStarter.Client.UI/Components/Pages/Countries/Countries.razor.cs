@@ -48,13 +48,12 @@ public partial class Countries : IDisposable
         try
         {
             _capabilities = await Client.CapabilitiesAsync(cancellationToken);
-            if (!_capabilities.ViewInactive) { _filters.Remove(CountryColumn.Status); if (_sortColumn == CountryColumn.Status) _sortColumn = null; }
+            if (!_capabilities.ViewInactive) _queryState.RemoveColumn(CountryColumn.Status);
             var page = await Client.QueryAsync(BuildQuery(), cancellationToken);
             if (!_disposed && !cancellationToken.IsCancellationRequested)
             {
                 _countries = page.Items;
-                _totalCount = page.TotalCount;
-                _currentPage = page.Page - 1;
+                _queryState.ApplyPage(page.Page, page.TotalCount);
             }
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
