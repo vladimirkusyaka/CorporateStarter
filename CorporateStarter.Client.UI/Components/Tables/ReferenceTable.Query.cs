@@ -1,23 +1,22 @@
 ﻿using CorporateStarter.Client.Core.Tables;
-using System.Text.Json;
 using CorporateStarter.Shared.Common;
-using CorporateStarter.Shared.Dtos.MasterData.Countries;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using System.Text.Json;
+using static MudBlazor.CategoryTypes;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace CorporateStarter.Client.UI.Components.Pages.Countries;
+namespace CorporateStarter.Client.UI.Components.Tables;
 
-public partial class Countries
+public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
 {
-    private enum CountryColumn { Code, Name, NativeName, PhoneCode, Status }
-    private readonly TableQueryState<CountryColumn, CountryColumnFilter> _queryState = new();
-    private IReadOnlyDictionary<CountryColumn, CountryColumnFilter> _filters => _queryState.Filters;
-    private CountryCapabilities _capabilities = new(false, false, false, false, false);
+    private readonly TableQueryState<TColumn, TableColumnFilter> _queryState = new();
+    private IReadOnlyDictionary<TColumn, TableColumnFilter> _filters => _queryState.Filters;
+    private TableCapabilities _capabilities = new(false, false, false, false, false);
     private bool _querying;
     private int _totalCount => _queryState.TotalCount;
     private int TotalPages => _queryState.TotalPages;
-    private IEnumerable<CountryColumn> VisibleColumns => Enum.GetValues<CountryColumn>()
-        .Where(x => x != CountryColumn.Status || _capabilities.ViewInactive);
+    private IEnumerable<TColumn> VisibleColumns => Columns.Where(x => !x.IsStatus || _capabilities.ViewInactive).Select(x => x.Key);
     private string _searchValue = string.Empty;
     private Guid? _lastFoundId;
     private string? _searchMessage;
@@ -26,27 +25,22 @@ public partial class Countries
         get => _searchValue;
         set { if (_searchValue == value) return; _searchValue = value; ResetSearchPosition(); }
     }
-    private static string Field(CountryColumn column) => column == CountryColumn.Status ? "isActive" :
-        char.ToLowerInvariant(column.ToString()[0]) + column.ToString()[1..];
-    private static string ColumnLabel(CountryColumn column) => column switch
-    {
-        CountryColumn.NativeName => "Native name",
-        CountryColumn.PhoneCode => "Phone code",
-        _ => column.ToString()
-    };
+    private TableColumn<TItem, TColumn> Definition(TColumn column) => Columns.Single(x => EqualityComparer<TColumn>.Default.Equals(x.Key, column));
+    private string Field(TColumn column) => Definition(column).Field;
+    private string ColumnLabel(TColumn column) => Definition(column).Label;
     private TableRequest BuildQuery() => _queryState.BuildRequest(Field, SerializeFilter);
-    private static TableFilter SerializeFilter(CountryColumn column, CountryColumnFilter filter) =>
-        column == CountryColumn.Status
+    private TableFilter SerializeFilter(TColumn column, TableColumnFilter filter) =>
+        Definition(column).IsStatus
             ? new TableFilter(Field(column), "in", Values: (filter.Values ?? [])
                 .Select(x => JsonSerializer.SerializeToElement(x == "Active")).ToArray())
             : new TableFilter(Field(column), "contains", JsonSerializer.SerializeToElement(filter.Text));
-    private string SortAria(CountryColumn column) => _queryState.SortColumn != column ? "none" : _queryState.SortDescending ? "descending" : "ascending";
-    private string SortArrow(CountryColumn column) => _queryState.SortColumn != column ? "" : _queryState.SortDescending ? "↓" : "↑";
-    private string FilterTitle(CountryColumn column) => $"Filter {ColumnLabel(column)}" + (_filters.ContainsKey(column) ? " (active)" : "");
+    private string SortAria(TColumn column) => !EqualityComparer<TColumn?>.Default.Equals(_queryState.SortColumn, column) ? "none" : _queryState.SortDescending ? "descending" : "ascending";
+    private string SortArrow(TColumn column) => !EqualityComparer<TColumn?>.Default.Equals(_queryState.SortColumn, column) ? "" : _queryState.SortDescending ? "↓" : "↑";
+    private string FilterTitle(TColumn column) => $"Filter {ColumnLabel(column)}" + (_filters.ContainsKey(column) ? " (active)" : "");
     private void ResetSearchPosition() { _lastFoundId = null; _searchMessage = null; }
     private void ResetViewPosition() { CurrentPage = 0; ClearSelection(); ResetSearchPosition(); }
 
-    private async Task SortBy(CountryColumn column)
+    private async Task SortBy(TColumn column)
     {
         if (_disposed || _loading || _creating || _querying) return;
         _queryState.ToggleSort(column);
@@ -78,12 +72,12 @@ public partial class Countries
         catch (OperationCanceledException) when (_lifetime.IsCancellationRequested) { }
         catch (Exception ex)
         {
-            Logger.LogWarning(ex, "Reloading countries after a query change failed.");
+            Logger.LogWarning(ex, "Reloading records after a query change failed.");
             if (!_disposed)
             {
                 ClearSelection();
-                _countries = [];
-                _error = "Could not load countries. Please retry.";
+                _items = [];
+                _error = "Could not load records. Please retry.";
             }
         }
         finally { _querying = false; }
@@ -113,21 +107,21 @@ public partial class Countries
             if (_disposed) return;
             if (found.Id is not { } id || found.PageNumber is not { } page)
             {
-                _searchMessage = _filters.Count > 0 ? "No match in the filtered list. Try clearing the filters." : "No matching country found.";
+                _searchMessage = _filters.Count > 0 ? "No match in the filtered list. Try clearing the filters." : "No matching record found.";
                 _lastFoundId = null; return;
             }
             CurrentPage = page - 1;
             await LoadAsync();
             if (_disposed) return;
-            if (_countries.Any(x => x.Id == id))
+            if (_items.Any(x => ItemId(x) == id))
             {
-                SelectSavedCountry(id); _lastFoundId = id;
-                _searchMessage = $"Found: {_countries.First(x => x.Id == id).Name}";
+                SelectSavedRow(id); _lastFoundId = id;
+                _searchMessage = $"Found: {ItemName(_items.First(x => ItemId(x) == id))}";
             }
             else { _searchMessage = "The list changed during search. Search again."; _lastFoundId = null; }
         }
         catch (OperationCanceledException) when (_lifetime.IsCancellationRequested) { }
-        catch (Exception ex) { Logger.LogWarning(ex, "Country search failed."); _searchMessage = "Search is unavailable. Please retry."; }
+        catch (Exception ex) { Logger.LogWarning(ex, "Record search failed."); _searchMessage = "Search is unavailable. Please retry."; }
         finally { _querying = false; }
     }
     private async Task LocateSavedAsync(Guid id)
@@ -139,31 +133,31 @@ public partial class Countries
             if (_disposed) return;
             CurrentPage = (found.PageNumber ?? 1) - 1;
             await LoadAsync();
-            if (!_disposed && _countries.Any(x => x.Id == id)) SelectSavedCountry(id);
+            if (!_disposed && _items.Any(x => ItemId(x) == id)) SelectSavedRow(id);
         }
         catch (OperationCanceledException) when (_lifetime.IsCancellationRequested) { }
-        catch (Exception ex) { Logger.LogWarning(ex, "Locating the saved country failed."); await LoadAsync(); }
+        catch (Exception ex) { Logger.LogWarning(ex, "Locating the saved record failed."); await LoadAsync(); }
     }
     private async Task ClearFilters()
     {
         if (_disposed || _loading || _creating || _querying) return;
         _queryState.ClearFilters(); await ReloadAfterQueryChangeAsync(filterChanged: true);
     }
-    private async Task OpenFilterAsync(CountryColumn column)
+    private async Task OpenFilterAsync(TColumn column)
     {
         if (_disposed || _loading || _creating || _querying) return;
         _creating = true;
         try
         {
-            var options = column == CountryColumn.Status
+            var options = Definition(column).IsStatus
                 ? await Client.FilterValuesAsync(new() { Query = BuildQuery(), Field = Field(column) }, _lifetime.Token) : [];
             if (_disposed) return;
-            var parameters = new DialogParameters<CountryFilterDialog>();
+            var parameters = new DialogParameters<TableFilterDialog>();
             parameters.Add(x => x.Label, ColumnLabel(column));
-            parameters.Add(x => x.IsChoice, column == CountryColumn.Status);
-            parameters.Add(x => x.Initial, _filters.GetValueOrDefault(column) ?? new CountryColumnFilter());
+            parameters.Add(x => x.IsChoice, Definition(column).IsStatus);
+            parameters.Add(x => x.Initial, _filters.GetValueOrDefault(column) ?? new TableColumnFilter());
             parameters.Add(x => x.Options, options);
-            _createDialog = await Dialogs.ShowAsync<CountryFilterDialog>($"Filter {ColumnLabel(column)}", parameters,
+            _createDialog = await Dialogs.ShowAsync<TableFilterDialog>($"Filter {ColumnLabel(column)}", parameters,
                 new DialogOptions
                 {
                     MaxWidth = MaxWidth.ExtraSmall,
@@ -175,13 +169,13 @@ public partial class Countries
                 });
             if (_disposed) { _createDialog.Close(); return; }
             var result = await _createDialog.Result;
-            if (_disposed || result is null || result.Canceled || result.Data is not CountryColumnFilter filter) return;
+            if (_disposed || result is null || result.Canceled || result.Data is not TableColumnFilter filter) return;
             if (filter.Values is null && string.IsNullOrWhiteSpace(filter.Text)) _queryState.RemoveFilter(column);
             else _queryState.SetFilter(column, filter);
             await ReloadAfterQueryChangeAsync(filterChanged: true);
         }
         catch (OperationCanceledException) when (_lifetime.IsCancellationRequested) { }
-        catch (Exception ex) { Logger.LogWarning(ex, "Country filter failed."); if (!_disposed) Snackbar.Add("Could not load the filter. Please retry.", Severity.Warning); }
+        catch (Exception ex) { Logger.LogWarning(ex, "Record filter failed."); if (!_disposed) Snackbar.Add("Could not load the filter. Please retry.", Severity.Warning); }
         finally { _createDialog = null; _creating = false; }
     }
 }

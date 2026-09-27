@@ -14,7 +14,8 @@ namespace CorporateStarter.Api.Controllers.MasterData;
 [Authorize]
 [Route("api/[controller]")]
 [Produces("application/json")]
-public sealed class PositionsController : ControllerBase
+[TableRequestErrors]
+public sealed partial class PositionsController : ControllerBase
 {
     private readonly IMediator _mediator;
 

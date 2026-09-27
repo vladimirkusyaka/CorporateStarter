@@ -1,13 +1,11 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
+namespace CorporateStarter.Shared.Dtos.MasterData.Positions;
 
-namespace CorporateStarter.Shared.Dtos.MasterData.Positions
+public sealed class CreatePositionRequest
 {
-    public class CreatePositionRequest
-    {
-        public string Name { get; set; } = string.Empty;
+    [Required, StringLength(150)]
+    public string Name { get; set; } = string.Empty;
 
-        public string? Description { get; set; }
-    }
+    [StringLength(1000)]
+    public string? Description { get; set; }
 }

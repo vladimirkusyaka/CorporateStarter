@@ -1,123 +1,37 @@
-﻿using CorporateStarter.Client.Abstractions.Api;
-using CorporateStarter.Client.Core.MasterData.Countries;
+﻿using CorporateStarter.Client.Core.MasterData.Countries;
+using CorporateStarter.Client.UI.Components.Tables;
 using CorporateStarter.Shared.Dtos.MasterData.Countries;
 using Microsoft.AspNetCore.Components;
-
+using MudBlazor;
 namespace CorporateStarter.Client.UI.Components.Pages.Countries;
 
-public partial class Countries : IDisposable
+public partial class Countries
 {
-    [Inject]
-    private CountriesClient Client { get; set; } = default!;
-
-    [Inject]
-    private ILogger<Countries> Logger { get; set; } = default!;
-
-    private static readonly int[] PageSizes = [10, 20, 50];
-    private readonly CancellationTokenSource _lifetime = new();
-    private IReadOnlyList<CountryListItemDto> _countries = [];
-    private bool _loadStarted;
-    private bool _loading;
-    private bool _disposed;
-    private string? _error;
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    [Inject] private CountriesClient Client { get; set; } = default!;
+    [Inject] private IDialogService Dialogs { get; set; } = default!;
+    private enum Column { Code, Name, NativeName, PhoneCode, Status }
+    private static readonly TableColumn<CountryListItemDto, Column>[] Columns =
+    [
+        new(Column.Code, "code", "Code", x => x.Code),
+        new(Column.Name, "name", "Name", x => x.Name),
+        new(Column.NativeName, "nativeName", "Native name", x => x.NativeName),
+        new(Column.PhoneCode, "phoneCode", "Phone code", x => x.PhoneCode),
+        new(Column.Status, "isActive", "Status", x => x.IsActive ? "Active" : "Inactive", true)
+    ];
+    private Task<IDialogReference> OpenEditorAsync(Guid? id)
     {
-        if (firstRender)
-            await LoadAsync();
-        else
-            ApplyPendingSelection();
-    }
-
-    protected Task LoadAsync() => LoadAsync(preserveSelection: false);
-
-    private async Task LoadAsync(bool preserveSelection, bool selectFirstIfMissing = false)
-    {
-        if (_disposed || _loading)
-            return;
-
-        var cancellationToken = _lifetime.Token;
-        if (!preserveSelection) ClearSelection();
-        else _pendingSelection = null;
-        ResetSearchPosition();
-        _loadStarted = true;
-        _loading = true;
-        _error = null;
-        _countries = [];
-        StateHasChanged();
-
-        try
-        {
-            _capabilities = await Client.CapabilitiesAsync(cancellationToken);
-            if (!_capabilities.ViewInactive) _queryState.RemoveColumn(CountryColumn.Status);
-            var page = await Client.QueryAsync(BuildQuery(), cancellationToken);
-            if (!_disposed && !cancellationToken.IsCancellationRequested)
+        var parameters = new DialogParameters<CountryEditorDialog>();
+        parameters.Add(x => x.CountryId, id);
+        return Dialogs.ShowAsync<CountryEditorDialog>(id.HasValue ? "Edit country" : "Add country", parameters,
+            new DialogOptions
             {
-                _countries = page.Items;
-                _queryState.ApplyPage(page.Page, page.TotalCount);
-            }
-        }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-        {
-        }
-        catch (ClientApiHttpException exception)
-        {
-            _error = exception.StatusCode switch
-            {
-                401 => "The request could not be authorized. Retry after session verification.",
-                403 => "You do not have permission to view countries.",
-                404 => "The countries service could not be found.",
-                429 => "Too many requests. Please wait before retrying.",
-                >= 500 => "The countries service is temporarily unavailable. Please retry.",
-                _ => "The countries service rejected the request. Please retry."
-            };
-        }
-        catch (ClientApiSessionException exception)
-        {
-            _error = exception.Failure switch
-            {
-                ClientApiSessionFailure.Busy =>
-                    "Session verification is in progress. Retry when it finishes.",
-                ClientApiSessionFailure.SessionChanged =>
-                    "The session changed. Reload the country list.",
-                _ => "A valid sign-in is required to load countries."
-            };
-        }
-        catch (ClientApiTransportException)
-        {
-            _error = "Could not receive a response from the service. Please retry.";
-        }
-        catch (InvalidDataException)
-        {
-            Logger.LogWarning("The countries service returned an invalid response.");
-            _error = "The service returned an unexpected response. Please contact support if this persists.";
-        }
-        catch (Exception exception)
-        {
-            Logger.LogError(exception, "Loading the country list failed.");
-            _error = "Could not load countries. Please retry.";
-        }
-        finally
-        {
-            if (preserveSelection)
-                _selection.RetainVisible(_disposed ? Array.Empty<Guid>() : _countries.Select(x => x.Id),
-                    selectFirstIfEmpty: selectFirstIfMissing && _error is null);
-            _loading = false;
-            if (!_disposed)
-                StateHasChanged();
-        }
-    }
-
-    public void Dispose()
-    {
-        if (_disposed)
-            return;
-
-        _disposed = true;
-        _createDialog?.Close();
-        _lifetime.Cancel();
-        _lifetime.Dispose();
-        _countries = [];
-        _error = null;
-        GC.SuppressFinalize(this);
+                Position = DialogPosition.CenterRight,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true,
+                CloseButton = false,
+                BackdropClick = false,
+                CloseOnEscapeKey = false,
+                CloseOnNavigation = false
+            });
     }
 }

@@ -1,0 +1,35 @@
+﻿.editor-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.editor-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+    .editor-fields ::deep .mud-input-control {
+        margin-bottom: 16px;
+    }
+
+    .editor-fields ::deep .editor-field-label {
+        display: block;
+        margin: 0 0 6px;
+        color: #1e293b;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+.editor-discard {
+    padding: 16px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 6px;
+}
+
+    .editor-discard p {
+        margin: 0 0 8px;
+    }

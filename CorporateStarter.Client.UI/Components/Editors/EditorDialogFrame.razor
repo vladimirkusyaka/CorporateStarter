@@ -1,0 +1,47 @@
+﻿<MudDialog Class="cs-record-editor-panel">
+    <TitleContent>
+        <div class="editor-heading">
+            <MudText Typo="Typo.h6">@Title</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Close" OnClick="Close" Disabled="@Saving" Size="Size.Small" aria-label="Close editor" />
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <div class="editor-fields">
+            @if (Loading)
+            {
+                <MudProgressLinear Indeterminate="true" Color="Color.Primary" aria-label="Loading record" />
+            }
+            <MudForm @ref="_form">@ChildContent</MudForm>
+            @if (Error is not null)
+            {
+                <MudAlert Severity="Severity.Error" role="alert">@Error</MudAlert>
+            }
+            @if (!Loaded && !Loading && SessionReady)
+            {
+                <MudButton OnClick="Retry" Color="Color.Primary">Retry loading</MudButton>
+            }
+            @if (!SessionReady)
+            {
+                <MudAlert Severity="Severity.Info" role="status">Waiting for session verification…</MudAlert>
+            }
+            @if (ConfirmDiscard)
+            {
+                <div class="editor-discard" role="alert">
+                    <p>Discard unsaved changes?</p>
+                    <MudButton OnClick="KeepEditing">Keep editing</MudButton>
+                    <MudButton Color="Color.Error" OnClick="Discard">Discard</MudButton>
+                </div>
+            }
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close" Disabled="@Saving">@(Uncertain ? "Close and check list" : "Cancel")</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Save" Disabled="@(Blocked || ConfirmDiscard)">
+            @if (Saving)
+            {
+                <MudProgressCircular Indeterminate="true" Size="Size.Small" Class="mr-2" />
+            }
+            Save
+        </MudButton>
+    </DialogActions>
+</MudDialog>

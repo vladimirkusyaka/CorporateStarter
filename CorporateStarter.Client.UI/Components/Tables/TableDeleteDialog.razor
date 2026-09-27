@@ -1,5 +1,5 @@
 ﻿<MudDialog>
-    <TitleContent><MudText Typo="Typo.h6">Delete @(_items.Length == 1 ? "Country" : "Countries")</MudText></TitleContent>
+    <TitleContent><MudText Typo="Typo.h6">Delete @(_items.Length == 1 ? Singular : Plural)</MudText></TitleContent>
     <DialogContent>
         <MudText>@Confirmation</MudText>
         @if (_busy)

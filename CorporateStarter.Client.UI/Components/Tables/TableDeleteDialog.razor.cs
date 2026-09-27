@@ -1,19 +1,19 @@
 ﻿using CorporateStarter.Client.Abstractions.Api;
 using CorporateStarter.Client.Abstractions.Auth;
-using CorporateStarter.Client.Core.MasterData.Countries;
-using CorporateStarter.Shared.Dtos.MasterData.Countries;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace CorporateStarter.Client.UI.Components.Pages.Countries;
+namespace CorporateStarter.Client.UI.Components.Tables;
 
-public partial class CountryDeleteDialog : IDisposable
+public partial class TableDeleteDialog : IDisposable
 {
-    [Parameter] public IReadOnlyList<CountryListItemDto> Countries { get; set; } = [];
+    [Parameter] public IReadOnlyList<TableDeleteItem> Items { get; set; } = [];
+    [Parameter, EditorRequired] public Func<Guid, CancellationToken, Task> Delete { get; set; } = default!;
+    [Parameter] public string Singular { get; set; } = "record";
+    [Parameter] public string Plural { get; set; } = "records";
     [CascadingParameter] private IMudDialogInstance Dialog { get; set; } = default!;
-    [Inject] private CountriesClient Client { get; set; } = default!;
     [Inject] private IClientAuthState Auth { get; set; } = default!;
-    [Inject] private ILogger<CountryDeleteDialog> Logger { get; set; } = default!;
+    [Inject] private ILogger<TableDeleteDialog> Logger { get; set; } = default!;
     private readonly CancellationTokenSource _lifetime = new();
     private (Guid Id, string Name)[] _items = [];
     private ClientAuthSnapshot _initial = default!;
@@ -26,14 +26,14 @@ public partial class CountryDeleteDialog : IDisposable
     private bool CanDelete => !_busy && !_attempted && !_disposed && !_closed &&
         _items.Length > 0 && SameSession && Auth.Current.Status == ClientAuthStatus.Authenticated;
     private string Confirmation => _items.Length == 1
-        ? $"Do you really want to delete Country: {_items[0].Name}?"
-        : $"Do you really want to delete {_items.Length} Countries?";
+        ? $"Do you really want to delete {Singular}: {_items[0].Name}?"
+        : $"Do you really want to delete {_items.Length} {Plural}?";
 
     protected override void OnInitialized()
     {
         _initial = Auth.Current;
         // Freeze IDs and names: the confirmation and the requests use the same selection.
-        _items = Countries.DistinctBy(x => x.Id).Select(x => (x.Id, x.Name)).ToArray();
+        _items = Items.DistinctBy(x => x.Id).Select(x => (x.Id, x.Name)).ToArray();
         Auth.StateChanged += OnSessionChanged;
         if (!CanDelete) ForceClose();
     }
@@ -61,7 +61,7 @@ public partial class CountryDeleteDialog : IDisposable
             {
                 _lifetime.Token.ThrowIfCancellationRequested();
                 if (!SameSession) throw new ClientApiTransportException("The session changed during deletion.");
-                await Client.DeleteAsync(item.Id, _lifetime.Token);
+                await Delete(item.Id, _lifetime.Token);
                 if (_closed || _disposed) return;
                 _completed++;
                 StateHasChanged();
@@ -72,20 +72,20 @@ public partial class CountryDeleteDialog : IDisposable
         catch (OperationCanceledException) when (_lifetime.IsCancellationRequested) { }
         catch (Exception ex)
         {
-            Logger.LogWarning(ex, "Country deletion stopped after {Completed} of {Total} confirmed requests.",
+            Logger.LogWarning(ex, "Record deletion stopped after {Completed} of {Total} confirmed requests.",
                 _completed, _items.Length);
             if (_closed || _disposed) return;
             var reason = ex is ClientApiHttpException http ? http.StatusCode switch
             {
                 401 => "Sign in again before continuing.",
-                403 => "You do not have permission to delete countries.",
-                404 => "The next country was not found.",
+                403 => "You do not have permission to delete records.",
+                404 => "The next record was not found.",
                 429 => "Too many requests. Please wait before trying again.",
                 >= 400 and < 500 => "The server rejected the next deletion.",
                 _ => "The result of the last request is unknown."
             } : "The result of the last request is unknown.";
             _error = $"Deletion stopped. {_completed} of {_items.Length} deletions confirmed. {reason} " +
-                "Close this dialog to refresh the list before selecting countries again.";
+                "Close this dialog to refresh the list before selecting records again.";
         }
         finally { _busy = false; }
     }
@@ -117,3 +117,5 @@ public partial class CountryDeleteDialog : IDisposable
         GC.SuppressFinalize(this);
     }
 }
+
+public sealed record TableDeleteItem(Guid Id, string Name);

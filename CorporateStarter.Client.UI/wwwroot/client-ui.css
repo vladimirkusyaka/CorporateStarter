@@ -70,7 +70,7 @@ h1:focus {
 }
 
 /* Right-side country creation dialog. */
-.mud-dialog.cs-country-create-panel {
+.mud-dialog.cs-record-editor-panel {
     width: 440px;
     max-width: 100vw;
     height: 100vh;
@@ -82,30 +82,30 @@ h1:focus {
     flex-direction: column;
 }
 
-.cs-country-create-panel .mud-dialog-title {
+.cs-record-editor-panel .mud-dialog-title {
     flex-shrink: 0;
     border-bottom: 1px solid #e4e7eb;
 }
 
-.cs-country-create-panel .mud-dialog-content {
+.cs-record-editor-panel .mud-dialog-content {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
     padding: 24px;
 }
 
-.cs-country-create-panel .mud-dialog-actions {
+.cs-record-editor-panel .mud-dialog-actions {
     flex-shrink: 0;
     padding: 16px 24px;
     border-top: 1px solid #e4e7eb;
 }
 
-.mud-dialog.cs-country-create-panel {
+.mud-dialog.cs-record-editor-panel {
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
-    width: var(--cs-country-panel-width, 440px);
+    width: var(--cs-record-panel-width, 440px);
     max-width: 100vw;
     margin: 0;
     transform-origin: right center;

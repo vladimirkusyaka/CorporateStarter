@@ -1,0 +1,132 @@
+﻿@typeparam TItem
+@typeparam TColumn where TColumn : struct, Enum
+
+<section class="reference-page" aria-labelledby="@(_elementId + "/title")">
+    <header class="reference-heading">
+        <h1 id="@(_elementId + "/title")">@Title</h1>
+    </header>
+    <div class="reference-toolbar">
+        <div class="reference-actions">
+            <MudTooltip Text="@($"Add {Singular}")">
+                <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Outlined"
+                               Color="Color.Primary" Disabled="@(_loading || _creating || _querying || !_capabilities.CanCreate)"
+                               OnClick="OpenCreateAsync" Class="reference-refresh" aria-label="@($"Add {Singular}")" />
+            </MudTooltip>
+            <MudTooltip Text="@($"Edit {Singular}")">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined"
+                               Color="Color.Primary" Disabled="@(!CanEdit)" OnClick="OpenEditAsync"
+                               Class="reference-refresh" aria-label="@($"Edit {Singular}")" />
+            </MudTooltip>
+            <MudTooltip Text="@($"Delete {Title}")">
+                <MudIconButton Icon="@DeleteIcon" Variant="Variant.Outlined"
+                               Color="Color.Primary" Disabled="@(!CanDelete)" OnClick="OpenDeleteAsync"
+                               Class="reference-refresh" aria-label="@($"Delete {Title}")" />
+            </MudTooltip>
+            <MudTooltip Text="@($"Refresh {Title}")">
+                <MudIconButton Icon="@Icons.Material.Filled.Refresh" Variant="Variant.Outlined"
+                               Color="Color.Primary" Disabled="@(_loading || _creating || _querying)" OnClick="LoadAsync"
+                               Class="reference-refresh" aria-label="@($"Refresh {Title}")" />
+            </MudTooltip>
+        </div>
+        <form class="reference-search" @onsubmit="FindNext" @onsubmit:preventDefault="true">
+            <label for="@(_elementId + "/search")">Search</label>
+            <input id="@(_elementId + "/search")" type="search" maxlength="200" @bind="_search" @bind:event="oninput"
+                   placeholder="Find in current list" disabled="@(_loading || _creating || _querying)" />
+            <MudIconButton Icon="@Icons.Material.Filled.Search" Color="Color.Primary"
+                           ButtonType="ButtonType.Submit" Disabled="@(_loading || _creating || _querying || string.IsNullOrWhiteSpace(_search))"
+                           title="Find next (Enter)" aria-label="Find next record" />
+        </form>
+    </div>
+    @if (_filters.Count > 0 || _searchMessage is not null)
+    {
+        <div class="reference-query-status">
+            <span role="status" aria-live="polite">@_searchMessage</span>
+            @if (_filters.Count > 0)
+            {
+                <button type="button" @onclick="ClearFilters" disabled="@(_loading || _creating || _querying)">Clear filters (@_filters.Count)</button>
+            }
+        </div>
+    }
+
+    @if (!_hasLoaded && (_loading || !_loadStarted))
+    {
+        <div class="reference-feedback reference-loading" role="status" aria-live="polite">
+            <span>Loading @Title…</span>
+            @for (var row = 0; row < 8; row++)
+            {
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="32px" />
+            }
+        </div>
+    }
+    else if (_error is not null)
+    {
+        <div class="reference-feedback" role="alert">
+            <MudIcon Icon="@Icons.Material.Outlined.Info" Color="Color.Primary" Size="Size.Large" />
+            <p>@_error</p>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadAsync">Retry</MudButton>
+        </div>
+    }
+    else
+    {
+        <div class="reference-table" aria-busy="@((_loading || _querying) ? "true" : "false")">
+            @if (_loading || _querying)
+            {
+                <div class="reference-update-indicator" role="status" aria-label="Updating records">
+                    <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+                </div>
+            }
+            <MudTable @ref="_table" OnRowClick="OnRowClick" RowClassFunc="RowClass"
+                      T="TItem" Items="@_items"
+                      Dense="true" Hover="true" Elevation="0" FixedHeader="true" Height="100%"
+                      Breakpoint="Breakpoint.Sm" RowsPerPage="100" CurrentPage="0">
+                <HeaderContent>
+                    @foreach (var column in VisibleColumns)
+                    {
+                        <MudTh aria-sort="@SortAria(column)">
+                            <div class="reference-column-header">
+                                <button type="button" class="reference-sort" @onclick="@(() => SortBy(column))"
+                                        disabled="@(_loading || _creating || _querying)">
+                                    @ColumnLabel(column) <span aria-hidden="true">@SortArrow(column)</span>
+                                </button>
+                                <button type="button" class="@(_filters.ContainsKey(column) ? "reference-filter is-active" : "reference-filter")"
+                                        title="@FilterTitle(column)" aria-label="@FilterTitle(column)"
+                                        disabled="@(_loading || _creating || _querying)" @onclick="@(() => OpenFilterAsync(column))">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 8v6l-4 2v-8L4 5z" /></svg>
+                                </button>
+                            </div>
+                        </MudTh>
+                    }
+                </HeaderContent>
+                <RowTemplate>
+                    @foreach (var column in VisibleColumns)
+                    {
+                        var definition = Definition(column);
+                        <MudTd DataLabel="@definition.Label">
+                            @if (EqualityComparer<TColumn>.Default.Equals(column, VisibleColumns.First()))
+                            {
+                                <button type="button" class="reference-row-select" disabled="@(_loading || _querying || _creating)" aria-label="@($"Select {ItemName(context)}")"
+                                    aria-pressed="@(_selectedIds.Contains(ItemId(context)) ? "true" : "false")"
+                                    @onclick="@(e => SelectRow(context, e))" @onclick:stopPropagation="true">@definition.Text(context)</button>
+                            }
+                            else
+                            {
+                                <span>@(definition.Text(context) ?? "—")</span>
+                            }
+                        </MudTd>
+                    }
+                </RowTemplate>
+                <NoRecordsContent><span role="status">@(_filters.Count == 0 ? "No records found." : "No records match the filters.")</span></NoRecordsContent>
+                <PagerContent>
+                    <div class="reference-server-pager">
+                        <label>Rows <select value="@RowsPerPage" @onchange="ChangePageSizeAsync" disabled="@(_loading || _querying || _creating)">
+                            @foreach (var size in PageSizes) { <option value="@size">@size</option> }
+                        </select></label>
+                        <span>Page @(CurrentPage + 1) of @TotalPages · @_totalCount records</span>
+                        <button type="button" @onclick="PreviousPageAsync" disabled="@(_loading || _querying || _creating || CurrentPage == 0)">Previous</button>
+                        <button type="button" @onclick="NextPageAsync" disabled="@(_loading || _querying || _creating || CurrentPage + 1 >= TotalPages)">Next</button>
+                    </div>
+                </PagerContent>
+            </MudTable>
+        </div>
+    }
+</section>

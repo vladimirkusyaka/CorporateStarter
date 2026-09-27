@@ -1,0 +1,121 @@
+﻿using System.Text.Json;
+using CorporateStarter.Client.Abstractions.Api;
+using CorporateStarter.Client.Abstractions.Auth;
+using CorporateStarter.Client.Core.Api;
+using CorporateStarter.Client.Core.Auth;
+using CorporateStarter.Client.Core.MasterData.Countries;
+using CorporateStarter.Client.Core.MasterData.Positions;
+using CorporateStarter.Shared.Common;
+using CorporateStarter.Shared.Dtos.MasterData.Countries;
+using CorporateStarter.Shared.Dtos.MasterData.Positions;
+using Microsoft.Extensions.Logging.Abstractions;
+using Xunit;
+
+namespace CorporateStarter.Tests.Client;
+
+public sealed class MasterDataClientTests
+{
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Query_preserves_filters_and_uses_entity_route(bool country)
+    {
+        var transport = new Transport { Response = new(200, "{\"items\":[],\"page\":2,\"pageSize\":10,\"totalCount\":10}", "application/json") };
+        var api = CreateApi(transport);
+        var request = new TableRequest
+        {
+            PageNumber = 2,
+            PageSize = 10,
+            Filters = [new("isActive", "in", Values: [JsonSerializer.SerializeToElement(false)])]
+        };
+        if (country) await new CountriesClient(api).QueryAsync(request);
+        else await new PositionsClient(api).QueryAsync(request);
+        Assert.Equal(country ? "/api/Countries/query" : "/api/Positions/query", transport.Path);
+        Assert.Equal(HttpMethod.Post, transport.Method);
+        using var body = JsonDocument.Parse(transport.Body!);
+        Assert.Equal(2, body.RootElement.GetProperty("pageNumber").GetInt32());
+        Assert.False(body.RootElement.GetProperty("filters")[0].GetProperty("values")[0].GetBoolean());
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Query_rejects_duplicate_record_ids(bool country)
+    {
+        var id = Guid.NewGuid();
+        var json = JsonSerializer.Serialize(new { items = new[] { new { id, name = "A", code = "AA" }, new { id, name = "B", code = "BB" } }, page = 1, pageSize = 20, totalCount = 2 });
+        var api = CreateApi(new Transport { Response = new(200, json, "application/json") });
+        if (country) await Assert.ThrowsAsync<InvalidDataException>(() => new CountriesClient(api).QueryAsync(new()));
+        else await Assert.ThrowsAsync<InvalidDataException>(() => new PositionsClient(api).QueryAsync(new()));
+    }
+
+    [Fact]
+    public async Task Position_update_sends_false_status_and_rejects_wrong_response_id()
+    {
+        var transport = new Transport { Response = new(200, JsonSerializer.Serialize(new { id = Guid.NewGuid(), name = "Lead", isActive = false }), "application/json") };
+        var client = new PositionsClient(CreateApi(transport));
+        var id = Guid.NewGuid();
+        await Assert.ThrowsAsync<InvalidDataException>(() => client.UpdateAsync(id, new() { Name = "Lead", IsActive = false }));
+        Assert.Equal($"/api/Positions/{id:D}", transport.Path);
+        using var body = JsonDocument.Parse(transport.Body!);
+        Assert.False(body.RootElement.GetProperty("isActive").GetBoolean());
+        Assert.Equal(1, transport.Calls);
+    }
+
+    [Fact]
+    public async Task Country_update_keeps_omitted_status_unchanged()
+    {
+        var id = Guid.NewGuid();
+        var transport = new Transport { Response = new(200, JsonSerializer.Serialize(new { id, name = "Country", code = "AA", isActive = false }), "application/json") };
+        await new CountriesClient(CreateApi(transport)).UpdateAsync(id, new() { Name = "Country", Code = "AA" });
+        using var body = JsonDocument.Parse(transport.Body!);
+        Assert.False(body.RootElement.TryGetProperty("isActive", out _));
+    }
+
+    [Fact]
+    public async Task Uncertain_create_is_not_replayed()
+    {
+        var transport = new Transport { Fail = true };
+        await Assert.ThrowsAsync<ClientApiTransportException>(() => new PositionsClient(CreateApi(transport)).CreateAsync(new() { Name = "Lead" }));
+        Assert.Equal(1, transport.Calls);
+    }
+
+    [Fact]
+    public async Task Delete_requires_204_and_empty_id_never_reaches_transport()
+    {
+        var transport = new Transport { Response = new(200, "{}", "application/json") };
+        var client = new PositionsClient(CreateApi(transport));
+        await Assert.ThrowsAsync<InvalidDataException>(() => client.DeleteAsync(Guid.NewGuid()));
+        await Assert.ThrowsAsync<ArgumentException>(() => client.DeleteAsync(Guid.Empty));
+        Assert.Equal(1, transport.Calls);
+    }
+
+    private static ClientApiClient CreateApi(Transport transport)
+    {
+        var state = new ClientAuthStateStore(NullLogger<ClientAuthStateStore>.Instance);
+        state.TryTransition(0, ClientAuthStatus.Authenticated, transport.UserId);
+        return new(transport, state, new ClientSessionCoordinator(state, transport, transport, transport));
+    }
+
+    private sealed class Transport : IClientApiTransport, IClientSessionTransport, IClientLoginTransport, IClientLogoutTransport
+    {
+        public Guid UserId { get; } = Guid.NewGuid();
+        public ClientApiResponse Response { get; init; } = new(204, "");
+        public bool Fail { get; init; }
+        public int Calls { get; private set; }
+        public string? Path { get; private set; }
+        public string? Body { get; private set; }
+        public HttpMethod? Method { get; private set; }
+        public Task<ClientApiResponse> SendAsync(HttpMethod method, string relativePath, Guid expectedUserId, string? jsonBody = null, CancellationToken cancellationToken = default)
+        {
+            Assert.Equal(UserId, expectedUserId);
+            Calls++; Path = relativePath; Body = jsonBody; Method = method;
+            if (Fail) throw new ClientApiTransportException("Lost response.");
+            return Task.FromResult(Response);
+        }
+        public Task<ClientSessionRestoreResult> RestoreAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(ClientSessionRestoreResult.Authenticated(UserId));
+        public Task<ClientLoginResult> LoginAsync(string login, string password) => throw new NotSupportedException();
+        public Task<ClientLogoutStatus> LogoutAsync() => throw new NotSupportedException();
+    }
+}

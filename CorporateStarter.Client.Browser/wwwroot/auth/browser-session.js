@@ -406,7 +406,7 @@ const clientApiMaxResponseBytes = 4 * 1024 * 1024;
 
 export async function sendApiRequest(request) {
     const guid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    const route = /^\/api\/Countries(?:\/(?:query|find|filter-values|capabilities)|\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?$/i;
+    const route = /^\/api\/(?:Countries|Positions)(?:\/(?:query|find|filter-values|capabilities)|\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?$/i;
     const methods = ["GET", "POST", "PUT", "DELETE"];
 
     if (!request || typeof request.id !== "string" || !guid.test(request.id) ||

@@ -1,13 +1,14 @@
-﻿using CorporateStarter.Shared.Dtos.MasterData.Countries;
+﻿using CorporateStarter.Client.Core.Tables;
+using CorporateStarter.Shared.Common;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
-using CorporateStarter.Client.Core.Tables;
+using static MudBlazor.CategoryTypes;
 
-namespace CorporateStarter.Client.UI.Components.Pages.Countries;
+namespace CorporateStarter.Client.UI.Components.Tables;
 
-public partial class Countries
+public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
 {
-    private MudTable<CountryListItemDto>? _table;
+    private MudTable<TItem>? _table;
     private readonly TableSelection<Guid> _selection = new();
     private IReadOnlySet<Guid> _selectedIds => _selection.SelectedIds;
     private Guid? _pendingSelection;
@@ -29,34 +30,33 @@ public partial class Countries
         _pendingSelection = null;
     }
 
-    private string CountryRowClass(CountryListItemDto country, int index) =>
-        _selectedIds.Contains(country.Id) ? "country-row-selected" : string.Empty;
+    private string RowClass(TItem record, int index) =>
+        _selectedIds.Contains(ItemId(record)) ? "reference-row-selected" : string.Empty;
 
-    private void OnCountryRowClick(TableRowClickEventArgs<CountryListItemDto> args)
+    private void OnRowClick(TableRowClickEventArgs<TItem> args)
     {
-        if (args.Item is not null) SelectCountry(args.Item, args.MouseEventArgs);
+        if (args.Item is not null) SelectRow(args.Item, args.MouseEventArgs);
     }
 
-    private void SelectCountry(CountryListItemDto country, MouseEventArgs mouse)
+    private void SelectRow(TItem record, MouseEventArgs mouse)
     {
-        if (_loading || _creating || _disposed || mouse.Button != 0 || _table is null) return;
+        if (_loading || _querying || _creating || _disposed || mouse.Button != 0 || _table is null) return;
         var visible = _table.FilteredItems.Skip(_table.CurrentPage * _table.RowsPerPage)
-            .Take(_table.RowsPerPage).Select(x => x.Id).ToList();
-        _selection.Select(country.Id, visible, mouse.ShiftKey, mouse.CtrlKey);
+            .Take(_table.RowsPerPage).Select(x => ItemId(x)).ToList();
+        _selection.Select(ItemId(record), visible, mouse.ShiftKey, mouse.CtrlKey || mouse.MetaKey);
     }
 
-    private void SelectSavedCountry(Guid id) { _pendingSelection = id; StateHasChanged(); }
+    private void SelectSavedRow(Guid id) { _pendingSelection = id; StateHasChanged(); }
 
     private void ApplyPendingSelection()
     {
         if (_pendingSelection is not { } id || _loading || _table is null) return;
         _pendingSelection = null;
-        var items = _countries.ToList();
-        var index = items.FindIndex(x => x.Id == id);
+        var items = _items.ToList();
+        var index = items.FindIndex(x => ItemId(x) == id);
         if (index < 0) return;
 
         _selection.SelectOnly(id);
         StateHasChanged();
     }
 }
-

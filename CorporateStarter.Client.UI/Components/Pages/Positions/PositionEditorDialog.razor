@@ -1,0 +1,20 @@
+﻿@using CorporateStarter.Client.UI.Components.Editors
+@using CorporateStarter.Shared.Dtos.MasterData.Positions
+@inherits RecordEditorBase<UpdatePositionRequest, PositionDetailsDto>
+
+<EditorDialogFrame @ref="_frame" Title="@(IsEditing ? "Edit position" : "Add position")"
+    Loading="_loadingDetails" Loaded="_loaded" Saving="_saving" Blocked="Blocked" SessionReady="_sessionReady"
+    Uncertain="_uncertain" ConfirmDiscard="_confirmDiscard" Error="@_error"
+    Close="CloseAsync" Save="SaveAsync" Retry="LoadDetailsAsync" KeepEditing="KeepEditing" Discard="Discard">
+                <label class="editor-field-label" for="position-create-name">Name</label>
+                <MudTextField @bind-Value="_model.Name" MaxLength="150" InputId="position-create-name" aria-required="true" Variant="Variant.Outlined"
+                              Margin="Margin.Dense" Immediate="true" Disabled="@Blocked"
+                              Validation="@(new Func<string, string?>(Required))" />
+                <MudTextField @bind-Value="_model.Description" MaxLength="1000" Label="Description" Lines="4" Variant="Variant.Outlined"
+                    Margin="Margin.Dense" Immediate="true" Disabled="@Blocked" />
+                @if (IsEditing)
+                {
+                    <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@Blocked" Label="Active" />
+                }
+
+</EditorDialogFrame>

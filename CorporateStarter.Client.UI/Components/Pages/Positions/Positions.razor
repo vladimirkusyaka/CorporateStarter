@@ -1,0 +1,8 @@
+﻿@page "/positions"
+@using CorporateStarter.Client.UI.Components.Tables
+@using CorporateStarter.Shared.Dtos.MasterData.Positions
+
+<PageTitle>Positions</PageTitle>
+<ReferenceTable TItem="PositionListItemDto" TColumn="Column" Client="Client" Columns="Columns"
+    ItemId="@(x => x.Id)" ItemName="@(x => x.Name)" Title="Positions" Singular="position"
+    OpenEditor="OpenEditorAsync" SavedId="@(value => (value as PositionDetailsDto)?.Id)" />

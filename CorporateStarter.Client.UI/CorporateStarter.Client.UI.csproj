@@ -10,10 +10,8 @@
 		<SupportedPlatform Include="browser" />
 		<Using Include="Microsoft.Extensions.Logging" />
 
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web"
-						  Version="10.0.11" />
-		<PackageReference Include="MudBlazor"
-						  Version="9.7.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.11" />
+		<PackageReference Include="MudBlazor" Version="9.7.0" />
 
 		<ProjectReference Include="..\CorporateStarter.Client.Core\CorporateStarter.Client.Core.csproj" />
 		<ProjectReference Include="..\CorporateStarter.Client.Browser\CorporateStarter.Client.Browser.csproj" />
