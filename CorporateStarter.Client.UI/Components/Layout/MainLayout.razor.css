@@ -340,3 +340,8 @@
         align-items: flex-start;
     }
 }
+
+/* Initial verification has no application shell behind it. */
+.cs-auth-mask.cs-auth-startup {
+    background: #f4f5f7;
+}

@@ -7,7 +7,7 @@
         "Action": "Start"
       },
       {
-        "Path": "CorporateStarter.Web\\CorporateStarter.Web.csproj",
+        "Path": "CorporateStarter.Standalone.Host\\CorporateStarter.Standalone.Host.csproj",
         "Action": "Start"
       }
     ]

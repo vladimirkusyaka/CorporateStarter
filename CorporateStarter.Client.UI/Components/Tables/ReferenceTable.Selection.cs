@@ -38,6 +38,20 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
         if (args.Item is not null) SelectRow(args.Item, args.MouseEventArgs);
     }
 
+    private Task OnRowDoubleClickAsync(TItem record, MouseEventArgs mouse)
+    {
+        if (_loading || _querying || _creating || _disposed || !_capabilities.CanUpdate || mouse.Button != 0)
+            return Task.CompletedTask;
+
+        var id = ItemId(record);
+        // Ignore events queued for a row that has disappeared after a refresh.
+        if (!_items.Any(item => ItemId(item) == id)) return Task.CompletedTask;
+
+        _pendingSelection = null;
+        _selection.SelectOnly(id);
+        return OpenEditAsync();
+    }
+
     private void SelectRow(TItem record, MouseEventArgs mouse)
     {
         if (_loading || _querying || _creating || _disposed || mouse.Button != 0 || _table is null) return;

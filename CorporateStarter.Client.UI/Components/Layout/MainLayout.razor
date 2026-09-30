@@ -12,7 +12,7 @@
       data-connection-ready="@(CanDismissReconnect ? "true" : "false")"></span>
 
 <div class="cs-layout-root">
-    @if (!ShowLogin)
+    @if (ShowShell)
     {
         <MudLayout Class="cs-shell">
             <MudAppBar Elevation="0" Dense="true" Class="cs-topbar">
@@ -252,7 +252,7 @@
     }
     else if (ShowSessionOverlay)
     {
-        <div class="cs-auth-mask">
+        <div class="@($"cs-auth-mask{(!ShowShell ? " cs-auth-startup" : string.Empty)}")">
             <MudPaper Class="pa-6" Elevation="10">
                 <div role="status" aria-live="polite">
                     @if (_snapshot.Status == ClientAuthStatus.Unavailable)
@@ -277,6 +277,7 @@
                     }
                     else
                     {
+                        <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Small" aria-hidden="true" />
                         <p>
                             @(Session.IsLogoutPending
                                 ? "Signing out…"

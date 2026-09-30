@@ -101,12 +101,14 @@
                     @foreach (var column in VisibleColumns)
                     {
                         var definition = Definition(column);
-                        <MudTd DataLabel="@definition.Label">
+                        <MudTd DataLabel="@definition.Label" @ondblclick="@(e => OnRowDoubleClickAsync(context, e))">
                             @if (EqualityComparer<TColumn>.Default.Equals(column, VisibleColumns.First()))
                             {
                                 <button type="button" class="reference-row-select" disabled="@(_loading || _querying || _creating)" aria-label="@($"Select {ItemName(context)}")"
-                                    aria-pressed="@(_selectedIds.Contains(ItemId(context)) ? "true" : "false")"
-                                    @onclick="@(e => SelectRow(context, e))" @onclick:stopPropagation="true">@definition.Text(context)</button>
+                                        aria-pressed="@(_selectedIds.Contains(ItemId(context)) ? "true" : "false")"
+                                        @onclick="@(e => SelectRow(context, e))" @onclick:stopPropagation="true">
+                                    @definition.Text(context)
+                                </button>
                             }
                             else
                             {
@@ -118,9 +120,15 @@
                 <NoRecordsContent><span role="status">@(_filters.Count == 0 ? "No records found." : "No records match the filters.")</span></NoRecordsContent>
                 <PagerContent>
                     <div class="reference-server-pager">
-                        <label>Rows <select value="@RowsPerPage" @onchange="ChangePageSizeAsync" disabled="@(_loading || _querying || _creating)">
-                            @foreach (var size in PageSizes) { <option value="@size">@size</option> }
-                        </select></label>
+                        <label>
+                            Rows
+                            <select value="@RowsPerPage" @onchange="ChangePageSizeAsync" disabled="@(_loading || _querying || _creating)">
+                                @foreach (var size in PageSizes)
+                                {
+                                    <option value="@size">@size</option>
+                                }
+                            </select>
+                        </label>
                         <span>Page @(CurrentPage + 1) of @TotalPages · @_totalCount records</span>
                         <button type="button" @onclick="PreviousPageAsync" disabled="@(_loading || _querying || _creating || CurrentPage == 0)">Previous</button>
                         <button type="button" @onclick="NextPageAsync" disabled="@(_loading || _querying || _creating || CurrentPage + 1 >= TotalPages)">Next</button>

@@ -19,10 +19,15 @@ public partial class MainLayout
         _snapshot.Status == ClientAuthStatus.Revalidating &&
         _snapshot.UserId is not null && _authorizedBody is not null;
 
+    // Never mount the application shell before this layout has authorized page content.
+    // Keep an existing shell during revalidation/reconnect to preserve the current page.
+    private bool ShowShell => !ShowLogin &&
+        (IsAuthenticated || (_snapshot.UserId is not null && _authorizedBody is not null));
+
     private bool ShowAuthorizedContent => IsAuthenticated || CanKeepContentDuringCheck;
     private bool IsQuietSessionCheck => CanKeepContentDuringCheck && !_showSessionCheckFeedback;
     private bool ShowSessionOverlay => !IsAuthenticated && !ShowLogin &&
-        (!IsSessionCheck || _showSessionCheckFeedback);
+        (!ShowShell || !IsSessionCheck || _showSessionCheckFeedback);
 
     private void UpdateSessionFeedback()
     {

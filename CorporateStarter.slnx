@@ -8,6 +8,8 @@
   <Project Path="CorporateStarter.Core/CorporateStarter.Core.csproj" />
   <Project Path="CorporateStarter.Infrastructure/CorporateStarter.Infrastructure.csproj" />
   <Project Path="CorporateStarter.Shared/CorporateStarter.Shared.csproj" />
+  <Project Path="CorporateStarter.Standalone.Host/CorporateStarter.Standalone.Host.csproj" Id="840aefda-6da6-46c7-b0f6-c279ee1d3d45" />
+  <Project Path="CorporateStarter.Standalone/CorporateStarter.Standalone.csproj" Id="4017ed24-f735-4b82-a046-16fe61eeb25a" />
   <Project Path="CorporateStarter.Tests.Client/CorporateStarter.Tests.Client.csproj" Id="270c6635-3cdb-43bb-a9a1-c634bc4912ad" />
   <Project Path="CorporateStarter.Tests.Integration/CorporateStarter.Tests.Integration.csproj" />
   <Project Path="CorporateStarter.Web/CorporateStarter.Web.csproj" />

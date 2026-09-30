@@ -1,14 +1,1 @@
-﻿@using CorporateStarter.Client.Browser.Components
-
-<BrowserEnvironmentGate>
-    <Router AppAssembly="typeof(Program).Assembly"
-            AdditionalAssemblies="CorporateStarter.Client.UI.ClientUiAssembly.RouteAssemblies"
-            NotFoundPage="typeof(CorporateStarter.Client.UI.Components.Pages.NotFound)">
-        <Found Context="routeData">
-            <RouteView RouteData="routeData"
-                       DefaultLayout="typeof(CorporateStarter.Client.UI.Components.Layout.MainLayout)" />
-
-            <FocusOnNavigate RouteData="routeData" Selector="h1" />
-        </Found>
-    </Router>
-</BrowserEnvironmentGate>
+﻿<CorporateStarter.Client.UI.Components.ClientRoutes HostAssembly="@typeof(Program).Assembly" />

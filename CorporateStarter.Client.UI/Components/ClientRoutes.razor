@@ -1,0 +1,18 @@
+﻿@using System.Reflection
+@using CorporateStarter.Client.Browser.Components
+
+<BrowserEnvironmentGate>
+    <Router AppAssembly="@HostAssembly"
+            AdditionalAssemblies="ClientUiAssembly.RouteAssemblies"
+            NotFoundPage="typeof(CorporateStarter.Client.UI.Components.Pages.NotFound)">
+        <Found Context="routeData">
+            <RouteView RouteData="routeData"
+                       DefaultLayout="typeof(CorporateStarter.Client.UI.Components.Layout.MainLayout)" />
+            <FocusOnNavigate RouteData="routeData" Selector="h1" />
+        </Found>
+    </Router>
+</BrowserEnvironmentGate>
+
+@code {
+    [Parameter, EditorRequired] public Assembly HostAssembly { get; set; } = default!;
+}
