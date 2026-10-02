@@ -1,0 +1,16 @@
+﻿@using CorporateStarter.Shared.Common
+
+<MudAutocomplete T="LookupOption" Label="@Label" Value="Value" ValueChanged="ValueChanged"
+                 SearchFunc="SearchAsync" ToStringFunc="@(option => option?.Label ?? string.Empty)"
+                 Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="Disabled"
+                 Required="true" RequiredError="Select a record from the list."
+                 Validation="@(new Func<LookupOption?, string?>(Validate))"
+                 Clearable="true" ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="false"
+                 Strict="false" MinCharacters="0" MaxItems="20" DebounceInterval="250">
+    <NoItemsTemplate><MudText Class="pa-2">No matching records. Try another search.</MudText></NoItemsTemplate>
+    <AfterItemsTemplate><MudText Typo="Typo.caption" Class="pa-2">Showing up to 20 records. Type to narrow the search.</MudText></AfterItemsTemplate>
+</MudAutocomplete>
+@if (_searchError is not null)
+{
+    <MudAlert Severity="Severity.Error" Dense="true" role="alert">@_searchError</MudAlert>
+}

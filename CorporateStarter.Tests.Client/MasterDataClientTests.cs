@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using CorporateStarter.Client.Core.MasterData.Cities;
+using System.Text.Json;
 using CorporateStarter.Client.Abstractions.Api;
 using CorporateStarter.Client.Abstractions.Auth;
 using CorporateStarter.Client.Core.Api;
@@ -16,9 +17,10 @@ namespace CorporateStarter.Tests.Client;
 public sealed class MasterDataClientTests
 {
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async Task Query_preserves_filters_and_uses_entity_route(bool country)
+    [InlineData("Countries")]
+    [InlineData("Positions")]
+    [InlineData("Cities")]
+    public async Task Query_preserves_filters_and_uses_entity_route(string entity)
     {
         var transport = new Transport { Response = new(200, "{\"items\":[],\"page\":2,\"pageSize\":10,\"totalCount\":10}", "application/json") };
         var api = CreateApi(transport);
@@ -28,9 +30,10 @@ public sealed class MasterDataClientTests
             PageSize = 10,
             Filters = [new("isActive", "in", Values: [JsonSerializer.SerializeToElement(false)])]
         };
-        if (country) await new CountriesClient(api).QueryAsync(request);
+        if (entity == "Countries") await new CountriesClient(api).QueryAsync(request);
+        else if (entity == "Cities") await new CitiesClient(api).QueryAsync(request);
         else await new PositionsClient(api).QueryAsync(request);
-        Assert.Equal(country ? "/api/Countries/query" : "/api/Positions/query", transport.Path);
+        Assert.Equal("/api/" + entity + "/query", transport.Path);
         Assert.Equal(HttpMethod.Post, transport.Method);
         using var body = JsonDocument.Parse(transport.Body!);
         Assert.Equal(2, body.RootElement.GetProperty("pageNumber").GetInt32());
@@ -38,14 +41,16 @@ public sealed class MasterDataClientTests
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async Task Query_rejects_duplicate_record_ids(bool country)
+    [InlineData("Countries")]
+    [InlineData("Positions")]
+    [InlineData("Cities")]
+    public async Task Query_rejects_duplicate_record_ids(string entity)
     {
         var id = Guid.NewGuid();
         var json = JsonSerializer.Serialize(new { items = new[] { new { id, name = "A", code = "AA" }, new { id, name = "B", code = "BB" } }, page = 1, pageSize = 20, totalCount = 2 });
         var api = CreateApi(new Transport { Response = new(200, json, "application/json") });
-        if (country) await Assert.ThrowsAsync<InvalidDataException>(() => new CountriesClient(api).QueryAsync(new()));
+        if (entity == "Countries") await Assert.ThrowsAsync<InvalidDataException>(() => new CountriesClient(api).QueryAsync(new()));
+        else if (entity == "Cities") await Assert.ThrowsAsync<InvalidDataException>(() => new CitiesClient(api).QueryAsync(new()));
         else await Assert.ThrowsAsync<InvalidDataException>(() => new PositionsClient(api).QueryAsync(new()));
     }
 
@@ -88,6 +93,31 @@ public sealed class MasterDataClientTests
         await Assert.ThrowsAsync<InvalidDataException>(() => client.DeleteAsync(Guid.NewGuid()));
         await Assert.ThrowsAsync<ArgumentException>(() => client.DeleteAsync(Guid.Empty));
         Assert.Equal(1, transport.Calls);
+    }
+
+    [Fact]
+    public async Task City_update_sends_country_region_and_inactive_status()
+    {
+        var id = Guid.NewGuid(); var countryId = Guid.NewGuid();
+        var transport = new Transport { Response = new(200, JsonSerializer.Serialize(new { id, name = "Town", countryId, countryName = "Country", countryCode = "AA" }), "application/json") };
+        await new CitiesClient(CreateApi(transport)).UpdateAsync(id, new() { Name = "Town", CountryId = countryId, Region = "North", IsActive = false });
+        using var body = JsonDocument.Parse(transport.Body!);
+        Assert.Equal(countryId, body.RootElement.GetProperty("countryId").GetGuid());
+        Assert.Equal("North", body.RootElement.GetProperty("region").GetString());
+        Assert.False(body.RootElement.GetProperty("isActive").GetBoolean());
+        Assert.Equal($"/api/Cities/{id:D}", transport.Path);
+    }
+
+    [Fact]
+    public async Task Country_lookup_is_bounded_and_rejects_duplicate_ids()
+    {
+        var id = Guid.NewGuid();
+        var transport = new Transport { Response = new(200, JsonSerializer.Serialize(new[] { new LookupOption(id, "AA"), new LookupOption(id, "BB") }), "application/json") };
+        await Assert.ThrowsAsync<InvalidDataException>(() => new CitiesClient(CreateApi(transport)).SearchCountriesAsync("Nor"));
+        Assert.Equal("/api/Cities/country-options", transport.Path);
+        using var body = JsonDocument.Parse(transport.Body!);
+        Assert.Equal("Nor", body.RootElement.GetProperty("text").GetString());
+        Assert.Equal(20, body.RootElement.GetProperty("limit").GetInt32());
     }
 
     private static ClientApiClient CreateApi(Transport transport)

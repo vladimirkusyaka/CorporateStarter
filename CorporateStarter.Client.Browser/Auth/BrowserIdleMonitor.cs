@@ -19,7 +19,7 @@ public sealed class BrowserIdleMonitor(IJSRuntime js) : IAsyncDisposable
             ObjectDisposedException.ThrowIf(_disposed, this);
             _revalidate = revalidate;
             _module ??= await js.InvokeAsync<IJSObjectReference>("import",
-                "./_content/CorporateStarter.Client.Browser/auth/browser-session.js");
+                BrowserSessionModule.Path);
             _reference ??= DotNetObjectReference.Create(this);
             _lease = await _module.InvokeAsync<long>("startIdleMonitor", _reference);
         }

@@ -12,7 +12,7 @@ public sealed class BrowserApiTransport(
     ILogger<BrowserApiTransport> logger) : IClientApiTransport
 {
     private const string ModulePath =
-        "./_content/CorporateStarter.Client.Browser/auth/browser-session.js";
+        BrowserSessionModule.Path;
 
     private const int RequestTimeoutMilliseconds = 30_000;
     private const long MaxResponseBytes = 4 * 1024 * 1024;

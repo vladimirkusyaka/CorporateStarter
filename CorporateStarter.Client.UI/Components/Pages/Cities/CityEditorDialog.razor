@@ -1,0 +1,21 @@
+﻿@using CorporateStarter.Client.UI.Components.Editors
+@using CorporateStarter.Client.UI.Components.Lookups
+@using CorporateStarter.Shared.Dtos.MasterData.Cities
+@inherits RecordEditorBase<UpdateCityRequest, CityDetailsDto>
+
+<EditorDialogFrame @ref="_frame" Title="@(IsEditing ? "Edit city" : "Add city")"
+                   Loading="_loadingDetails" Loaded="_loaded" Saving="_saving" Blocked="Blocked" SessionReady="_sessionReady"
+                   Uncertain="_uncertain" ConfirmDiscard="_confirmDiscard" Error="@_error"
+                   Close="CloseAsync" Save="SaveAsync" Retry="LoadDetailsAsync" KeepEditing="KeepEditing" Discard="Discard">
+    <ReferenceLookup Label="Country" Value="_country" ValueChanged="CountryChanged"
+                     Search="Client.SearchCountriesAsync" Disabled="@Blocked" />
+    <MudTextField @bind-Value="_model.Name" Label="Name" MaxLength="150" Variant="Variant.Outlined"
+                  Margin="Margin.Dense" Immediate="true" Disabled="@Blocked"
+                  Validation="@(new Func<string, string?>(Required))" />
+    <MudTextField @bind-Value="_model.Region" Label="Region" MaxLength="150" Variant="Variant.Outlined"
+                  Margin="Margin.Dense" Immediate="true" Disabled="@Blocked" />
+    @if (IsEditing)
+    {
+        <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@Blocked" Label="Active" />
+    }
+</EditorDialogFrame>

@@ -257,6 +257,7 @@ builder.Services.AddScoped<IPersonWriteRepository, PersonWriteRepository>();
 builder.Services.AddScoped<ICityReadRepository, CityReadRepository>();
 builder.Services.AddScoped<ICityWriteRepository, CityWriteRepository>();
 builder.Services.AddScoped<ICountryReadRepository, CountryReadRepository>();
+builder.Services.AddScoped<ICityTableRepository, CityTableRepository>();
 builder.Services.AddScoped<ICountryWriteRepository, CountryWriteRepository>();
 builder.Services.AddScoped<IPositionReadRepository, PositionReadRepository>();
 builder.Services.AddScoped<IPositionWriteRepository, PositionWriteRepository>();

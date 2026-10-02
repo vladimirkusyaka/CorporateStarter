@@ -14,7 +14,8 @@ namespace CorporateStarter.Api.Controllers.MasterData;
 [Authorize]
 [Route("api/[controller]")]
 [Produces("application/json")]
-public sealed class CitiesController : ControllerBase
+[TableRequestErrors]
+public sealed partial class CitiesController : ControllerBase
 {
     private readonly IMediator _mediator;
 

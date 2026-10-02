@@ -22,6 +22,7 @@ public abstract class RecordEditorBase<TModel, TDetails> : ComponentBase, IDispo
     protected abstract Task<TDetails> WriteModelAsync(CancellationToken ct);
     protected abstract void CaptureBaseline();
     protected abstract string ConflictMessage { get; }
+    protected virtual string SaveNotFoundMessage => "This record no longer exists. Close the form and refresh the list.";
     protected bool _loadingDetails;
     protected bool _loaded;
     protected EditorDialogFrame? _frame;
@@ -118,7 +119,7 @@ public abstract class RecordEditorBase<TModel, TDetails> : ComponentBase, IDispo
                 400 => "Check the record fields and try again.",
                 401 => "The request was not authorized. Verify your session before saving again.",
                 403 => "You do not have permission to save this record.",
-                404 => "This record no longer exists. Close the form and refresh the list.",
+                404 => SaveNotFoundMessage,
                 409 => ConflictMessage,
                 429 => "Too many requests. Please wait before saving again.",
                 _ => "The service rejected the request. Check the record list before trying again."

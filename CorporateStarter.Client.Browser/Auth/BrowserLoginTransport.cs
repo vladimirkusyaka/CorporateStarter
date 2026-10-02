@@ -14,7 +14,7 @@ namespace CorporateStarter.Client.Browser.Auth
       IAsyncDisposable
     {
         private const string ModulePath =
-            "./_content/CorporateStarter.Client.Browser/auth/browser-session.js";
+            BrowserSessionModule.Path;
 
         private readonly SemaphoreSlim _gate = new(1, 1);
         private IJSObjectReference? _module;
