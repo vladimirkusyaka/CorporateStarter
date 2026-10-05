@@ -11,8 +11,9 @@ public partial class ReferenceTable<TItem, TColumn> : IDisposable where TColumn 
     [Parameter, EditorRequired] public IReadOnlyList<TableColumn<TItem, TColumn>> Columns { get; set; } = [];
     [Parameter, EditorRequired] public Func<TItem, Guid> ItemId { get; set; } = default!;
     [Parameter, EditorRequired] public Func<TItem, string> ItemName { get; set; } = default!;
-    [Parameter, EditorRequired] public Func<Guid?, Task<MudBlazor.IDialogReference>> OpenEditor { get; set; } = default!;
-    [Parameter, EditorRequired] public Func<object?, Guid?> SavedId { get; set; } = default!;
+    [Parameter] public Func<Guid?, Task<MudBlazor.IDialogReference>>? OpenEditor { get; set; }
+    [Parameter] public Func<object?, Guid?> SavedId { get; set; } = _ => null;
+    [Parameter] public bool ReadOnly { get; set; }
     [Parameter] public string Title { get; set; } = "Records";
     [Parameter] public string Singular { get; set; } = "record";
     private readonly string _elementId = "table-" + Guid.NewGuid().ToString("N");

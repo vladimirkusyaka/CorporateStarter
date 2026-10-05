@@ -7,21 +7,24 @@
     </header>
     <div class="reference-toolbar">
         <div class="reference-actions">
-            <MudTooltip Text="@($"Add {Singular}")">
-                <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Outlined"
-                               Color="Color.Primary" Disabled="@(_loading || _creating || _querying || !_capabilities.CanCreate)"
-                               OnClick="OpenCreateAsync" Class="reference-refresh" aria-label="@($"Add {Singular}")" />
-            </MudTooltip>
-            <MudTooltip Text="@($"Edit {Singular}")">
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined"
-                               Color="Color.Primary" Disabled="@(!CanEdit)" OnClick="OpenEditAsync"
-                               Class="reference-refresh" aria-label="@($"Edit {Singular}")" />
-            </MudTooltip>
-            <MudTooltip Text="@($"Delete {Title}")">
-                <MudIconButton Icon="@DeleteIcon" Variant="Variant.Outlined"
-                               Color="Color.Primary" Disabled="@(!CanDelete)" OnClick="OpenDeleteAsync"
-                               Class="reference-refresh" aria-label="@($"Delete {Title}")" />
-            </MudTooltip>
+            @if (!ReadOnly)
+            {
+                <MudTooltip Text="@($"Add {Singular}")">
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Outlined"
+                                   Color="Color.Primary" Disabled="@(_loading || _creating || _querying || !_capabilities.CanCreate)"
+                                   OnClick="OpenCreateAsync" Class="reference-refresh" aria-label="@($"Add {Singular}")" />
+                </MudTooltip>
+                <MudTooltip Text="@($"Edit {Singular}")">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined"
+                                   Color="Color.Primary" Disabled="@(!CanEdit)" OnClick="OpenEditAsync"
+                                   Class="reference-refresh" aria-label="@($"Edit {Singular}")" />
+                </MudTooltip>
+                <MudTooltip Text="@($"Delete {Title}")">
+                    <MudIconButton Icon="@DeleteIcon" Variant="Variant.Outlined"
+                                   Color="Color.Primary" Disabled="@(!CanDelete)" OnClick="OpenDeleteAsync"
+                                   Class="reference-refresh" aria-label="@($"Delete {Title}")" />
+                </MudTooltip>
+            }
             <MudTooltip Text="@($"Refresh {Title}")">
                 <MudIconButton Icon="@Icons.Material.Filled.Refresh" Variant="Variant.Outlined"
                                Color="Color.Primary" Disabled="@(_loading || _creating || _querying)" OnClick="LoadAsync"

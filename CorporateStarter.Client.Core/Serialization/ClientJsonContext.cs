@@ -1,4 +1,5 @@
-﻿using CorporateStarter.Shared.Dtos.MasterData.Cities;
+﻿using CorporateStarter.Shared.Dtos.Permissions;
+using CorporateStarter.Shared.Dtos.MasterData.Cities;
 using CorporateStarter.Shared.Dtos.MasterData.Positions;
 using System.Text.Json.Serialization;
 using CorporateStarter.Shared.Common;
@@ -33,6 +34,7 @@ namespace CorporateStarter.Client.Core.Serialization;
 [JsonSerializable(typeof(PagedResult<CityListItemDto>), TypeInfoPropertyName = "CityPage")]
 [JsonSerializable(typeof(LookupRequest))]
 [JsonSerializable(typeof(LookupOption[]), TypeInfoPropertyName = "LookupOptions")]
+[JsonSerializable(typeof(PagedResult<PermissionListItemDto>), TypeInfoPropertyName = "PermissionPage")]
 internal partial class ClientJsonContext : JsonSerializerContext
 {
 }

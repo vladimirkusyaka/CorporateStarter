@@ -16,7 +16,7 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
 
     private async Task OpenEditorAsync(Guid? recordId)
     {
-        if (_creating || _disposed || _loading || _querying || (recordId.HasValue ? !_capabilities.CanUpdate : !_capabilities.CanCreate)) return;
+        if (ReadOnly || OpenEditor is null || _creating || _disposed || _loading || _querying || (recordId.HasValue ? !_capabilities.CanUpdate : !_capabilities.CanCreate)) return;
         _creating = true;
         try
         {

@@ -1,0 +1,7 @@
+﻿@page "/permissions"
+@using CorporateStarter.Client.UI.Components.Tables
+@using CorporateStarter.Shared.Dtos.Permissions
+
+<PageTitle>Permissions</PageTitle>
+<ReferenceTable TItem="PermissionListItemDto" TColumn="Column" Client="Client" Columns="Columns"
+    ItemId="@(x => x.Id)" ItemName="@(x => x.Code)" Title="Permissions" Singular="permission" ReadOnly="true" />

@@ -1,4 +1,5 @@
-﻿using CorporateStarter.Client.Core.MasterData.Cities;
+﻿using CorporateStarter.Client.Core.Security.Permissions;
+using CorporateStarter.Client.Core.MasterData.Cities;
 using System.Text.Json;
 using CorporateStarter.Client.Abstractions.Api;
 using CorporateStarter.Client.Abstractions.Auth;
@@ -20,6 +21,7 @@ public sealed class MasterDataClientTests
     [InlineData("Countries")]
     [InlineData("Positions")]
     [InlineData("Cities")]
+    [InlineData("Permissions")]
     public async Task Query_preserves_filters_and_uses_entity_route(string entity)
     {
         var transport = new Transport { Response = new(200, "{\"items\":[],\"page\":2,\"pageSize\":10,\"totalCount\":10}", "application/json") };
@@ -31,6 +33,7 @@ public sealed class MasterDataClientTests
             Filters = [new("isActive", "in", Values: [JsonSerializer.SerializeToElement(false)])]
         };
         if (entity == "Countries") await new CountriesClient(api).QueryAsync(request);
+        else if (entity == "Permissions") await new PermissionsClient(api).QueryAsync(request);
         else if (entity == "Cities") await new CitiesClient(api).QueryAsync(request);
         else await new PositionsClient(api).QueryAsync(request);
         Assert.Equal("/api/" + entity + "/query", transport.Path);
@@ -44,12 +47,14 @@ public sealed class MasterDataClientTests
     [InlineData("Countries")]
     [InlineData("Positions")]
     [InlineData("Cities")]
+    [InlineData("Permissions")]
     public async Task Query_rejects_duplicate_record_ids(string entity)
     {
         var id = Guid.NewGuid();
         var json = JsonSerializer.Serialize(new { items = new[] { new { id, name = "A", code = "AA" }, new { id, name = "B", code = "BB" } }, page = 1, pageSize = 20, totalCount = 2 });
         var api = CreateApi(new Transport { Response = new(200, json, "application/json") });
         if (entity == "Countries") await Assert.ThrowsAsync<InvalidDataException>(() => new CountriesClient(api).QueryAsync(new()));
+        else if (entity == "Permissions") await Assert.ThrowsAsync<InvalidDataException>(() => new PermissionsClient(api).QueryAsync(new()));
         else if (entity == "Cities") await Assert.ThrowsAsync<InvalidDataException>(() => new CitiesClient(api).QueryAsync(new()));
         else await Assert.ThrowsAsync<InvalidDataException>(() => new PositionsClient(api).QueryAsync(new()));
     }
@@ -118,6 +123,22 @@ public sealed class MasterDataClientTests
         using var body = JsonDocument.Parse(transport.Body!);
         Assert.Equal("Nor", body.RootElement.GetProperty("text").GetString());
         Assert.Equal(20, body.RootElement.GetProperty("limit").GetInt32());
+    }
+
+    [Fact]
+    public async Task Permission_catalog_uses_capabilities_and_rejects_delete_without_HTTP()
+    {
+        var transport = new Transport
+        {
+            Response = new(200,
+            "{\"canCreate\":false,\"canUpdate\":false,\"canDelete\":false,\"viewInactive\":true,\"canRestore\":false}", "application/json")
+        };
+        var client = new PermissionsClient(CreateApi(transport));
+        Assert.Equal(new TableCapabilities(false, false, false, true, false), await client.GetCapabilitiesAsync());
+        Assert.Equal("/api/Permissions/capabilities", transport.Path);
+        Assert.Equal(HttpMethod.Get, transport.Method);
+        await Assert.ThrowsAsync<NotSupportedException>(() => client.DeleteAsync(Guid.NewGuid()));
+        Assert.Equal(1, transport.Calls);
     }
 
     private static ClientApiClient CreateApi(Transport transport)

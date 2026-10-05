@@ -20,6 +20,7 @@ public static class ClientCoreServiceCollectionExtensions
         services.TryAddScoped<ClientApiClient>();
         services.TryAddScoped<CountriesClient>();
         services.TryAddScoped<PositionsClient>();
+        services.TryAddScoped<CorporateStarter.Client.Core.Security.Permissions.PermissionsClient>();
         services.TryAddScoped<CorporateStarter.Client.Core.MasterData.Cities.CitiesClient>();
         return services;
     }

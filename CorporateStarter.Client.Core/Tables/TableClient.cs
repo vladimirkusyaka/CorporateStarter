@@ -28,7 +28,7 @@ public abstract class TableClient<TItem>(ClientApiClient api, string route,
     public Task<string[]> FilterValuesAsync(TableValuesRequest request, CancellationToken ct = default) =>
         Api.PostJsonAsync(Route + "/filter-values", request, ClientJsonContext.Default.TableValuesRequest,
             ClientJsonContext.Default.StringArray, ct);
-    public Task DeleteAsync(Guid id, CancellationToken ct = default)
+    public virtual Task DeleteAsync(Guid id, CancellationToken ct = default)
     {
         if (id == Guid.Empty) throw new ArgumentException("Record ID is required.", nameof(id));
         return Api.DeleteAsync($"{Route}/{id:D}", ct);

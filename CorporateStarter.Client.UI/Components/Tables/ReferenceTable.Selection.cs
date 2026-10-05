@@ -12,7 +12,7 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
     private readonly TableSelection<Guid> _selection = new();
     private IReadOnlySet<Guid> _selectedIds => _selection.SelectedIds;
     private Guid? _pendingSelection;
-    private bool CanEdit => _capabilities.CanUpdate && !_querying && !_loading && !_creating && !_disposed && _selectedIds.Count == 1;
+    private bool CanEdit => !ReadOnly && OpenEditor is not null && _capabilities.CanUpdate && !_querying && !_loading && !_creating && !_disposed && _selectedIds.Count == 1;
     private int CurrentPage
     {
         get => _queryState.PageIndex;
@@ -40,7 +40,7 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
 
     private Task OnRowDoubleClickAsync(TItem record, MouseEventArgs mouse)
     {
-        if (_loading || _querying || _creating || _disposed || !_capabilities.CanUpdate || mouse.Button != 0)
+        if (ReadOnly || OpenEditor is null || _loading || _querying || _creating || _disposed || !_capabilities.CanUpdate || mouse.Button != 0)
             return Task.CompletedTask;
 
         var id = ItemId(record);

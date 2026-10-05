@@ -59,6 +59,42 @@ public sealed class TableComponentTests
         Assert.Empty(renderer.Errors);
     }
 
+    [Fact]
+    public async Task Read_only_table_keeps_selection_and_sort_but_blocks_all_mutations()
+    {
+        var client = new FakeTableClient();
+        await using var services = CreateServices();
+        await using var renderer = new TestRenderer(services);
+        var table = await Mount(renderer, client, readOnly: true);
+        var editorCalls = 0;
+        await renderer.Dispatcher.InvokeAsync(async () =>
+        {
+            await table.SetParametersAsync(ParameterView.FromDictionary(new Dictionary<string, object?>
+            {
+                ["OpenEditor"] = new Func<Guid?, Task<MudBlazor.IDialogReference>>(_ =>
+                {
+                    editorCalls++;
+                    throw new InvalidOperationException("A read-only table opened an editor.");
+                })
+            }));
+            // Even an incorrectly permissive capability response cannot enable mutations.
+            table.GetType().GetField("_capabilities", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .SetValue(table, new TableCapabilities(true, true, true, true, true));
+            Invoke(table, "SelectRow", client.Items[1], new MouseEventArgs());
+            Assert.False(Read<bool>(table, "CanEdit"));
+            Assert.False(Read<bool>(table, "CanDelete"));
+            await (Task)Invoke(table, "OpenCreateAsync")!;
+            await (Task)Invoke(table, "OpenEditAsync")!;
+            await (Task)Invoke(table, "OpenDeleteAsync")!;
+            await (Task)Invoke(table, "OnRowDoubleClickAsync", client.Items[1], new MouseEventArgs())!;
+            await (Task)Invoke(table, "SortBy", Column.Name)!;
+        });
+        Assert.Equal(0, editorCalls);
+        Assert.Equal(client.Items[1].Id, Assert.Single(Read<IReadOnlySet<Guid>>(table, "_selectedIds")));
+        Assert.Equal("name", Assert.Single(client.LastQuery!.Sorts).Field);
+        Assert.Empty(renderer.Errors);
+    }
+
     internal static ServiceProvider CreateServices(Action<IServiceCollection>? configure = null)
     {
         var services = new ServiceCollection();
@@ -71,11 +107,12 @@ public sealed class TableComponentTests
         return services.BuildServiceProvider();
     }
 
-    private static async Task<ReferenceTable<PositionListItemDto, Column>> Mount(TestRenderer renderer, FakeTableClient client)
+    private static async Task<ReferenceTable<PositionListItemDto, Column>> Mount(TestRenderer renderer, FakeTableClient client, bool readOnly = false)
     {
         var parameters = new Dictionary<string, object?>
         {
             ["Client"] = client,
+            ["ReadOnly"] = readOnly,
             ["Columns"] = new TableColumn<PositionListItemDto, Column>[]
             {
                 new(Column.Name, "name", "Name", x => x.Name),

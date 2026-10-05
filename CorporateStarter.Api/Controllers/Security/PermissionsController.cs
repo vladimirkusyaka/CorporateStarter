@@ -11,7 +11,8 @@ namespace CorporateStarter.Api.Controllers.Security
     [Authorize]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public sealed class PermissionsController : ControllerBase
+    [TableRequestErrors]
+    public sealed partial class PermissionsController : ControllerBase
     {
         private readonly IMediator _mediator;
 
