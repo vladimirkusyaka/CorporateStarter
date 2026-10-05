@@ -6,8 +6,12 @@ let userId = null;
 let sessionOperationInProgress = false;
 const csrfCookieName = "__Host-corporate_starter_csrf";
 let restorePromise = null;
+let logoutPromise = null;
+let logoutPending = false;
+let sessionEpoch = 0;
 
 function clearSession() {
+    sessionEpoch++;
     accessToken = null;
     accessTokenExpiresAt = 0;
     userId = null;
@@ -47,7 +51,7 @@ export async function login(loginName, password) {
         return result("invalid_input");
     }
 
-    if (sessionOperationInProgress)
+    if (sessionOperationInProgress || logoutPending)
         return result("busy");
 
     sessionOperationInProgress = true;
@@ -57,6 +61,7 @@ export async function login(loginName, password) {
             clearSession();
 
             const response = await fetch("/api/Auth/login", {
+                signal: AbortSignal.timeout(30_000),
                 method: "POST",
                 mode: "same-origin",
                 credentials: "same-origin",
@@ -102,10 +107,11 @@ export async function login(loginName, password) {
 }
 
 export function restoreSession() {
+    if (logoutPending) return Promise.resolve(result("logout_pending"));
     if (restorePromise !== null)
         return restorePromise;
 
-    if (sessionOperationInProgress)
+    if (sessionOperationInProgress || logoutPending)
         return Promise.resolve(result("unavailable"));
 
     sessionOperationInProgress = true;
@@ -119,6 +125,7 @@ export function restoreSession() {
 }
 
 function acceptSession(payload) {
+    if (logoutPending) return result("unavailable");
     const expiresAt = typeof payload?.expiresAtUtc === "string"
         ? Date.parse(payload.expiresAtUtc)
         : NaN;
@@ -175,6 +182,7 @@ async function restoreCore() {
                 return result("anonymous");
 
             const response = await fetch("/api/Auth/refresh", {
+                signal: AbortSignal.timeout(30_000),
                 method: "POST",
                 mode: "same-origin",
                 credentials: "same-origin",
@@ -201,17 +209,19 @@ async function restoreCore() {
     }
 }
 
-export async function logout() {
-    if (sessionOperationInProgress)
-        return result("busy");
-
+export function logout() {
+    if (logoutPromise !== null) return logoutPromise;
+    logoutPending = true;
     clearSession();
+    logoutPromise = logoutCore().finally(() => { logoutPromise = null; });
+    return logoutPromise;
+}
 
+async function logoutCore() {
     if (globalThis.isSecureContext !== true ||
         typeof globalThis.navigator?.locks?.request !== "function") {
         return result("unsupported");
     }
-
     sessionOperationInProgress = true;
 
     try {
@@ -231,6 +241,7 @@ export async function logout() {
                 return result("unavailable");
 
             const response = await fetch("/api/Auth/logout", {
+                signal: AbortSignal.timeout(30_000),
                 method: "POST",
                 mode: "same-origin",
                 credentials: "same-origin",
@@ -245,6 +256,8 @@ export async function logout() {
             if (response.status !== 204)
                 return result("unavailable");
 
+            clearSession();
+            logoutPending = false;
             await notifySessionChanged();
 
             return result("signed_out");
@@ -316,15 +329,16 @@ function scheduleIdleCheck(lease) {
 
 async function checkIdleSession(lease) {
     if (idleChecking || idleReceiver === null || lease !== idleLease || userId === null ||
-        sessionOperationInProgress || performance.now() < idleNextCheck)
+        (sessionOperationInProgress || logoutPending) || performance.now() < idleNextCheck)
         return;
 
+    const epoch = sessionEpoch;
     idleChecking = true;
     let revalidate = false;
     let requestTimeout;
     try {
         await navigator.locks.request(sessionLockName, async () => {
-            if (lease !== idleLease || idleReceiver === null || userId === null) return;
+            if (lease !== idleLease || idleReceiver === null || userId === null || logoutPending || epoch !== sessionEpoch) return;
             const activity = idlePendingActivity;
             const prefix = csrfCookieName + "=";
             const cookies = document.cookie.split(";").map(x => x.trim())
@@ -356,6 +370,7 @@ async function checkIdleSession(lease) {
                 return;
             }
             const payload = await response.json();
+            if (logoutPending || epoch !== sessionEpoch || lease !== idleLease || userId === null) return;
             const remaining = payload?.remainingMilliseconds;
 
             const validUser =
@@ -391,7 +406,7 @@ async function checkIdleSession(lease) {
         clearTimeout(requestTimeout);
         idleChecking = false;
     }
-    if (revalidate && idleReceiver !== null && lease === idleLease) {
+    if (revalidate && !logoutPending && epoch === sessionEpoch && userId !== null && idleReceiver !== null && lease === idleLease) {
         idleNextCheck = performance.now() + idleReportInterval;
         // Restore passes through the server idle check and the coordinator's
         // generation handling; rejected sessions unmount all protected content.
@@ -424,7 +439,7 @@ export async function sendApiRequest(request) {
     if (globalThis.isSecureContext !== true)
         return { kind: "unavailable" };
 
-    if (sessionOperationInProgress)
+    if (sessionOperationInProgress || logoutPending)
         return { kind: "busy" };
 
     if (userId === null || accessToken === null)
@@ -470,7 +485,7 @@ export async function sendApiRequest(request) {
             return { kind: timedOut ? "timeout" : "cancelled" };
 
         // Rotation also invalidates this result conservatively.
-        if (sessionOperationInProgress || userId !== userAtStart || accessToken !== tokenAtStart)
+        if (sessionOperationInProgress || logoutPending || userId !== userAtStart || accessToken !== tokenAtStart)
             return { kind: "session_changed" };
 
         return {

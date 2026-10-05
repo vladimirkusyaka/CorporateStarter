@@ -74,6 +74,8 @@ namespace CorporateStarter.Client.Browser.Auth
 
             return reply?.Status switch
             {
+                "logout_pending" => ClientSessionRestoreResult.LogoutPending,
+
                 "anonymous" => ClientSessionRestoreResult.Anonymous,
 
                 "unsupported" =>

@@ -39,6 +39,8 @@ public sealed partial class ClientSessionCoordinator
     private async Task<bool> RestoreAsync(bool waitForCurrentOperation,
             CancellationToken cancellationToken)
     {
+        if (_logoutPending) return false;
+        var generationAtStart = _state.Current.SessionGeneration;
         if (waitForCurrentOperation)
         {
             await _operationGate.WaitAsync(cancellationToken)
@@ -52,7 +54,7 @@ public sealed partial class ClientSessionCoordinator
 
         try
         {
-            if (_logoutPending)
+            if (_logoutPending || _state.Current.SessionGeneration != generationAtStart)
                 return false;
 
             cancellationToken.ThrowIfCancellationRequested();

@@ -1,88 +1,57 @@
 ﻿using CorporateStarter.Client.Abstractions.Auth;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace CorporateStarter.Client.Core.Auth
+namespace CorporateStarter.Client.Core.Auth;
+
+public sealed partial class ClientSessionCoordinator
 {
-    public sealed partial class ClientSessionCoordinator
+    private readonly object _logoutSync = new();
+    private Task<ClientLogoutStatus?>? _logoutTask;
+
+    public Task<ClientLogoutStatus?> LogoutAsync()
     {
-        public async Task<ClientLogoutStatus?> LogoutAsync()
+        lock (_logoutSync)
         {
-            if (!await _operationGate.WaitAsync(0).ConfigureAwait(false))
-                return null;
+            if (_logoutTask is { IsCompleted: false }) return _logoutTask;
+            if (!_logoutPending && _state.Current.UserId is null)
+                return Task.FromResult<ClientLogoutStatus?>(null);
 
-            try
-            {
-                var previous = _state.Current;
-
-                if (!_logoutPending &&
-                    previous.Status != ClientAuthStatus.Authenticated)
-                {
-                    return null;
-                }
-
-                _logoutPending = true;
-
-                if (!_state.TryTransition(
-                    previous.Revision,
-                    ClientAuthStatus.Anonymous,
-                    invalidationReason:
-                        ClientSessionInvalidationReason.SignedOut))
-                {
-                    return null;
-                }
-
-                var revision = checked(previous.Revision + 1);
-
-                if (!_state.TryTransition(
-                    revision,
-                    ClientAuthStatus.Revalidating))
-                {
-                    return null;
-                }
-
-                revision = checked(revision + 1);
-
-                try
-                {
-                    if (_state.Current.Revision != revision)
-                        return null;
-
-                    var result = await _logoutTransport
-                        .LogoutAsync()
-                        .ConfigureAwait(false);
-
-                    if (result == ClientLogoutStatus.SignedOut)
-                    {
-                        _logoutPending = false;
-
-                        return _state.TryTransition(
-                            revision,
-                            ClientAuthStatus.Anonymous)
-                                ? result
-                                : null;
-                    }
-
-                    return _state.TryTransition(
-                        revision,
-                        ClientAuthStatus.Unavailable)
-                            ? result
-                            : null;
-                }
-                catch
-                {
-                    _state.TryTransition(
-                        revision,
-                        ClientAuthStatus.Unavailable);
-
-                    throw;
-                }
-            }
-            finally
-            {
-                _operationGate.Release();
-            }
+            // Record intent before waiting: in-flight refresh replies become obsolete immediately.
+            _logoutPending = true;
+            ClientAuthSnapshot current;
+            do { current = _state.Current; }
+            while (!_state.TryTransition(current.Revision, ClientAuthStatus.Anonymous,
+                invalidationReason: ClientSessionInvalidationReason.SignedOut));
+            PublishLogoutState(ClientAuthStatus.Revalidating);
+            return _logoutTask = FinishLogoutAsync();
         }
+    }
+
+    private async Task<ClientLogoutStatus?> FinishLogoutAsync()
+    {
+        await _operationGate.WaitAsync().ConfigureAwait(false);
+        try
+        {
+            var result = await _logoutTransport.LogoutAsync().ConfigureAwait(false);
+            if (result == ClientLogoutStatus.SignedOut)
+            {
+                _logoutPending = false;
+                PublishLogoutState(ClientAuthStatus.Anonymous);
+            }
+            else PublishLogoutState(ClientAuthStatus.Unavailable);
+            return result;
+        }
+        catch
+        {
+            PublishLogoutState(ClientAuthStatus.Unavailable);
+            throw;
+        }
+        finally { _operationGate.Release(); }
+    }
+
+    private void PublishLogoutState(ClientAuthStatus status)
+    {
+        ClientAuthSnapshot current;
+        do { current = _state.Current; }
+        while (!_state.TryTransition(current.Revision, status));
     }
 }

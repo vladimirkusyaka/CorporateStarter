@@ -9,6 +9,7 @@ namespace CorporateStarter.Client.Abstractions.Auth
         Authenticated = 1,
         Anonymous = 2,
         Unavailable = 3,
-        UnsupportedEnvironment = 4
+        UnsupportedEnvironment = 4,
+        LogoutPending = 5
     }
 }

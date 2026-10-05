@@ -75,7 +75,7 @@
                             <MudMenuItem Icon="@Icons.Material.Filled.Settings">Preferences</MudMenuItem>
                             <MudDivider Class="my-1" />
                             <MudMenuItem Icon="@Icons.Material.Filled.Logout"
-                                         Disabled="@(!IsAuthenticated || _signingOut)"
+                                         Disabled="@(_snapshot.UserId is null || _signingOut || IsSigningIn || Session.IsLogoutPending)"
                                          OnClick="SignOutAsync">
                                 Logout
                             </MudMenuItem>

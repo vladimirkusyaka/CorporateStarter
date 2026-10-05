@@ -272,8 +272,7 @@ namespace CorporateStarter.Client.UI.Components.Layout
 
         protected async Task SignOutAsync()
         {
-            if (_disposed || !IsConnectionReady || _signingOut ||
-                _restoreInProgress || IsSigningIn)
+            if (_disposed || _signingOut || IsSigningIn)
             {
                 return;
             }

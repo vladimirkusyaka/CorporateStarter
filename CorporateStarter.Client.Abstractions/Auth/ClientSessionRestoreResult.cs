@@ -26,6 +26,9 @@ namespace CorporateStarter.Client.Abstractions.Auth
             return new(ClientSessionRestoreStatus.Authenticated, userId);
         }
 
+        public static ClientSessionRestoreResult LogoutPending { get; } =
+            new(ClientSessionRestoreStatus.LogoutPending, null);
+
         public static ClientSessionRestoreResult Anonymous { get; } =
             new(ClientSessionRestoreStatus.Anonymous, null);
 

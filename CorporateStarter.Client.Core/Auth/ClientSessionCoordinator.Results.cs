@@ -12,8 +12,18 @@ namespace CorporateStarter.Client.Core.Auth
             Guid? previousUserId,
             ClientSessionRestoreResult result)
         {
+            if (_logoutPending) return false;
+
             switch (result.Status)
             {
+                case ClientSessionRestoreStatus.LogoutPending:
+                    // A replacement server circuit must resume an unconfirmed browser logout.
+                    if (!_state.TryTransition(revision, ClientAuthStatus.Anonymous,
+                        invalidationReason: ClientSessionInvalidationReason.SignedOut)) return false;
+                    _logoutPending = true;
+                    PublishLogoutState(ClientAuthStatus.Unavailable);
+                    return true;
+
                 case ClientSessionRestoreStatus.Authenticated:
                     var reason = previousUserId is not null
                         && previousUserId != result.UserId
