@@ -12,7 +12,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 app.UseHttpsRedirection();
-app.UseBlazorFrameworkFiles();
+// Serve build-time assets and fingerprinted framework routes from the generated manifest.
+app.MapStaticAssets();
 app.UseStaticFiles();
 app.MapReverseProxy();
 // API errors must never fall through to the SPA HTML page, including unknown API routes.

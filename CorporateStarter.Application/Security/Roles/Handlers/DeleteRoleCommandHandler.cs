@@ -20,23 +20,11 @@ namespace CorporateStarter.Application.Security.Roles.Handlers
             DeleteRoleCommand request,
             CancellationToken cancellationToken)
         {
-            if (!await _readRepository.ExistsByIdAsync(
-                    request.Id,
-                    cancellationToken))
-            {
-                return CommandResult<Unit>.Failure(
-                    "role.not_found",
-                    "Role not found.");
-            }
-
-            if (await _readRepository.IsAdministratorRoleAsync(
-                request.Id,
-                cancellationToken))
-            {
-                return CommandResult<Unit>.Failure(
-                    "role.administrator_cannot_be_deleted",
-                    "Administrator role cannot be deleted.");
-            }
+            var current = await _readRepository.GetByIdAsync(request.Id, cancellationToken);
+            if (current is null)
+                return CommandResult<Unit>.Failure("role.not_found", "Role not found.");
+            if (current.IsSystemRole || current.Name == "Administrator")
+                return CommandResult<Unit>.Failure("role.system_role_read_only", "System roles are read-only.");
 
             await _writeRepository.DeactivateAsync(
                 request.Id,

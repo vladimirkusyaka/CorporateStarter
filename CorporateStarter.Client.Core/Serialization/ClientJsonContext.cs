@@ -1,4 +1,6 @@
-﻿using CorporateStarter.Shared.Dtos.Permissions;
+﻿using CorporateStarter.Shared.Dtos.Security.Roles;
+using CorporateStarter.Client.Core.Api;
+using CorporateStarter.Shared.Dtos.Permissions;
 using CorporateStarter.Shared.Dtos.MasterData.Cities;
 using CorporateStarter.Shared.Dtos.MasterData.Positions;
 using System.Text.Json.Serialization;
@@ -35,6 +37,13 @@ namespace CorporateStarter.Client.Core.Serialization;
 [JsonSerializable(typeof(LookupRequest))]
 [JsonSerializable(typeof(LookupOption[]), TypeInfoPropertyName = "LookupOptions")]
 [JsonSerializable(typeof(PagedResult<PermissionListItemDto>), TypeInfoPropertyName = "PermissionPage")]
+[JsonSerializable(typeof(PagedResult<RoleListItemDto>), TypeInfoPropertyName = "RolePage")]
+[JsonSerializable(typeof(RoleDetailsDto))]
+[JsonSerializable(typeof(RoleCapabilities))]
+[JsonSerializable(typeof(CreateRoleRequest))]
+[JsonSerializable(typeof(UpdateRoleRequest))]
+[JsonSerializable(typeof(ClientCommandResult))]
+[JsonSerializable(typeof(PermissionListItemDto[]), TypeInfoPropertyName = "PermissionOptions")]
 internal partial class ClientJsonContext : JsonSerializerContext
 {
 }

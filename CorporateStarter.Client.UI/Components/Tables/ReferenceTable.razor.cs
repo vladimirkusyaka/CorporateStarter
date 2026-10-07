@@ -14,6 +14,8 @@ public partial class ReferenceTable<TItem, TColumn> : IDisposable where TColumn 
     [Parameter] public Func<Guid?, Task<MudBlazor.IDialogReference>>? OpenEditor { get; set; }
     [Parameter] public Func<object?, Guid?> SavedId { get; set; } = _ => null;
     [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public Func<TItem, bool> CanEditItem { get; set; } = _ => true;
+    [Parameter] public Func<TItem, bool> CanDeleteItem { get; set; } = _ => true;
     [Parameter] public string Title { get; set; } = "Records";
     [Parameter] public string Singular { get; set; } = "record";
     private readonly string _elementId = "table-" + Guid.NewGuid().ToString("N");

@@ -1,0 +1,91 @@
+﻿.tree-select {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+    .tree-select > input {
+        padding: 8px;
+        border: 1px solid #b8bec7;
+        border-radius: 4px;
+        font: inherit;
+    }
+
+.tree-select-options {
+    max-height: 420px;
+    overflow: auto;
+    border: 1px solid #dce0e6;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.tree-select-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 5px 0;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+    .tree-select-option input {
+        margin-top: 4px;
+        flex-shrink: 0;
+    }
+
+.tree-group-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 600;
+    padding: 6px 0;
+    text-align: left;
+    cursor: pointer;
+}
+
+    .tree-group-check:focus-visible {
+        outline: 2px solid var(--mud-palette-primary);
+        outline-offset: 3px;
+        border-radius: 2px;
+    }
+
+    .tree-group-check:disabled {
+        cursor: default;
+        opacity: .5;
+    }
+
+.tree-group-box {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    border: 1px solid #777;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
+
+    .tree-group-box.true {
+        background: #111;
+        border-color: #111;
+    }
+
+    .tree-group-box.mixed {
+        background: #9a9a9a;
+        border-color: #9a9a9a;
+    }
+
+    .tree-group-box svg {
+        width: 14px;
+        height: 14px;
+        fill: none;
+        stroke: #fff;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }

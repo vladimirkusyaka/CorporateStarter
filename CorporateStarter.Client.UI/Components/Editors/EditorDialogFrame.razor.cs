@@ -8,6 +8,10 @@ namespace CorporateStarter.Client.UI.Components.Editors
 {
     public partial class EditorDialogFrame
     {
+        [Parameter] public IReadOnlyList<string> Steps { get; set; } = [];
+        [Parameter] public int CurrentStep { get; set; }
+        [Parameter] public EventCallback Next { get; set; }
+        [Parameter] public EventCallback Back { get; set; }
         [Parameter] public string Title { get; set; } = "Edit record";
         [Parameter] public RenderFragment? ChildContent { get; set; }
         [Parameter] public bool Loading { get; set; }

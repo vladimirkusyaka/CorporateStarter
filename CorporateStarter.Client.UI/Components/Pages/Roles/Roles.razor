@@ -1,0 +1,10 @@
+﻿@page "/roles"
+@using CorporateStarter.Client.UI.Components.Tables
+@using CorporateStarter.Shared.Dtos.Security.Roles
+
+<PageTitle>Roles</PageTitle>
+<ReferenceTable TItem="RoleListItemDto" TColumn="Column" Client="Client" Columns="Columns"
+                ItemId="@(x => x.Id)" ItemName="@(x => x.Name)" Title="Roles" Singular="role"
+                CanEditItem="@(x => !x.IsSystemRole && x.Name != "Administrator")"
+                CanDeleteItem="@(x => !x.IsSystemRole && x.Name != "Administrator")"
+                OpenEditor="OpenEditorAsync" SavedId="@(value => value is Guid id ? id : null)" />

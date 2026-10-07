@@ -44,6 +44,15 @@ public sealed partial class ClientApiClient
             throw new InvalidDataException("The DELETE endpoint did not confirm completion with HTTP 204.");
     }
 
+    public async Task<TResponse> DeleteJsonAsync<TResponse>(string relativePath,
+        JsonTypeInfo<TResponse> responseType, CancellationToken cancellationToken = default)
+    {
+        var initial = _authState.Current;
+        var response = await SendWriteAsync(HttpMethod.Delete, relativePath, null, initial, cancellationToken)
+            .ConfigureAwait(false);
+        return ReadJson(response, responseType, initial, cancellationToken);
+    }
+
     private async Task<ClientApiResponse> SendWriteAsync(HttpMethod method, string relativePath,
         string? body, ClientAuthSnapshot initial, CancellationToken cancellationToken)
     {

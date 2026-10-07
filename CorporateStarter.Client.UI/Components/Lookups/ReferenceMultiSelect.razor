@@ -1,0 +1,48 @@
+﻿@namespace CorporateStarter.Client.UI.Components.Lookups
+
+<div class="multi-select">
+    <label for="@_searchId">@Label</label>
+    <input id="@_searchId" type="search" placeholder="Filter options" @bind="_search" @bind:event="oninput" disabled="@Disabled" />
+    <span role="status">@Selected.Count selected</span>
+    <div class="multi-select-options">
+        @foreach (var group in Visible.GroupBy(x => x.Group))
+        {
+            <fieldset>
+                <legend>@group.Key</legend>
+                @foreach (var option in group)
+                {
+                    <label @key="option.Id" class="multi-select-option">
+                        <input type="checkbox" checked="@Selected.Contains(option.Id)" disabled="@(Disabled || !option.Enabled)"
+                               @onchange="@(e => ChangeAsync(option, e))" />
+                        <span>@option.Label</span>
+                    </label>
+                }
+            </fieldset>
+        }
+        @if (!Visible.Any())
+        {
+            <p role="status">No matching options.</p>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; } = "Options";
+    [Parameter] public IReadOnlyList<SelectionOption> Options { get; set; } = [];
+    [Parameter] public IReadOnlySet<Guid> Selected { get; set; } = new HashSet<Guid>();
+    [Parameter] public EventCallback<IReadOnlySet<Guid>> SelectedChanged { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    private string _search = string.Empty;
+    private readonly string _searchId = "selection-" + Guid.NewGuid().ToString("N");
+    private IEnumerable<SelectionOption> Visible => Options.Where(x =>
+        x.Label.Contains(_search.Trim(), StringComparison.OrdinalIgnoreCase) ||
+        x.Group.Contains(_search.Trim(), StringComparison.OrdinalIgnoreCase))
+        .OrderBy(x => x.Group).ThenBy(x => x.Label);
+    private Task ChangeAsync(SelectionOption option, ChangeEventArgs args)
+    {
+        if (Disabled || !option.Enabled || !Options.Any(x => x.Id == option.Id && x.Enabled)) return Task.CompletedTask;
+        var next = Selected.ToHashSet();
+        if (args.Value is true) next.Add(option.Id); else next.Remove(option.Id);
+        return SelectedChanged.InvokeAsync(next);
+    }
+}

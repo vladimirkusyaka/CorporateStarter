@@ -12,7 +12,7 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
     private readonly TableSelection<Guid> _selection = new();
     private IReadOnlySet<Guid> _selectedIds => _selection.SelectedIds;
     private Guid? _pendingSelection;
-    private bool CanEdit => !ReadOnly && OpenEditor is not null && _capabilities.CanUpdate && !_querying && !_loading && !_creating && !_disposed && _selectedIds.Count == 1;
+    private bool CanEdit => !ReadOnly && OpenEditor is not null && _capabilities.CanUpdate && !_querying && !_loading && !_creating && !_disposed && _selectedIds.Count == 1 && _items.Any(x => _selectedIds.Contains(ItemId(x)) && CanEditItem(x));
     private int CurrentPage
     {
         get => _queryState.PageIndex;
@@ -45,7 +45,7 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
 
         var id = ItemId(record);
         // Ignore events queued for a row that has disappeared after a refresh.
-        if (!_items.Any(item => ItemId(item) == id)) return Task.CompletedTask;
+        if (!_items.Any(item => ItemId(item) == id && CanEditItem(item))) return Task.CompletedTask;
 
         _pendingSelection = null;
         _selection.SelectOnly(id);

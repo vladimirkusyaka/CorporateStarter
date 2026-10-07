@@ -8,7 +8,7 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
 {
     // The trash icon from the design system.
     private const string DeleteIcon = "<g fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M3 6h18'/><path d='M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2'/><path d='M6 6l1 14a1 1 0 001 1h8a1 1 0 001-1l1-14'/></g>";
-    private bool CanDelete => !ReadOnly && _capabilities.CanDelete && !_querying && !_loading && !_creating && !_disposed && _selectedIds.Count > 0;
+    private bool CanDelete => !ReadOnly && _capabilities.CanDelete && !_querying && !_loading && !_creating && !_disposed && _selectedIds.Count > 0 && _selectedIds.All(id => _items.Any(x => ItemId(x) == id && CanDeleteItem(x)));
 
     private async Task OpenDeleteAsync()
     {

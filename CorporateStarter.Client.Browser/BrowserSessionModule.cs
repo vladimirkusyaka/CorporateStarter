@@ -5,5 +5,5 @@
 internal static class BrowserSessionModule
 {
     public const string Path =
-        "./_content/CorporateStarter.Client.Browser/auth/browser-session.js?v=6a4a6e893097890e";
+        "./_content/CorporateStarter.Client.Browser/auth/browser-session.js?v=372f102b52feb96a";
 }

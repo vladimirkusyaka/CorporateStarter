@@ -11,6 +11,16 @@
             {
                 <MudProgressLinear Indeterminate="true" Color="Color.Primary" aria-label="Loading record" />
             }
+            @if (Steps.Count > 1)
+            {
+                <ol class="editor-steps" aria-label="Editor steps">
+                    @for (var step = 0; step < Steps.Count; step++)
+                    {
+                        <li aria-current="@(step == CurrentStep ? "step" : null)"
+                            class="@(step == CurrentStep ? "is-current" : null)">@(step + 1). @Steps[step]</li>
+                    }
+                </ol>
+            }
             <MudForm @ref="_form">@ChildContent</MudForm>
             @if (Error is not null)
             {
@@ -36,12 +46,23 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Close" Disabled="@Saving">@(Uncertain ? "Close and check list" : "Cancel")</MudButton>
-        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Save" Disabled="@(Blocked || ConfirmDiscard)">
-            @if (Saving)
-            {
-                <MudProgressCircular Indeterminate="true" Size="Size.Small" Class="mr-2" />
-            }
-            Save
-        </MudButton>
+        @if (Steps.Count > 1 && CurrentStep > 0)
+        {
+            <MudButton OnClick="Back" Disabled="@(Blocked || ConfirmDiscard)">Back</MudButton>
+        }
+        @if (Steps.Count > 1 && CurrentStep < Steps.Count - 1)
+        {
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Next" Disabled="@(Blocked || ConfirmDiscard)">Next</MudButton>
+        }
+        else
+        {
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Save" Disabled="@(Blocked || ConfirmDiscard)">
+                @if (Saving)
+                {
+                    <MudProgressCircular Indeterminate="true" Size="Size.Small" Class="mr-2" />
+                }
+                Save
+            </MudButton>
+        }
     </DialogActions>
 </MudDialog>

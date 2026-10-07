@@ -1,0 +1,31 @@
+﻿@using CorporateStarter.Client.UI.Components.Editors
+@using CorporateStarter.Client.UI.Components.Lookups
+@using CorporateStarter.Shared.Dtos.Security.Roles
+@inherits RecordEditorBase<UpdateRoleRequest, Guid>
+
+<EditorDialogFrame @ref="_frame" Title="@(IsEditing ? "Edit role" : "Add role")"
+                   Loading="_loadingDetails" Loaded="_loaded" Saving="_saving" Blocked="@(Blocked || _system || _validating)" SessionReady="_sessionReady"
+                   Uncertain="_uncertain" ConfirmDiscard="_confirmDiscard" Error="@_error"
+                   Close="CloseAsync" Save="SaveTabbedAsync" Retry="LoadDetailsAsync" KeepEditing="KeepEditing" Discard="Discard">
+    @if (_system)
+    {
+        <MudAlert Severity="Severity.Info">System roles are read-only.</MudAlert>
+    }
+    <MudTabs ActivePanelIndex="_tab" ActivePanelIndexChanged="ChangeTab" KeepPanelsAlive="true" Elevation="0" TabPanelsClass="pt-4">
+        <MudTabPanel Text="Details" Disabled="@(Blocked || _confirmDiscard || _validating)">
+            <MudTextField @bind-Value="_model.Name" Label="Name" MaxLength="100" Variant="Variant.Outlined"
+                          Margin="Margin.Dense" Immediate="true" Disabled="@(Blocked || _system)" Validation="@(new Func<string, string?>(Required))" />
+            <MudTextField @bind-Value="_model.Description" Label="Description" MaxLength="500" Lines="3" Variant="Variant.Outlined"
+                          Margin="Margin.Dense" Immediate="true" Disabled="@(Blocked || _system)" />
+            <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@(Blocked || _system)" Label="Active" />
+        </MudTabPanel>
+        <MudTabPanel Text="Permissions" Disabled="@(Blocked || _confirmDiscard || _validating)">
+            <ReferenceTreeSelect Label="Permissions" Options="_options" Selected="_selected" SelectedChanged="PermissionsChanged"
+                                 Disabled="@(Blocked || _system || !_managePermissions)" />
+            @if (!_managePermissions)
+            {
+                <MudText Typo="Typo.body2">You can view assigned permissions but cannot change them.</MudText>
+            }
+        </MudTabPanel>
+    </MudTabs>
+</EditorDialogFrame>

@@ -1,4 +1,6 @@
-﻿using CorporateStarter.Client.Core.Security.Permissions;
+﻿using CorporateStarter.Client.Core.Security.Roles;
+using CorporateStarter.Shared.Dtos.Security.Roles;
+using CorporateStarter.Client.Core.Security.Permissions;
 using CorporateStarter.Client.Core.MasterData.Cities;
 using System.Text.Json;
 using CorporateStarter.Client.Abstractions.Api;
@@ -22,6 +24,7 @@ public sealed class MasterDataClientTests
     [InlineData("Positions")]
     [InlineData("Cities")]
     [InlineData("Permissions")]
+    [InlineData("Roles")]
     public async Task Query_preserves_filters_and_uses_entity_route(string entity)
     {
         var transport = new Transport { Response = new(200, "{\"items\":[],\"page\":2,\"pageSize\":10,\"totalCount\":10}", "application/json") };
@@ -33,6 +36,7 @@ public sealed class MasterDataClientTests
             Filters = [new("isActive", "in", Values: [JsonSerializer.SerializeToElement(false)])]
         };
         if (entity == "Countries") await new CountriesClient(api).QueryAsync(request);
+        else if (entity == "Roles") await new RolesClient(api).QueryAsync(request);
         else if (entity == "Permissions") await new PermissionsClient(api).QueryAsync(request);
         else if (entity == "Cities") await new CitiesClient(api).QueryAsync(request);
         else await new PositionsClient(api).QueryAsync(request);
@@ -48,12 +52,14 @@ public sealed class MasterDataClientTests
     [InlineData("Positions")]
     [InlineData("Cities")]
     [InlineData("Permissions")]
+    [InlineData("Roles")]
     public async Task Query_rejects_duplicate_record_ids(string entity)
     {
         var id = Guid.NewGuid();
         var json = JsonSerializer.Serialize(new { items = new[] { new { id, name = "A", code = "AA" }, new { id, name = "B", code = "BB" } }, page = 1, pageSize = 20, totalCount = 2 });
         var api = CreateApi(new Transport { Response = new(200, json, "application/json") });
         if (entity == "Countries") await Assert.ThrowsAsync<InvalidDataException>(() => new CountriesClient(api).QueryAsync(new()));
+        else if (entity == "Roles") await Assert.ThrowsAsync<InvalidDataException>(() => new RolesClient(api).QueryAsync(new()));
         else if (entity == "Permissions") await Assert.ThrowsAsync<InvalidDataException>(() => new PermissionsClient(api).QueryAsync(new()));
         else if (entity == "Cities") await Assert.ThrowsAsync<InvalidDataException>(() => new CitiesClient(api).QueryAsync(new()));
         else await Assert.ThrowsAsync<InvalidDataException>(() => new PositionsClient(api).QueryAsync(new()));
@@ -138,6 +144,34 @@ public sealed class MasterDataClientTests
         Assert.Equal("/api/Permissions/capabilities", transport.Path);
         Assert.Equal(HttpMethod.Get, transport.Method);
         await Assert.ThrowsAsync<NotSupportedException>(() => client.DeleteAsync(Guid.NewGuid()));
+        Assert.Equal(1, transport.Calls);
+    }
+
+    [Fact]
+    public async Task Role_commands_use_existing_envelope_and_omit_unchanged_permissions()
+    {
+        var id = Guid.NewGuid();
+        var transport = new Transport { Response = new(200, JsonSerializer.Serialize(new { succeeded = true, value = id }), "application/json") };
+        var client = new RolesClient(CreateApi(transport));
+        Assert.Equal(id, await client.CreateAsync(new() { Name = "Auditor" }));
+        Assert.Equal(id, await client.UpdateAsync(id, new() { Name = "Auditor", PermissionIds = null }));
+        using (var body = JsonDocument.Parse(transport.Body!)) Assert.False(body.RootElement.TryGetProperty("permissionIds", out _));
+        await client.UpdateAsync(id, new() { Name = "Auditor", PermissionIds = [] });
+        using (var body = JsonDocument.Parse(transport.Body!)) Assert.Equal(0, body.RootElement.GetProperty("permissionIds").GetArrayLength());
+        await client.DeleteAsync(id);
+        Assert.Equal(HttpMethod.Delete, transport.Method);
+        Assert.Equal($"/api/Roles/{id:D}", transport.Path);
+        Assert.Equal(4, transport.Calls);
+    }
+
+    [Theory]
+    [InlineData("{\"succeeded\":true}")]
+    [InlineData("{\"succeeded\":false}")]
+    [InlineData("{\"succeeded\":true,\"value\":\"00000000-0000-0000-0000-000000000000\"}")]
+    public async Task Role_create_rejects_unconfirmed_response_without_replay(string response)
+    {
+        var transport = new Transport { Response = new(200, response, "application/json") };
+        await Assert.ThrowsAsync<InvalidDataException>(() => new RolesClient(CreateApi(transport)).CreateAsync(new() { Name = "Auditor" }));
         Assert.Equal(1, transport.Calls);
     }
 

@@ -22,14 +22,11 @@ namespace CorporateStarter.Application.Security.Roles.Handlers
             UpdateRoleCommand request,
             CancellationToken cancellationToken)
         {
-            if (!await _readRepository.ExistsByIdAsync(
-                    request.Id,
-                    cancellationToken))
-            {
-                return CommandResult<Unit>.Failure(
-                    "role.not_found",
-                    "Role not found.");
-            }
+            var current = await _readRepository.GetByIdAsync(request.Id, cancellationToken);
+            if (current is null)
+                return CommandResult<Unit>.Failure("role.not_found", "Role not found.");
+            if (current.IsSystemRole || current.Name == "Administrator")
+                return CommandResult<Unit>.Failure("role.system_role_read_only", "System roles are read-only.");
 
             var values = request.Request.Adapt<RoleWriteValues>();
             values.Id = request.Id;
@@ -50,8 +47,8 @@ namespace CorporateStarter.Application.Security.Roles.Handlers
                     "Role with the same name already exists.");
             }
 
-            if (!await _readRepository.AllPermissionsExistAsync(
-                    values.PermissionIds,
+            if (values.PermissionIds is not null && !await _readRepository.AllPermissionsExistAsync(
+                    values.PermissionIds.Except(current.Permissions.Select(x => x.Id)).ToArray(),
                     cancellationToken))
             {
                 return CommandResult<Unit>.Failure(

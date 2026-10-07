@@ -13,7 +13,8 @@ namespace CorporateStarter.Api.Controllers.Security
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public sealed class RolesController : ControllerBase
+    [TableRequestErrors]
+    public sealed partial class RolesController : ControllerBase
     {
         private readonly IMediator _mediator;
 
@@ -60,13 +61,13 @@ namespace CorporateStarter.Api.Controllers.Security
             CreateRoleRequest request,
             CancellationToken cancellationToken)
         {
+            if (request.PermissionIds is { Count: > 0 } && !User.HasClaim("permission", AppPermissions.RolesManagePermissions))
+                return Forbid();
             var result = await _mediator.Send(
                 new CreateRoleCommand(request),
                 cancellationToken);
 
-            return result.Succeeded
-                ? Ok(result)
-                : BadRequest(result);
+            return CommandResponse(result);
         }
 
         [Authorize(Policy = AppPermissions.RolesUpdate)]
@@ -78,13 +79,13 @@ namespace CorporateStarter.Api.Controllers.Security
             UpdateRoleRequest request,
             CancellationToken cancellationToken)
         {
+            if (request.PermissionIds is not null && !User.HasClaim("permission", AppPermissions.RolesManagePermissions))
+                return Forbid();
             var result = await _mediator.Send(
                 new UpdateRoleCommand(id, request),
                 cancellationToken);
 
-            return result.Succeeded
-                ? Ok(result)
-                : BadRequest(result);
+            return CommandResponse(result);
         }
 
         [Authorize(Policy = AppPermissions.RolesDelete)]
@@ -99,9 +100,16 @@ namespace CorporateStarter.Api.Controllers.Security
                 new DeleteRoleCommand(id),
                 cancellationToken);
 
-            return result.Succeeded
-                ? Ok(result)
-                : BadRequest(result);
+            return CommandResponse(result);
         }
+        private ActionResult CommandResponse<T>(CommandResult<T> result) => result.Succeeded
+            ? Ok(result)
+            : StatusCode(result.ErrorCode switch
+            {
+                "role.not_found" => 404,
+                "role.name_already_exists" => 409,
+                "role.system_role_read_only" or "role.administrator_cannot_be_deleted" => 403,
+                _ => 400
+            }, result);
     }
 }

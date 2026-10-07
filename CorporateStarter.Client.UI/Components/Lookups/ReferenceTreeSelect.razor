@@ -1,0 +1,53 @@
+﻿@namespace CorporateStarter.Client.UI.Components.Lookups
+
+<div class="tree-select">
+    <label for="@_searchId">@Label</label>
+    <input id="@_searchId" type="search" placeholder="Find option or group" @bind="_search" @bind:event="oninput" />
+    <span role="status">@Selected.Count selected</span>
+    <div class="tree-select-options">
+        <MudTreeView T="string" ReadOnly="true" Dense="true" ExpandOnClick="true" aria-label="@Label">
+            @foreach (var group in Visible.GroupBy(x => x.Group))
+            {
+                <MudTreeViewItem T="string" @key="group.Key" Value="@("group:" + group.Key)" Text="@group.Key"
+                                 Expanded="@(!string.IsNullOrWhiteSpace(_search) || !_collapsed.Contains(group.Key))"
+                                 ExpandedChanged="@(expanded => SetExpanded(group.Key, expanded))">
+                    <BodyContent>
+                        <button type="button" role="checkbox" class="tree-group-check"
+                                aria-checked="@GroupAria(group.Key)" disabled="@(Disabled || !GroupOptions(group.Key).Any(x => x.Enabled))"
+                                title="Select or clear all available options in this group (including search-hidden options)"
+                                @onclick="@(() => ToggleGroupAsync(group.Key))" @onclick:stopPropagation="true" @onkeydown:stopPropagation="true">
+                            <span aria-hidden="true" class="@("tree-group-box " + GroupAria(group.Key))">
+                                @if (GroupState(group.Key) != false)
+                                {
+                                    <svg viewBox="0 0 16 16"><path d="M3 8l3 3 7-7" /></svg>
+                                }
+                            </span>
+                            <MudIcon Icon="@Icons.Material.Filled.Folder" Size="Size.Small" aria-hidden="true" />
+                            <span>@group.Key</span>
+                        </button>
+                    </BodyContent>
+                    <ChildContent>
+                        @foreach (var option in group)
+                        {
+                            <MudTreeViewItem T="string" @key="option.Id" Value="@(option.Id.ToString())" Text="@option.Label">
+                                <BodyContent>
+                                    <label class="tree-select-option" @onclick:stopPropagation="true" @onkeydown:stopPropagation="true">
+                                        <input type="checkbox" checked="@Selected.Contains(option.Id)" disabled="@(Disabled || !option.Enabled)"
+                                               @onchange="@(e => ChangeAsync(option, e))" />
+                                        <span>@option.Label</span>
+                                    </label>
+                                </BodyContent>
+                            </MudTreeViewItem>
+                        }
+                    </ChildContent>
+                </MudTreeViewItem>
+            }
+        </MudTreeView>
+        @if (!Visible.Any())
+        {
+            <p role="status">No matching options.</p>
+        }
+    </div>
+</div>
+
+

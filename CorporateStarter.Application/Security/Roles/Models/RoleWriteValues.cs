@@ -14,16 +14,16 @@ namespace CorporateStarter.Application.Security.Roles.Models
 
         public bool IsActive { get; set; } = true;
 
-        public IReadOnlyList<Guid> PermissionIds { get; set; } = [];
+        public IReadOnlyList<Guid>? PermissionIds { get; set; }
 
         public void Normalize()
         {
-            Name = Name.Trim();
+            Name = Name?.Trim() ?? string.Empty;
             Description = string.IsNullOrWhiteSpace(Description)
                 ? null
                 : Description.Trim();
 
-            PermissionIds = PermissionIds
+            PermissionIds = PermissionIds?
                 .Where(x => x != Guid.Empty)
                 .Distinct()
                 .ToArray();

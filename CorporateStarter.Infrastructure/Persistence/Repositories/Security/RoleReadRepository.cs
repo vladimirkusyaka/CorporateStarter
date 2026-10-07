@@ -42,7 +42,6 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
                     IsSystemRole = x.IsSystemRole,
                     IsActive = x.IsActive,
                     Permissions = x.RolePermissions
-                        .Where(rp => rp.Permission.IsActive)
                         .OrderBy(rp => rp.Permission.Group)
                         .ThenBy(rp => rp.Permission.Name)
                         .Select(rp => new PermissionListItemDto

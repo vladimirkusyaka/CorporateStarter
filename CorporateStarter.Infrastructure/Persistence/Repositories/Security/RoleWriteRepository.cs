@@ -25,7 +25,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
 
             await _dbContext.Roles.AddAsync(role, cancellationToken);
 
-            AddRolePermissions(role.Id, values.PermissionIds);
+            AddRolePermissions(role.Id, values.PermissionIds ?? []);
 
             return role.Id;
         }
@@ -49,7 +49,8 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
             role.IsActive = values.IsActive;
             role.UpdatedAtUtc = DateTime.UtcNow;
 
-            ReplaceRolePermissions(role, values.PermissionIds);
+            if (values.PermissionIds is not null)
+                ReplaceRolePermissions(role, values.PermissionIds);
         }
 
         public async Task DeactivateAsync(

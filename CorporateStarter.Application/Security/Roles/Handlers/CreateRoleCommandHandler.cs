@@ -41,7 +41,7 @@ namespace CorporateStarter.Application.Security.Roles.Handlers
             }
 
             if (!await _readRepository.AllPermissionsExistAsync(
-                    values.PermissionIds,
+                    values.PermissionIds ?? [],
                     cancellationToken))
             {
                 return CommandResult<Guid>.Failure(

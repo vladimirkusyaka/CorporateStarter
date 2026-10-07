@@ -425,6 +425,14 @@ function permissionRouteAllowed(method, path) {
         (method === "POST" && /^\/api\/Permissions\/(?:query|find|filter-values)$/i.test(path));
 }
 
+function roleRouteAllowed(method, path) {
+    if (/^\/api\/Roles$/i.test(path)) return method === "GET" || method === "POST";
+    if (/^\/api\/Roles\/(?:capabilities|permission-options)$/i.test(path)) return method === "GET";
+    if (/^\/api\/Roles\/(?:query|find|filter-values)$/i.test(path)) return method === "POST";
+    return /^\/api\/Roles\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(path) &&
+        (method === "GET" || method === "PUT" || method === "DELETE");
+}
+
 export async function sendApiRequest(request) {
     const guid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     const route = /^\/api\/(?:Countries|Positions|Cities)(?:\/(?:query|find|filter-values|capabilities)|\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?$/i;
@@ -432,7 +440,7 @@ export async function sendApiRequest(request) {
 
     if (!request || typeof request.id !== "string" || !guid.test(request.id) ||
         clientApiRequests.has(request.id) || !methods.includes(request.method) ||
-        typeof request.relativePath !== "string" || !(permissionRouteAllowed(request.method, request.relativePath) || route.test(request.relativePath) || (request.method === "POST" && /^\/api\/Cities\/country-options$/i.test(request.relativePath))) ||
+        typeof request.relativePath !== "string" || !(roleRouteAllowed(request.method, request.relativePath) || permissionRouteAllowed(request.method, request.relativePath) || route.test(request.relativePath) || (request.method === "POST" && /^\/api\/Cities\/country-options$/i.test(request.relativePath))) ||
         typeof request.expectedUserId !== "string" || !guid.test(request.expectedUserId) ||
         request.expectedUserId === "00000000-0000-0000-0000-000000000000" ||
         (request.jsonBody != null && typeof request.jsonBody !== "string") ||

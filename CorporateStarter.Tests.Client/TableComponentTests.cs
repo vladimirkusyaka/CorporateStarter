@@ -95,6 +95,36 @@ public sealed class TableComponentTests
         Assert.Empty(renderer.Errors);
     }
 
+    [Fact]
+    public async Task Protected_rows_block_edit_double_click_and_mixed_bulk_delete()
+    {
+        var client = new FakeTableClient();
+        await using var services = CreateServices();
+        await using var renderer = new TestRenderer(services);
+        var table = await Mount(renderer, client);
+        await renderer.Dispatcher.InvokeAsync(async () =>
+        {
+            await table.SetParametersAsync(ParameterView.FromDictionary(new Dictionary<string, object?>
+            {
+                ["CanEditItem"] = new Func<PositionListItemDto, bool>(x => x.Id != client.Items[1].Id),
+                ["CanDeleteItem"] = new Func<PositionListItemDto, bool>(x => x.Id != client.Items[1].Id),
+                ["OpenEditor"] = new Func<Guid?, Task<MudBlazor.IDialogReference>>(_ => throw new InvalidOperationException("Protected row opened an editor."))
+            }));
+            table.GetType().GetField("_capabilities", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .SetValue(table, new TableCapabilities(true, true, true, true, true));
+            Invoke(table, "SelectRow", client.Items[1], new MouseEventArgs());
+            Assert.False(Read<bool>(table, "CanEdit"));
+            await (Task)Invoke(table, "OnRowDoubleClickAsync", client.Items[1], new MouseEventArgs())!;
+            Invoke(table, "SelectRow", client.Items[0], new MouseEventArgs { CtrlKey = true });
+            Assert.False(Read<bool>(table, "CanDelete"));
+            await (Task)Invoke(table, "OpenDeleteAsync")!;
+            Invoke(table, "SelectRow", client.Items[0], new MouseEventArgs());
+            Assert.True(Read<bool>(table, "CanEdit"));
+            Assert.True(Read<bool>(table, "CanDelete"));
+        });
+        Assert.Empty(renderer.Errors);
+    }
+
     internal static ServiceProvider CreateServices(Action<IServiceCollection>? configure = null)
     {
         var services = new ServiceCollection();
