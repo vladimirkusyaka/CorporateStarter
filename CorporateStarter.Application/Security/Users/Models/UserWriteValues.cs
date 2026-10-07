@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Collections.Generic;
 
@@ -6,6 +6,8 @@ namespace CorporateStarter.Application.Security.Users.Models
 {
     public sealed class UserWriteValues
     {
+        public bool ReplaceRoles { get; set; } = true;
+
         public Guid? Id { get; set; }
 
         public string Login { get; set; } = string.Empty;
@@ -24,8 +26,8 @@ namespace CorporateStarter.Application.Security.Users.Models
 
         public void Normalize()
         {
-            Login = Login.Trim();
-            Email = Email.Trim().ToLowerInvariant();
+            Login = (Login ?? string.Empty).Trim();
+            Email = (Email ?? string.Empty).Trim().ToLowerInvariant();
 
             DisplayName = string.IsNullOrWhiteSpace(DisplayName)
                 ? null
@@ -38,7 +40,7 @@ namespace CorporateStarter.Application.Security.Users.Models
             if (PersonId == Guid.Empty)
                 PersonId = null;
 
-            RoleIds = RoleIds
+            RoleIds = (RoleIds ?? [])
                 .Where(x => x != Guid.Empty)
                 .Distinct()
                 .ToArray();

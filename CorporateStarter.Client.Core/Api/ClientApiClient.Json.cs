@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using CorporateStarter.Client.Abstractions.Api;
@@ -25,7 +25,7 @@ public sealed partial class ClientApiClient
         CancellationToken cancellationToken)
     {
         if (!response.IsSuccessStatusCode)
-            throw new ClientApiHttpException(response.StatusCode, response.RetryAfter);
+            throw new ClientApiHttpException(response.StatusCode, response.RetryAfter, ReadErrorCode(response));
 
         if (!MediaTypeHeaderValue.TryParse(response.ContentType, out var contentType) ||
             contentType.MediaType is not { } mediaType ||
@@ -51,5 +51,19 @@ public sealed partial class ClientApiClient
         cancellationToken.ThrowIfCancellationRequested();
         RequireAuthenticated(ReadCurrentSession(requestSession));
         return value;
+    }
+    private static string? ReadErrorCode(ClientApiResponse response)
+    {
+        // Carry only a bounded machine-readable code, never a raw response or password.
+        if (response.StatusCode is not (400 or 403 or 404 or 409)) return null;
+        try
+        {
+            using var json = JsonDocument.Parse(response.Body);
+            if (json.RootElement.ValueKind == JsonValueKind.Object &&
+                json.RootElement.TryGetProperty("errorCode", out var code) && code.ValueKind == JsonValueKind.String &&
+                code.GetString() is { Length: > 0 and <= 100 } value) return value;
+        }
+        catch (JsonException) { }
+        return null;
     }
 }

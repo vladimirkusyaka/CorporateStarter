@@ -1,4 +1,4 @@
-﻿using CorporateStarter.Application.Common.Interfaces.Repositories.Security;
+using CorporateStarter.Application.Common.Interfaces.Repositories.Security;
 using CorporateStarter.Application.Common.Interfaces.Security;
 using CorporateStarter.Application.Common.Results;
 using CorporateStarter.Application.Common.Security;
@@ -74,6 +74,11 @@ namespace CorporateStarter.Application.Security.Users.Handlers
 
             if (!await readRepository.AllRolesExistAsync(values.RoleIds, cancellationToken))
                 return CommandResult<Guid>.Failure("user.roles_not_found", "One or more roles do not exist.");
+
+            if (await readRepository.ExistsByLoginAsync(values.Login, null, cancellationToken))
+                return CommandResult<Guid>.Failure("user.login_already_exists", "A user with this login already exists.");
+            if (await readRepository.ExistsByEmailAsync(values.Email, null, cancellationToken))
+                return CommandResult<Guid>.Failure("user.email_already_exists", "A user with this email already exists.");
 
             var passwordHash = passwordHasher.Hash(values.Password);
 

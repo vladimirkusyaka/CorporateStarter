@@ -1,4 +1,4 @@
-﻿const sessionLockName = "CorporateStarter.auth.session";
+const sessionLockName = "CorporateStarter.auth.session";
 
 let accessToken = null;
 let accessTokenExpiresAt = 0;
@@ -433,6 +433,14 @@ function roleRouteAllowed(method, path) {
         (method === "GET" || method === "PUT" || method === "DELETE");
 }
 
+function userRouteAllowed(method, path) {
+    if (/^\/api\/Users$/i.test(path)) return method === "GET" || method === "POST";
+    if (/^\/api\/Users\/(?:capabilities|role-options)$/i.test(path)) return method === "GET";
+    if (/^\/api\/Users\/(?:query|find|filter-values)$/i.test(path)) return method === "POST";
+    const match = /^\/api\/Users\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(\/password)?$/i.exec(path);
+    return !!match && (match[1] ? method === "PUT" : ["GET", "PUT", "DELETE"].includes(method));
+}
+
 export async function sendApiRequest(request) {
     const guid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     const route = /^\/api\/(?:Countries|Positions|Cities)(?:\/(?:query|find|filter-values|capabilities)|\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?$/i;
@@ -440,7 +448,7 @@ export async function sendApiRequest(request) {
 
     if (!request || typeof request.id !== "string" || !guid.test(request.id) ||
         clientApiRequests.has(request.id) || !methods.includes(request.method) ||
-        typeof request.relativePath !== "string" || !(roleRouteAllowed(request.method, request.relativePath) || permissionRouteAllowed(request.method, request.relativePath) || route.test(request.relativePath) || (request.method === "POST" && /^\/api\/Cities\/country-options$/i.test(request.relativePath))) ||
+        typeof request.relativePath !== "string" || !(userRouteAllowed(request.method, request.relativePath) || roleRouteAllowed(request.method, request.relativePath) || permissionRouteAllowed(request.method, request.relativePath) || route.test(request.relativePath) || (request.method === "POST" && /^\/api\/Cities\/country-options$/i.test(request.relativePath))) ||
         typeof request.expectedUserId !== "string" || !guid.test(request.expectedUserId) ||
         request.expectedUserId === "00000000-0000-0000-0000-000000000000" ||
         (request.jsonBody != null && typeof request.jsonBody !== "string") ||

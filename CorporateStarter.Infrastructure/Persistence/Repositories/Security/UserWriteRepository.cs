@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +57,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
             user.PersonId = values.PersonId;
             user.UpdatedAtUtc = DateTime.UtcNow;
 
-            ReplaceUserRoles(user, values.RoleIds);
+            if (values.ReplaceRoles) ReplaceUserRoles(user, values.RoleIds);
         }
 
         public async Task ChangePasswordAsync(

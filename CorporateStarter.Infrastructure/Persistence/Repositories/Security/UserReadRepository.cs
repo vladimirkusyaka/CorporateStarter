@@ -1,4 +1,4 @@
-﻿using Mapster;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using CorporateStarter.Application.Common.Interfaces.Repositories.Security;
 using CorporateStarter.Shared.Dtos.Security.Users;
@@ -59,7 +59,6 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
                         ? null
                         : x.Person.FirstName + " " + x.Person.LastName,
                     Roles = x.UserRoles
-                        .Where(ur => ur.Role.IsActive)
                         .OrderBy(ur => ur.Role.Name)
                         .Select(ur => new UserRoleDto
                         {

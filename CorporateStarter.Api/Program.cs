@@ -287,6 +287,9 @@ builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<CorporateStarter.Application.Common.Interfaces.Repositories.Security.IUserTableRepository,
+    CorporateStarter.Infrastructure.Persistence.Repositories.Security.UserTableRepository>();
+
 builder.Services.AddScoped<CorporateStarter.Application.Common.Interfaces.Repositories.Security.IRoleTableRepository,
     CorporateStarter.Infrastructure.Persistence.Repositories.Security.RoleTableRepository>();
 builder.Services.AddScoped<CorporateStarter.Application.Common.Interfaces.Repositories.Security.IPermissionTableRepository,

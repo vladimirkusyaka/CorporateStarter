@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
@@ -8,10 +8,15 @@
 
 	<ItemGroup>
 	  <Compile Remove="Components\Lookups\ReferenceMultiSelect.razor.cs" />
+	
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Content Include="Components\Lookups\ReferenceMultiSelect.razor.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	
 	</ItemGroup>
 
 	<ItemGroup>
@@ -26,3 +31,4 @@
 	</ItemGroup>
 
 </Project>
+

@@ -1,4 +1,4 @@
-﻿namespace CorporateStarter.Client.Abstractions.Api;
+namespace CorporateStarter.Client.Abstractions.Api;
 
 /// <summary>
 /// The API returned an unsuccessful HTTP status.
@@ -8,8 +8,9 @@ public sealed class ClientApiHttpException : Exception
 {
     public int StatusCode { get; }
     public string? RetryAfter { get; }
+    public string? ErrorCode { get; }
 
-    public ClientApiHttpException(int statusCode, string? retryAfter = null)
+    public ClientApiHttpException(int statusCode, string? retryAfter = null, string? errorCode = null)
         : base($"The API returned HTTP {statusCode}.")
     {
         if (statusCode is < 300 or > 599)
@@ -17,6 +18,7 @@ public sealed class ClientApiHttpException : Exception
 
         StatusCode = statusCode;
         RetryAfter = retryAfter;
+        ErrorCode = errorCode;
     }
 }
 

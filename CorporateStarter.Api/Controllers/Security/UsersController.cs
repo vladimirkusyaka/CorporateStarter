@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using MediatR;
 using CorporateStarter.Application.Common.Results;
@@ -13,7 +13,8 @@ namespace CorporateStarter.Api.Controllers.Security
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public sealed class UsersController : ControllerBase
+    [TableRequestErrors]
+    public sealed partial class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;
 
@@ -64,9 +65,7 @@ namespace CorporateStarter.Api.Controllers.Security
                 new CreateUserCommand(request),
                 cancellationToken);
 
-            return result.Succeeded
-                ? Ok(result)
-                : BadRequest(result);
+            return CommandResponse(result);
         }
 
         [Authorize(Policy = AppPermissions.UsersUpdate)]
@@ -82,9 +81,7 @@ namespace CorporateStarter.Api.Controllers.Security
                 new UpdateUserCommand(id, request),
                 cancellationToken);
 
-            return result.Succeeded
-                ? Ok(result)
-                : BadRequest(result);
+            return CommandResponse(result);
         }
 
         [Authorize(Policy = AppPermissions.UsersChangePassword)]
@@ -100,9 +97,7 @@ namespace CorporateStarter.Api.Controllers.Security
                 new ChangeUserPasswordCommand(id, request),
                 cancellationToken);
 
-            return result.Succeeded
-                ? Ok(result)
-                : BadRequest(result);
+            return CommandResponse(result);
         }
 
         [Authorize(Policy = AppPermissions.UsersDelete)]
@@ -117,9 +112,15 @@ namespace CorporateStarter.Api.Controllers.Security
                 new DeleteUserCommand(id),
                 cancellationToken);
 
-            return result.Succeeded
-                ? Ok(result)
-                : BadRequest(result);
+            return CommandResponse(result);
         }
+        private ActionResult CommandResponse<T>(CommandResult<T> result) => result.Succeeded
+            ? Ok(result)
+            : StatusCode(result.ErrorCode switch
+            {
+                "user.not_found" => 404,
+                "user.login_already_exists" or "user.email_already_exists" => 409,
+                _ => 400
+            }, result);
     }
 }

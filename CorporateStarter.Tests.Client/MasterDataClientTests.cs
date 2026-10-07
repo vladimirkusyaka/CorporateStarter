@@ -1,4 +1,5 @@
-﻿using CorporateStarter.Client.Core.Security.Roles;
+using CorporateStarter.Client.Core.Security.Users;
+using CorporateStarter.Client.Core.Security.Roles;
 using CorporateStarter.Shared.Dtos.Security.Roles;
 using CorporateStarter.Client.Core.Security.Permissions;
 using CorporateStarter.Client.Core.MasterData.Cities;
@@ -25,6 +26,7 @@ public sealed class MasterDataClientTests
     [InlineData("Cities")]
     [InlineData("Permissions")]
     [InlineData("Roles")]
+    [InlineData("Users")]
     public async Task Query_preserves_filters_and_uses_entity_route(string entity)
     {
         var transport = new Transport { Response = new(200, "{\"items\":[],\"page\":2,\"pageSize\":10,\"totalCount\":10}", "application/json") };
@@ -36,6 +38,7 @@ public sealed class MasterDataClientTests
             Filters = [new("isActive", "in", Values: [JsonSerializer.SerializeToElement(false)])]
         };
         if (entity == "Countries") await new CountriesClient(api).QueryAsync(request);
+        else if (entity == "Users") await new UsersClient(api).QueryAsync(request);
         else if (entity == "Roles") await new RolesClient(api).QueryAsync(request);
         else if (entity == "Permissions") await new PermissionsClient(api).QueryAsync(request);
         else if (entity == "Cities") await new CitiesClient(api).QueryAsync(request);
@@ -53,12 +56,14 @@ public sealed class MasterDataClientTests
     [InlineData("Cities")]
     [InlineData("Permissions")]
     [InlineData("Roles")]
+    [InlineData("Users")]
     public async Task Query_rejects_duplicate_record_ids(string entity)
     {
         var id = Guid.NewGuid();
         var json = JsonSerializer.Serialize(new { items = new[] { new { id, name = "A", code = "AA" }, new { id, name = "B", code = "BB" } }, page = 1, pageSize = 20, totalCount = 2 });
         var api = CreateApi(new Transport { Response = new(200, json, "application/json") });
         if (entity == "Countries") await Assert.ThrowsAsync<InvalidDataException>(() => new CountriesClient(api).QueryAsync(new()));
+        else if (entity == "Users") await Assert.ThrowsAsync<InvalidDataException>(() => new UsersClient(api).QueryAsync(new()));
         else if (entity == "Roles") await Assert.ThrowsAsync<InvalidDataException>(() => new RolesClient(api).QueryAsync(new()));
         else if (entity == "Permissions") await Assert.ThrowsAsync<InvalidDataException>(() => new PermissionsClient(api).QueryAsync(new()));
         else if (entity == "Cities") await Assert.ThrowsAsync<InvalidDataException>(() => new CitiesClient(api).QueryAsync(new()));
@@ -172,6 +177,46 @@ public sealed class MasterDataClientTests
     {
         var transport = new Transport { Response = new(200, response, "application/json") };
         await Assert.ThrowsAsync<InvalidDataException>(() => new RolesClient(CreateApi(transport)).CreateAsync(new() { Name = "Auditor" }));
+        Assert.Equal(1, transport.Calls);
+    }
+
+    [Fact]
+    public async Task User_update_preserves_roles_and_password_is_a_separate_request()
+    {
+        var id = Guid.NewGuid();
+        var transport = new Transport { Response = new(200, "{\"succeeded\":true}", "application/json") };
+        var client = new UsersClient(CreateApi(transport));
+        await client.UpdateAsync(id, new() { Login = "tester", Email = "tester@example.test", IsActive = false });
+        using (var body = JsonDocument.Parse(transport.Body!))
+        {
+            Assert.False(body.RootElement.TryGetProperty("roleIds", out _));
+            Assert.False(body.RootElement.TryGetProperty("password", out _));
+            Assert.False(body.RootElement.GetProperty("isActive").GetBoolean());
+        }
+        await client.UpdateAsync(id, new() { RoleIds = [] });
+        using (var body = JsonDocument.Parse(transport.Body!)) Assert.Equal(0, body.RootElement.GetProperty("roleIds").GetArrayLength());
+        await client.ChangePasswordAsync(id, new() { NewPassword = "Test-only-secret" });
+        Assert.Equal($"/api/Users/{id:D}/password", transport.Path);
+        Assert.Equal(HttpMethod.Put, transport.Method);
+        Assert.Equal(3, transport.Calls);
+    }
+
+    [Fact]
+    public async Task User_validation_keeps_error_code_without_leaking_raw_response()
+    {
+        var transport = new Transport { Response = new(400, "{\"errorCode\":\"user.password_reused\",\"errorMessage\":\"private detail\"}", "application/json") };
+        var exception = await Assert.ThrowsAsync<ClientApiHttpException>(() => new UsersClient(CreateApi(transport)).ChangePasswordAsync(Guid.NewGuid(), new()));
+        Assert.Equal("user.password_reused", exception.ErrorCode);
+        Assert.DoesNotContain("private detail", exception.Message);
+        Assert.NotNull(CommandErrorMessages.ForCode(exception.ErrorCode));
+        Assert.Equal(1, transport.Calls);
+    }
+
+    [Fact]
+    public async Task User_save_with_lost_response_is_not_replayed()
+    {
+        var transport = new Transport { Fail = true };
+        await Assert.ThrowsAsync<ClientApiTransportException>(() => new UsersClient(CreateApi(transport)).CreateAsync(new()));
         Assert.Equal(1, transport.Calls);
     }
 

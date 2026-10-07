@@ -1,4 +1,4 @@
-﻿using CorporateStarter.Client.Abstractions.Api;
+using CorporateStarter.Client.Abstractions.Api;
 using CorporateStarter.Client.Abstractions.Auth;
 using CorporateStarter.Shared.Common;
 using Microsoft.AspNetCore.Components;
@@ -114,7 +114,7 @@ public abstract class RecordEditorBase<TModel, TDetails> : ComponentBase, IDispo
         catch (ClientApiHttpException ex)
         {
             if (ex.StatusCode >= 500) MarkUncertain();
-            else _error = ex.StatusCode switch
+            else _error = CorporateStarter.Client.Core.Api.CommandErrorMessages.ForCode(ex.ErrorCode) ?? ex.StatusCode switch
             {
                 400 => "Check the record fields and try again.",
                 401 => "The request was not authorized. Verify your session before saving again.",

@@ -1,4 +1,4 @@
-﻿@typeparam TItem
+@typeparam TItem
 @typeparam TColumn where TColumn : struct, Enum
 
 <section class="reference-page" aria-labelledby="@(_elementId + "/title")">
@@ -23,6 +23,14 @@
                     <MudIconButton Icon="@DeleteIcon" Variant="Variant.Outlined"
                                    Color="Color.Primary" Disabled="@(!CanDelete)" OnClick="OpenDeleteAsync"
                                    Class="reference-refresh" aria-label="@($"Delete {Title}")" />
+                </MudTooltip>
+            }
+            @foreach (var action in Actions)
+            {
+                <MudTooltip Text="@action.Label">
+                    <MudIconButton Icon="@action.Icon" Variant="Variant.Outlined" Color="Color.Primary"
+                                   Disabled="@(!CanRunAction(action))" OnClick="@(() => RunActionAsync(action))"
+                                   Class="reference-refresh" aria-label="@action.Label" />
                 </MudTooltip>
             }
             <MudTooltip Text="@($"Refresh {Title}")">

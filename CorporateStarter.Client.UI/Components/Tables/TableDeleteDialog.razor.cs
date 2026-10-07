@@ -1,4 +1,4 @@
-﻿using CorporateStarter.Client.Abstractions.Api;
+using CorporateStarter.Client.Abstractions.Api;
 using CorporateStarter.Client.Abstractions.Auth;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -75,7 +75,7 @@ public partial class TableDeleteDialog : IDisposable
             Logger.LogWarning(ex, "Record deletion stopped after {Completed} of {Total} confirmed requests.",
                 _completed, _items.Length);
             if (_closed || _disposed) return;
-            var reason = ex is ClientApiHttpException http ? http.StatusCode switch
+            var reason = ex is ClientApiHttpException http ? CorporateStarter.Client.Core.Api.CommandErrorMessages.ForCode(http.ErrorCode) ?? http.StatusCode switch
             {
                 401 => "Sign in again before continuing.",
                 403 => "You do not have permission to delete records.",
