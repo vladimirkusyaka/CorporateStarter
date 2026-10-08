@@ -35,7 +35,8 @@
         public void Normalize()
         {
             Code = NormalizeOptional(Code);
-            Name = Name.Trim();
+            Name = (Name ?? string.Empty).Trim();
+            if (CityId == Guid.Empty) CityId = null;
             LegalName = NormalizeOptional(LegalName);
             TaxNumber = NormalizeOptional(TaxNumber);
             VatId = NormalizeOptional(VatId);

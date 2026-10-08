@@ -1,3 +1,4 @@
+using CorporateStarter.Client.Core.Directory.Companies;
 using CorporateStarter.Client.Core.Security.Users;
 using CorporateStarter.Client.Core.Security.Roles;
 using CorporateStarter.Shared.Dtos.Security.Roles;
@@ -27,6 +28,7 @@ public sealed class MasterDataClientTests
     [InlineData("Permissions")]
     [InlineData("Roles")]
     [InlineData("Users")]
+    [InlineData("Companies")]
     public async Task Query_preserves_filters_and_uses_entity_route(string entity)
     {
         var transport = new Transport { Response = new(200, "{\"items\":[],\"page\":2,\"pageSize\":10,\"totalCount\":10}", "application/json") };
@@ -38,6 +40,7 @@ public sealed class MasterDataClientTests
             Filters = [new("isActive", "in", Values: [JsonSerializer.SerializeToElement(false)])]
         };
         if (entity == "Countries") await new CountriesClient(api).QueryAsync(request);
+        else if (entity == "Companies") await new CompaniesClient(api).QueryAsync(request);
         else if (entity == "Users") await new UsersClient(api).QueryAsync(request);
         else if (entity == "Roles") await new RolesClient(api).QueryAsync(request);
         else if (entity == "Permissions") await new PermissionsClient(api).QueryAsync(request);
@@ -57,12 +60,14 @@ public sealed class MasterDataClientTests
     [InlineData("Permissions")]
     [InlineData("Roles")]
     [InlineData("Users")]
+    [InlineData("Companies")]
     public async Task Query_rejects_duplicate_record_ids(string entity)
     {
         var id = Guid.NewGuid();
         var json = JsonSerializer.Serialize(new { items = new[] { new { id, name = "A", code = "AA" }, new { id, name = "B", code = "BB" } }, page = 1, pageSize = 20, totalCount = 2 });
         var api = CreateApi(new Transport { Response = new(200, json, "application/json") });
         if (entity == "Countries") await Assert.ThrowsAsync<InvalidDataException>(() => new CountriesClient(api).QueryAsync(new()));
+        else if (entity == "Companies") await Assert.ThrowsAsync<InvalidDataException>(() => new CompaniesClient(api).QueryAsync(new()));
         else if (entity == "Users") await Assert.ThrowsAsync<InvalidDataException>(() => new UsersClient(api).QueryAsync(new()));
         else if (entity == "Roles") await Assert.ThrowsAsync<InvalidDataException>(() => new RolesClient(api).QueryAsync(new()));
         else if (entity == "Permissions") await Assert.ThrowsAsync<InvalidDataException>(() => new PermissionsClient(api).QueryAsync(new()));
@@ -218,6 +223,36 @@ public sealed class MasterDataClientTests
         var transport = new Transport { Fail = true };
         await Assert.ThrowsAsync<ClientApiTransportException>(() => new UsersClient(CreateApi(transport)).CreateAsync(new()));
         Assert.Equal(1, transport.Calls);
+    }
+
+    [Fact]
+    public async Task Company_update_clears_optional_city_preserves_contacts_and_uses_details_contract()
+    {
+        var id = Guid.NewGuid();
+        var transport = new Transport { Response = new(200, JsonSerializer.Serialize(new { id, name = "Example" }), "application/json") };
+        var client = new CompaniesClient(CreateApi(transport));
+        await client.UpdateAsync(id, new() { Name = "Example", CityId = null, Email = "office@example.test", Street = "Main", IsActive = false });
+        using var body = JsonDocument.Parse(transport.Body!);
+        Assert.Equal(JsonValueKind.Null, body.RootElement.GetProperty("cityId").ValueKind);
+        Assert.Equal("office@example.test", body.RootElement.GetProperty("email").GetString());
+        Assert.Equal("Main", body.RootElement.GetProperty("street").GetString());
+        Assert.False(body.RootElement.GetProperty("isActive").GetBoolean());
+        Assert.Equal($"/api/Companies/{id:D}", transport.Path);
+        Assert.Equal(1, transport.Calls);
+    }
+
+    [Fact]
+    public async Task Company_lookup_is_bounded_and_company_write_is_not_replayed()
+    {
+        var id = Guid.NewGuid();
+        var transport = new Transport { Response = new(200, JsonSerializer.Serialize(new[] { new LookupOption(id, "City"), new LookupOption(id, "City") }), "application/json") };
+        await Assert.ThrowsAsync<InvalidDataException>(() => new CompaniesClient(CreateApi(transport)).SearchCitiesAsync("York"));
+        Assert.Equal("/api/Companies/city-options", transport.Path);
+        using var body = JsonDocument.Parse(transport.Body!);
+        Assert.Equal(20, body.RootElement.GetProperty("limit").GetInt32());
+        var lost = new Transport { Fail = true };
+        await Assert.ThrowsAsync<ClientApiTransportException>(() => new CompaniesClient(CreateApi(lost)).CreateAsync(new() { Name = "Example" }));
+        Assert.Equal(1, lost.Calls);
     }
 
     private static ClientApiClient CreateApi(Transport transport)

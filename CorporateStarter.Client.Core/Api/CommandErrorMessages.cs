@@ -15,6 +15,10 @@ public static class CommandErrorMessages
         "user.password_required" => "Enter a password.",
         "user.login_invalid" or "user.login_required" => "Enter a login of 3–100 characters.",
         "user.email_invalid" or "user.email_required" => "Enter a valid email address.",
+        "company.name_required" => "Enter a company name.",
+        "company.name_exists" => "A company with this name already exists.",
+        "company.code_exists" => "A company with this code already exists.",
+        "company.city_not_found" => "The selected city no longer exists. Choose another city or clear the selection.",
         _ => null
     };
 }

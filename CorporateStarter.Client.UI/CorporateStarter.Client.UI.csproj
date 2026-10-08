@@ -16,10 +16,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	
-	</ItemGroup>
-
-	<ItemGroup>
 		<SupportedPlatform Include="browser" />
 		<Using Include="Microsoft.Extensions.Logging" />
 

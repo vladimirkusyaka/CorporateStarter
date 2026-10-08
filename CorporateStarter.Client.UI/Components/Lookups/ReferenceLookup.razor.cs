@@ -7,11 +7,12 @@ public partial class ReferenceLookup
     [Parameter] public string Label { get; set; } = "Record";
     [Parameter] public LookupOption? Value { get; set; }
     [Parameter] public EventCallback<LookupOption?> ValueChanged { get; set; }
+    [Parameter] public bool Required { get; set; } = true;
     [Parameter] public bool Disabled { get; set; }
     [Parameter, EditorRequired] public Func<string, CancellationToken, Task<LookupOption[]>> Search { get; set; } = default!;
     private string? _searchError;
     private long _searchRevision;
-    private static string? Validate(LookupOption? value) => value is null || value.Id == Guid.Empty ? "Select a record from the list." : null;
+    private string? Validate(LookupOption? value) => (Required && value is null) || value?.Id == Guid.Empty ? "Select a record from the list." : null;
     private async Task<IEnumerable<LookupOption>> SearchAsync(string text, CancellationToken ct)
     {
         var revision = ++_searchRevision;

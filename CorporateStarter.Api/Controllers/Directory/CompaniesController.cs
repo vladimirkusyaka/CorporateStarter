@@ -13,7 +13,8 @@ namespace CorporateStarter.Api.Controllers.Directory;
 [ApiController]
 [Authorize]
 [Route("api/[controller]")]
-public sealed class CompaniesController : ControllerBase
+[TableRequestErrors]
+public sealed partial class CompaniesController : ControllerBase
 {
     private readonly ISender _sender;
 

@@ -1,3 +1,4 @@
+using CorporateStarter.Shared.Dtos.Directory.Companies;
 using CorporateStarter.Shared.Dtos.Security.Users;
 using CorporateStarter.Shared.Dtos.Security.Roles;
 using CorporateStarter.Client.Core.Api;
@@ -52,6 +53,11 @@ namespace CorporateStarter.Client.Core.Serialization;
 [JsonSerializable(typeof(ChangeUserPasswordRequest))]
 [JsonSerializable(typeof(PagedResult<UserTableItemDto>), TypeInfoPropertyName = "UserPage")]
 [JsonSerializable(typeof(RoleListItemDto[]), TypeInfoPropertyName = "RoleOptions")]
+[JsonSerializable(typeof(CompanyListItemDto[]), TypeInfoPropertyName = "Companies")]
+[JsonSerializable(typeof(PagedResult<CompanyListItemDto>), TypeInfoPropertyName = "CompanyPage")]
+[JsonSerializable(typeof(CompanyDetailsDto))]
+[JsonSerializable(typeof(CreateCompanyRequest))]
+[JsonSerializable(typeof(UpdateCompanyRequest))]
 internal partial class ClientJsonContext : JsonSerializerContext
 {
 }

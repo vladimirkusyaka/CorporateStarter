@@ -15,13 +15,6 @@ public sealed class CitiesClient(ClientApiClient api)
     public Task<TableCapabilities> CapabilitiesAsync(CancellationToken ct = default) =>
         Api.GetJsonAsync("/api/Cities/capabilities", ClientJsonContext.Default.TableCapabilities, ct);
     public override Task<TableCapabilities> GetCapabilitiesAsync(CancellationToken ct = default) => CapabilitiesAsync(ct);
-    public async Task<LookupOption[]> SearchCountriesAsync(string text, CancellationToken ct = default)
-    {
-        var result = await Api.PostJsonAsync("/api/Cities/country-options", new LookupRequest { Text = text },
-            ClientJsonContext.Default.LookupRequest, ClientJsonContext.Default.LookupOptions, ct);
-        if (result.Length > 20 || result.Any(x => x is null || x.Id == Guid.Empty || string.IsNullOrWhiteSpace(x.Label)) ||
-            result.Select(x => x.Id).Distinct().Count() != result.Length)
-            throw new InvalidDataException("The API returned invalid lookup options.");
-        return result;
-    }
+    public Task<LookupOption[]> SearchCountriesAsync(string text, CancellationToken ct = default) =>
+        CorporateStarter.Client.Core.Lookups.LookupQuery.SearchAsync(Api, "/api/Cities/country-options", text, ct);
 }

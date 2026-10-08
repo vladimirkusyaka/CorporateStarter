@@ -22,6 +22,7 @@ public static class ClientCoreServiceCollectionExtensions
         services.TryAddScoped<PositionsClient>();
         services.TryAddScoped<CorporateStarter.Client.Core.Security.Roles.RolesClient>();
         services.TryAddScoped<CorporateStarter.Client.Core.Security.Users.UsersClient>();
+        services.TryAddScoped<CorporateStarter.Client.Core.Directory.Companies.CompaniesClient>();
         services.TryAddScoped<CorporateStarter.Client.Core.Security.Permissions.PermissionsClient>();
         services.TryAddScoped<CorporateStarter.Client.Core.MasterData.Cities.CitiesClient>();
         return services;
