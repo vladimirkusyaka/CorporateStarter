@@ -1,3 +1,4 @@
+using CorporateStarter.Client.Core.Directory.Persons;
 using CorporateStarter.Client.Core.Directory.Companies;
 using CorporateStarter.Client.Core.Security.Users;
 using CorporateStarter.Client.Core.Security.Roles;
@@ -29,6 +30,7 @@ public sealed class MasterDataClientTests
     [InlineData("Roles")]
     [InlineData("Users")]
     [InlineData("Companies")]
+    [InlineData("Persons")]
     public async Task Query_preserves_filters_and_uses_entity_route(string entity)
     {
         var transport = new Transport { Response = new(200, "{\"items\":[],\"page\":2,\"pageSize\":10,\"totalCount\":10}", "application/json") };
@@ -40,6 +42,7 @@ public sealed class MasterDataClientTests
             Filters = [new("isActive", "in", Values: [JsonSerializer.SerializeToElement(false)])]
         };
         if (entity == "Countries") await new CountriesClient(api).QueryAsync(request);
+        else if (entity == "Persons") await new PersonsClient(api).QueryAsync(request);
         else if (entity == "Companies") await new CompaniesClient(api).QueryAsync(request);
         else if (entity == "Users") await new UsersClient(api).QueryAsync(request);
         else if (entity == "Roles") await new RolesClient(api).QueryAsync(request);
@@ -61,12 +64,14 @@ public sealed class MasterDataClientTests
     [InlineData("Roles")]
     [InlineData("Users")]
     [InlineData("Companies")]
+    [InlineData("Persons")]
     public async Task Query_rejects_duplicate_record_ids(string entity)
     {
         var id = Guid.NewGuid();
         var json = JsonSerializer.Serialize(new { items = new[] { new { id, name = "A", code = "AA" }, new { id, name = "B", code = "BB" } }, page = 1, pageSize = 20, totalCount = 2 });
         var api = CreateApi(new Transport { Response = new(200, json, "application/json") });
         if (entity == "Countries") await Assert.ThrowsAsync<InvalidDataException>(() => new CountriesClient(api).QueryAsync(new()));
+        else if (entity == "Persons") await Assert.ThrowsAsync<InvalidDataException>(() => new PersonsClient(api).QueryAsync(new()));
         else if (entity == "Companies") await Assert.ThrowsAsync<InvalidDataException>(() => new CompaniesClient(api).QueryAsync(new()));
         else if (entity == "Users") await Assert.ThrowsAsync<InvalidDataException>(() => new UsersClient(api).QueryAsync(new()));
         else if (entity == "Roles") await Assert.ThrowsAsync<InvalidDataException>(() => new RolesClient(api).QueryAsync(new()));
@@ -252,6 +257,33 @@ public sealed class MasterDataClientTests
         Assert.Equal(20, body.RootElement.GetProperty("limit").GetInt32());
         var lost = new Transport { Fail = true };
         await Assert.ThrowsAsync<ClientApiTransportException>(() => new CompaniesClient(CreateApi(lost)).CreateAsync(new() { Name = "Example" }));
+        Assert.Equal(1, lost.Calls);
+    }
+
+    [Fact]
+    public async Task Person_date_is_calendar_date_and_optional_links_can_be_cleared()
+    {
+        var id = Guid.NewGuid();
+        var transport = new Transport { Response = new(200, JsonSerializer.Serialize(new { id, firstName = "Alex", dateOfBirth = "1990-02-03" }), "application/json") };
+        var client = new PersonsClient(CreateApi(transport));
+        var result = await client.UpdateAsync(id, new() { FirstName = "Alex", DateOfBirth = new(1990, 2, 3), CompanyId = null, PositionId = null, IsActive = false });
+        Assert.Equal(new DateOnly(1990, 2, 3), result.DateOfBirth);
+        using var body = JsonDocument.Parse(transport.Body!);
+        Assert.Equal("1990-02-03", body.RootElement.GetProperty("dateOfBirth").GetString());
+        Assert.Equal(JsonValueKind.Null, body.RootElement.GetProperty("companyId").ValueKind);
+        Assert.Equal(JsonValueKind.Null, body.RootElement.GetProperty("positionId").ValueKind);
+        Assert.False(body.RootElement.GetProperty("isActive").GetBoolean());
+        Assert.Equal($"/api/Persons/{id:D}", transport.Path);
+    }
+    [Fact]
+    public async Task Person_options_use_separate_routes_and_unknown_write_is_not_replayed()
+    {
+        var transport = new Transport { Response = new(200, "[]", "application/json") };
+        var client = new PersonsClient(CreateApi(transport));
+        await client.SearchCompaniesAsync("Example"); Assert.Equal("/api/Persons/company-options", transport.Path);
+        await client.SearchPositionsAsync("Manager"); Assert.Equal("/api/Persons/position-options", transport.Path);
+        var lost = new Transport { Fail = true };
+        await Assert.ThrowsAsync<ClientApiTransportException>(() => new PersonsClient(CreateApi(lost)).CreateAsync(new() { FirstName = "Alex" }));
         Assert.Equal(1, lost.Calls);
     }
 

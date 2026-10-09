@@ -1,0 +1,40 @@
+﻿@using CorporateStarter.Client.UI.Components.Editors
+@using CorporateStarter.Client.UI.Components.Lookups
+@using CorporateStarter.Shared.Dtos.Directory.Persons
+@inherits RecordEditorBase<UpdatePersonRequest, PersonDetailsDto>
+
+<EditorDialogFrame @ref="_frame" Title="@(IsEditing ? "Edit person" : "Add person")"
+                   Loading="_loadingDetails" Loaded="_loaded" Saving="_saving" Blocked="@(Blocked || _validating)" SessionReady="_sessionReady"
+                   Uncertain="_uncertain" ConfirmDiscard="_confirmDiscard" Error="@_error"
+                   Close="CloseAsync" Save="SaveTabbedAsync" Retry="LoadDetailsAsync" KeepEditing="KeepEditing" Discard="Discard">
+    <MudTabs ActivePanelIndex="_tab" ActivePanelIndexChanged="ChangeTab" KeepPanelsAlive="true" Elevation="0" TabPanelsClass="pt-4">
+        <MudTabPanel Text="Details" Disabled="@(Blocked || _confirmDiscard || _validating)">
+            <MudTextField @bind-Value="_model.FirstName" Label="First name" MaxLength="100" Variant="Variant.Outlined"
+                          Margin="Margin.Dense" Immediate="true" Disabled="Blocked" Validation="@(new Func<string, string?>(Required))" />
+            <MudTextField @bind-Value="_model.MiddleName" Label="Middle name" MaxLength="100" Variant="Variant.Outlined"
+                          Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
+            <MudTextField @bind-Value="_model.LastName" Label="Last name" MaxLength="100" Variant="Variant.Outlined"
+                          Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
+            <MudTextField @bind-Value="_model.Code" Label="Code" MaxLength="100" Variant="Variant.Outlined"
+                          Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
+            <MudDatePicker @bind-Date="BirthDate" Label="Date of birth" DateFormat="yyyy-MM-dd" Clearable="true"
+                           Editable="true" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="Blocked" />
+            @if (IsEditing)
+            {
+                <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="Blocked" Label="Active" />
+            }
+        </MudTabPanel>
+        <MudTabPanel Text="Contacts" Disabled="@(Blocked || _confirmDiscard || _validating)">
+            <MudTextField @bind-Value="_model.Email" Label="Email" MaxLength="256" Variant="Variant.Outlined"
+                          Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
+            <MudTextField @bind-Value="_model.Phone" Label="Phone" MaxLength="50" Variant="Variant.Outlined"
+                          Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
+            <MudTextField @bind-Value="_model.Description" Label="Description" MaxLength="2000" Variant="Variant.Outlined"
+                          Margin="Margin.Dense" Immediate="true" Disabled="Blocked" Lines="3" />
+        </MudTabPanel>
+        <MudTabPanel Text="Work" Disabled="@(Blocked || _confirmDiscard || _validating)">
+            <ReferenceLookup Label="Company" Value="_company" ValueChanged="CompanyChanged" Search="Client.SearchCompaniesAsync" Required="false" Disabled="Blocked" />
+            <ReferenceLookup Label="Position" Value="_position" ValueChanged="PositionChanged" Search="Client.SearchPositionsAsync" Required="false" Disabled="Blocked" />
+        </MudTabPanel>
+    </MudTabs>
+</EditorDialogFrame>

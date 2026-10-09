@@ -33,7 +33,9 @@ namespace CorporateStarter.Application.Directory.Persons.Models
         public void Normalize()
         {
             Code = NormalizeOptional(Code);
-            FirstName = FirstName.Trim();
+            FirstName = (FirstName ?? string.Empty).Trim();
+            if (CompanyId == Guid.Empty) CompanyId = null;
+            if (PositionId == Guid.Empty) PositionId = null;
             MiddleName = NormalizeOptional(MiddleName);
             LastName = NormalizeOptional(LastName);
             Email = NormalizeOptional(Email);

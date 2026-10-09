@@ -19,6 +19,9 @@ public static class CommandErrorMessages
         "company.name_exists" => "A company with this name already exists.",
         "company.code_exists" => "A company with this code already exists.",
         "company.city_not_found" => "The selected city no longer exists. Choose another city or clear the selection.",
+        "person.first_name_required" => "Enter a first name.",
+        "person.company_not_found" => "The selected company no longer exists. Choose another company or clear the selection.",
+        "person.position_not_found" => "The selected position no longer exists. Choose another position or clear the selection.",
         _ => null
     };
 }

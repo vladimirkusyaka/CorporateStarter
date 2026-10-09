@@ -14,7 +14,8 @@ namespace CorporateStarter.Api.Controllers.Directory
     [Authorize]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public sealed class PersonsController : ControllerBase
+    [TableRequestErrors]
+    public sealed partial class PersonsController : ControllerBase
     {
         private readonly IMediator _mediator;
 
