@@ -1,0 +1,39 @@
+﻿@using CorporateStarter.Client.Core.Audit
+@using CorporateStarter.Shared.Dtos.Audit
+@using CorporateStarter.Client.UI.Components.Details
+
+<RecordDetailsDialog TItem="AuditLogListItemDto" Title="Change details" Load="@(ct => Client.GetDetailsAsync(ChangeId, ct))">
+    <ChildContent Context="item">
+        <dl class="change-metadata">
+            <dt>Date (UTC)</dt><dd>@item.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")</dd>
+            <dt>Entity</dt><dd>@item.EntityName</dd>
+            <dt>Record</dt><dd>@item.EntityId</dd>
+            <dt>Action</dt><dd>@item.Action</dd>
+            <dt>User</dt><dd>@(item.UserEmail ?? "—")</dd>
+        </dl>
+        @{ var comparison = ChangeComparison.Parse(item.OldValuesJson, item.NewValuesJson); }
+        @if (comparison.InvalidJson)
+        {
+            <MudAlert Severity="Severity.Warning">The stored snapshot is not valid JSON and cannot be compared.</MudAlert>
+        }
+        else
+        {
+            <MudSwitch @bind-Value="_onlyChanged" Color="Color.Primary" Label="Changed fields only" />
+            <div class="change-values">
+                <table>
+                    <thead><tr><th>Field</th><th>Before</th><th>After</th></tr></thead>
+                    <tbody>
+                        @foreach (var row in comparison.Rows.Where(x => !_onlyChanged || x.Changed))
+                        {
+                            <tr class="@(row.Changed ? "changed" : null)"><th>@row.Field</th><td><pre>@row.Before</pre></td><td><pre>@row.After</pre></td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @if (!comparison.Rows.Any(x => !_onlyChanged || x.Changed))
+            {
+                <MudText>No field differences recorded.</MudText>
+            }
+        }
+    </ChildContent>
+</RecordDetailsDialog>

@@ -25,6 +25,13 @@
                                    Class="reference-refresh" aria-label="@($"Delete {Title}")" />
                 </MudTooltip>
             }
+            @if (OpenDetails is not null)
+            {
+                <MudTooltip Text="View details">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Visibility" Variant="Variant.Outlined" Color="Color.Primary"
+                                   Disabled="@(!CanView)" OnClick="OpenDetailsAsync" Class="reference-refresh" aria-label="View details" />
+                </MudTooltip>
+            }
             @foreach (var action in Actions)
             {
                 <MudTooltip Text="@action.Label">
@@ -140,7 +147,13 @@
                                 }
                             </select>
                         </label>
-                        <span>Page @(CurrentPage + 1) of @TotalPages · @_totalCount records</span>
+                        <label class="reference-page-number">
+                            Page <input type="text" inputmode="numeric" maxlength="10" aria-label="Page number"
+                                        title="Enter a page number and press Enter" @bind="PageNumberText" @bind:event="oninput"
+                                        @onkeydown="PageNumberKeyDownAsync" @onblur="CommitPageNumberAsync"
+                                        disabled="@(_loading || _querying || _creating)" />
+                            of @TotalPages · @_totalCount records
+                        </label>
                         <button type="button" @onclick="PreviousPageAsync" disabled="@(_loading || _querying || _creating || CurrentPage == 0)">Previous</button>
                         <button type="button" @onclick="NextPageAsync" disabled="@(_loading || _querying || _creating || CurrentPage + 1 >= TotalPages)">Next</button>
                     </div>

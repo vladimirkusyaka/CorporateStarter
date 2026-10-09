@@ -64,6 +64,9 @@ namespace CorporateStarter.Client.Core.Serialization;
 [JsonSerializable(typeof(PersonDetailsDto))]
 [JsonSerializable(typeof(CreatePersonRequest))]
 [JsonSerializable(typeof(UpdatePersonRequest))]
+[JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Audit.ChangeListItemDto))]
+[JsonSerializable(typeof(PagedResult<CorporateStarter.Shared.Dtos.Audit.ChangeListItemDto>), TypeInfoPropertyName = "ChangePage")]
+[JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Audit.AuditLogListItemDto))]
 internal partial class ClientJsonContext : JsonSerializerContext
 {
 }

@@ -287,6 +287,30 @@ public sealed class MasterDataClientTests
         Assert.Equal(1, lost.Calls);
     }
 
+    [Fact]
+    public async Task Changes_client_preserves_utc_and_never_sends_delete()
+    {
+        var id = Guid.NewGuid();
+        var transport = new Transport { Response = new(200, JsonSerializer.Serialize(new { id, entityName = "Person", createdAtUtc = "2026-10-09T12:30:00Z", oldValuesJson = "{}", newValuesJson = "{}" }), "application/json") };
+        var client = new CorporateStarter.Client.Core.Audit.ChangesClient(CreateApi(transport));
+        var detail = await client.GetDetailsAsync(id);
+        Assert.Equal(DateTimeKind.Utc, detail.CreatedAtUtc.Kind);
+        Assert.Equal($"/api/Audit/{id:D}", transport.Path);
+        await Assert.ThrowsAsync<NotSupportedException>(() => client.DeleteAsync(id));
+        Assert.Equal(1, transport.Calls);
+        await Assert.ThrowsAsync<InvalidDataException>(() => client.GetDetailsAsync(Guid.NewGuid()));
+    }
+    [Fact]
+    public async Task Changes_query_uses_shared_table_contract()
+    {
+        var id = Guid.NewGuid();
+        var transport = new Transport { Response = new(200, JsonSerializer.Serialize(new { items = new[] { new { id, entityName = "Person", action = "Update" } }, page = 1, pageSize = 20, totalCount = 1 }), "application/json") };
+        var client = new CorporateStarter.Client.Core.Audit.ChangesClient(CreateApi(transport));
+        var page = await client.QueryAsync(new() { PageSize = 20 });
+        Assert.Equal(id, Assert.Single(page.Items).Id);
+        Assert.Equal("/api/Audit/query", transport.Path);
+    }
+
     private static ClientApiClient CreateApi(Transport transport)
     {
         var state = new ClientAuthStateStore(NullLogger<ClientAuthStateStore>.Instance);

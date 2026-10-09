@@ -179,11 +179,26 @@
                         </MudMenu>
                     }
 
-                    <MudNavLink Href="/audit"
-                                Icon="@Icons.Material.Filled.History"
-                                Class="cs-nav-link">
-                        Audit
-                    </MudNavLink>
+                    @if (DrawerOpen)
+                    {
+                        <MudNavGroup Title="Audit"
+                                     Icon="@Icons.Material.Filled.History"
+                                     Class="cs-nav-group">
+                            <MudNavLink Href="/changes" Icon="@Icons.Material.Filled.Feed">Changes</MudNavLink>
+                        </MudNavGroup>
+                    }
+                    else
+                    {
+                        <MudMenu Icon="@Icons.Material.Filled.History" AriaLabel="Audit"
+                                 ActivationEvent="MouseEvent.MouseOver"
+                                 AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopLeft"
+                                 Dense="true" Class="cs-nav-flyout" PopoverClass="cs-nav-popup">
+                            <ChildContent>
+                                <div class="cs-nav-popup-title">Audit</div>
+                                <MudNavLink Href="/changes" Icon="@Icons.Material.Filled.Feed">Changes</MudNavLink>
+                            </ChildContent>
+                        </MudMenu>
+                    }
                 </MudNavMenu>
             </MudDrawer>
 

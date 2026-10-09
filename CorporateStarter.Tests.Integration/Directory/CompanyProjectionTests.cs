@@ -11,6 +11,7 @@ namespace CorporateStarter.Tests.Integration.Directory;
 public sealed class CompanyProjectionTests
 {
     [Theory]
+    [InlineData(typeof(CorporateStarter.Infrastructure.Persistence.Repositories.Audit.ChangeTableRepository), typeof(CorporateStarter.Shared.Dtos.Audit.ChangeListItemDto))]
     [InlineData(typeof(CompanyTableRepository), typeof(CompanyListItemDto))]
     [InlineData(typeof(PersonTableRepository), typeof(PersonListItemDto))]
     public void Compiled_projection_has_quoted_identifiers_for_every_mapped_property(Type repositoryType, Type dtoType)

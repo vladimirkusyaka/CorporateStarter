@@ -11,7 +11,7 @@ namespace CorporateStarter.Api.Controllers.Audit
     [Authorize]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public class AuditController(IMediator mediator) : Controller
+    public partial class AuditController(IMediator mediator) : Controller
     {
         private readonly IMediator _mediator = mediator;
 

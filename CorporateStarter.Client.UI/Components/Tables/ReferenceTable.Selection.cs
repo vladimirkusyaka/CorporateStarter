@@ -40,6 +40,13 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
 
     private Task OnRowDoubleClickAsync(TItem record, MouseEventArgs mouse)
     {
+        if (OpenDetails is not null)
+        {
+            if (_loading || _querying || _creating || _disposed || mouse.Button != 0 || !_items.Any(x => ItemId(x) == ItemId(record))) return Task.CompletedTask;
+            _pendingSelection = null;
+            _selection.SelectOnly(ItemId(record));
+            return OpenDetailsAsync();
+        }
         if (ReadOnly || OpenEditor is null || _loading || _querying || _creating || _disposed || !_capabilities.CanUpdate || mouse.Button != 0)
             return Task.CompletedTask;
 

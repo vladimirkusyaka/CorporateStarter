@@ -82,11 +82,30 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
         }
         finally { _querying = false; }
     }
+    private string? _pageNumberDraft;
+    private string PageNumberText
+    {
+        get => _pageNumberDraft ?? (CurrentPage + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+        set => _pageNumberDraft = value;
+    }
+    private Task PageNumberKeyDownAsync(Microsoft.AspNetCore.Components.Web.KeyboardEventArgs args)
+    {
+        if (args.Key == "Escape") { _pageNumberDraft = null; return Task.CompletedTask; }
+        return args.Key == "Enter" ? CommitPageNumberAsync() : Task.CompletedTask;
+    }
+    private async Task CommitPageNumberAsync()
+    {
+        var text = _pageNumberDraft;
+        _pageNumberDraft = null;
+        if (!int.TryParse(text, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var page)) return;
+        // Clamp to the available range; invalid/empty input restores the current page.
+        await GoToPageAsync(Math.Clamp(page, 1, TotalPages) - 1);
+    }
     private Task PreviousPageAsync() => GoToPageAsync(CurrentPage - 1);
     private Task NextPageAsync() => GoToPageAsync(CurrentPage + 1);
     private async Task GoToPageAsync(int page)
     {
-        if (_disposed || _loading || _creating || _querying || page < 0 || page >= TotalPages) return;
+        if (_disposed || _loading || _creating || _querying || page < 0 || page >= TotalPages || page == CurrentPage) return;
         CurrentPage = page;
         await LoadAsync();
     }

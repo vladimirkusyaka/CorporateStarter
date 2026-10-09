@@ -3,6 +3,20 @@ namespace CorporateStarter.Client.UI.Components.Tables;
 
 public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
 {
+    private bool CanView => OpenDetails is not null && !_disposed && !_loading && !_querying && !_creating && _selectedIds.Count == 1 && _items.Any(x => _selectedIds.Contains(ItemId(x)));
+    private async Task OpenDetailsAsync()
+    {
+        if (!CanView) return;
+        var item = _items.Single(x => _selectedIds.Contains(ItemId(x)));
+        _creating = true;
+        try
+        {
+            _createDialog = await OpenDetails!(item);
+            if (_disposed) { _createDialog.Close(); return; }
+            await _createDialog.Result;
+        }
+        finally { _createDialog = null; _creating = false; }
+    }
     [Parameter] public IReadOnlyList<TableRecordAction<TItem>> Actions { get; set; } = [];
     private bool CanRunAction(TableRecordAction<TItem> action) => !ReadOnly && !_disposed &&
         !_loading && !_querying && !_creating && _selectedIds.Count == 1 &&

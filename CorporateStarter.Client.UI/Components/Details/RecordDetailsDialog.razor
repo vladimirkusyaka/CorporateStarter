@@ -1,0 +1,24 @@
+﻿@typeparam TItem
+@implements IDisposable
+@using CorporateStarter.Client.Abstractions.Auth
+@using CorporateStarter.Client.Abstractions.Api
+
+<MudDialog>
+    <TitleContent><MudText Typo="Typo.h6">@Title</MudText></TitleContent>
+    <DialogContent>
+        @if (_loading)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+        }
+        else if (_error is not null)
+        {
+            <MudAlert Severity="Severity.Error">@_error</MudAlert>
+            <MudButton OnClick="LoadAsync">Retry</MudButton>
+        }
+        else if (_loaded)
+        {
+            @ChildContent(_item!)
+        }
+    </DialogContent>
+    <DialogActions><MudButton OnClick="Close">Close</MudButton></DialogActions>
+</MudDialog>

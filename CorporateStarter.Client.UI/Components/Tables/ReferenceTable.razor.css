@@ -361,3 +361,30 @@
 .reference-row-select:disabled {
     cursor: default;
 }
+
+.reference-page-number {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .reference-page-number input {
+        width: 6ch;
+        box-sizing: content-box;
+        padding: 5px 8px;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        background: white;
+        color: inherit;
+        font: inherit;
+        text-align: center;
+    }
+
+        .reference-page-number input:focus-visible {
+            outline: 2px solid var(--mud-palette-primary);
+            outline-offset: 2px;
+        }
+
+        .reference-page-number input:disabled {
+            opacity: .45;
+        }

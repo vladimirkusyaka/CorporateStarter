@@ -160,6 +160,35 @@ public sealed class TableComponentTests
     private static T Read<T>(object target, string name) =>
         (T)target.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(target)!;
 
+    [Fact]
+    public async Task Read_only_details_open_for_visible_row_but_not_stale_or_right_click()
+    {
+        var client = new FakeTableClient();
+        await using var services = CreateServices();
+        await using var renderer = new TestRenderer(services);
+        var table = await Mount(renderer, client, readOnly: true);
+        var calls = 0;
+        await renderer.Dispatcher.InvokeAsync(async () =>
+        {
+            await table.SetParametersAsync(ParameterView.FromDictionary(new Dictionary<string, object?>
+            {
+                ["OpenDetails"] = new Func<PositionListItemDto, Task<MudBlazor.IDialogReference>>(item =>
+                {
+                    calls++; Assert.Equal(client.Items[1].Id, item.Id);
+                    var dialog = new MudBlazor.DialogReference(Guid.NewGuid(), services.GetRequiredService<MudBlazor.IDialogService>());
+                    dialog.Dismiss(MudBlazor.DialogResult.Cancel());
+                    return Task.FromResult<MudBlazor.IDialogReference>(dialog);
+                })
+            }));
+            await (Task)Invoke(table, "OnRowDoubleClickAsync", client.Items[1], new MouseEventArgs { Button = 2 })!;
+            await (Task)Invoke(table, "OnRowDoubleClickAsync", new PositionListItemDto { Id = Guid.NewGuid() }, new MouseEventArgs())!;
+            Assert.Equal(0, calls);
+            await (Task)Invoke(table, "OnRowDoubleClickAsync", client.Items[1], new MouseEventArgs())!;
+            Assert.Equal(1, calls);
+            Assert.False(Read<bool>(table, "CanEdit")); Assert.False(Read<bool>(table, "CanDelete"));
+        });
+        Assert.Empty(renderer.Errors);
+    }
     private sealed class FakeTableClient : ITableClient<PositionListItemDto>
     {
         public PositionListItemDto[] Items { get; } =

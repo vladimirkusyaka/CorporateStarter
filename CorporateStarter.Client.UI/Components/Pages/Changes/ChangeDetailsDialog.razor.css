@@ -1,0 +1,51 @@
+﻿.change-metadata {
+    display: grid;
+    grid-template-columns: 110px minmax(0,1fr);
+    gap: 8px 16px;
+    margin-bottom: 20px;
+}
+
+    .change-metadata dt {
+        font-weight: 600;
+    }
+
+    .change-metadata dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+.change-values {
+    overflow: auto;
+    max-height: 55vh;
+}
+
+    .change-values table {
+        border-collapse: collapse;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .change-values th, .change-values td {
+        padding: 10px;
+        border: 1px solid var(--mud-palette-lines-default);
+        text-align: left;
+        vertical-align: top;
+        overflow-wrap: anywhere;
+    }
+
+    .change-values thead th {
+        position: sticky;
+        top: 0;
+        background: var(--mud-palette-surface);
+    }
+
+    .change-values pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        margin: 0;
+        font: inherit;
+    }
+
+    .change-values .changed {
+        background: var(--mud-palette-action-default-hover);
+    }

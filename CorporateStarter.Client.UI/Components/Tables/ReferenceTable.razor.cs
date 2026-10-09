@@ -13,6 +13,7 @@ public partial class ReferenceTable<TItem, TColumn> : IDisposable where TColumn 
     [Parameter, EditorRequired] public Func<TItem, string> ItemName { get; set; } = default!;
     [Parameter] public Func<Guid?, Task<MudBlazor.IDialogReference>>? OpenEditor { get; set; }
     [Parameter] public Func<object?, Guid?> SavedId { get; set; } = _ => null;
+    [Parameter] public Func<TItem, Task<MudBlazor.IDialogReference>>? OpenDetails { get; set; }
     [Parameter] public bool ReadOnly { get; set; }
     [Parameter] public Func<TItem, bool> CanEditItem { get; set; } = _ => true;
     [Parameter] public Func<TItem, bool> CanDeleteItem { get; set; } = _ => true;
@@ -49,6 +50,7 @@ public partial class ReferenceTable<TItem, TColumn> : IDisposable where TColumn 
         var cancellationToken = _lifetime.Token;
         if (!preserveSelection) ClearSelection();
         else _pendingSelection = null;
+        _pageNumberDraft = null;
         ResetSearchPosition();
         _loadStarted = true;
         _loading = true;
