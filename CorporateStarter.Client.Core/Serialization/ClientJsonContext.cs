@@ -9,6 +9,7 @@ using CorporateStarter.Shared.Dtos.MasterData.Positions;
 using System.Text.Json.Serialization;
 using CorporateStarter.Shared.Common;
 using CorporateStarter.Shared.Dtos.MasterData.Countries;
+using CorporateStarter.Shared.Dtos.Audit;
 
 namespace CorporateStarter.Client.Core.Serialization;
 
@@ -67,6 +68,8 @@ namespace CorporateStarter.Client.Core.Serialization;
 [JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Audit.ChangeListItemDto))]
 [JsonSerializable(typeof(PagedResult<CorporateStarter.Shared.Dtos.Audit.ChangeListItemDto>), TypeInfoPropertyName = "ChangePage")]
 [JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Audit.AuditLogListItemDto))]
+[JsonSerializable(typeof(PagedResult<SecurityEventRowDto>), TypeInfoPropertyName = "SecurityEventPage")]
+[JsonSerializable(typeof(SecurityEventListItemDto))]
 internal partial class ClientJsonContext : JsonSerializerContext
 {
 }

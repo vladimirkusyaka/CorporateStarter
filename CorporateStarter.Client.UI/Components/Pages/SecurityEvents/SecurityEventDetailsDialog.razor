@@ -1,0 +1,35 @@
+﻿@using CorporateStarter.Client.Core.Audit
+@using CorporateStarter.Shared.Dtos.Audit
+@using CorporateStarter.Client.UI.Components.Details
+
+
+<RecordDetailsDialog TItem="SecurityEventListItemDto" Title="Security event" Load="@(ct => Client.GetDetailsAsync(EventId, ct))">
+    <ChildContent Context="item">
+        <dl class="event-metadata">
+            <dt>Date (UTC)</dt>
+            <dd>@item.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")</dd>
+            <dt>Event</dt>
+            <dd>@item.EventType</dd>
+            <dt>Severity</dt>
+            <dd>@item.Severity</dd>
+            <dt>Outcome</dt>
+            <dd>@item.Outcome</dd>
+            <dt>User</dt>
+            <dd>@(item.SubjectUserEmail ?? "Not recorded")</dd>
+            <dt>User ID</dt>
+            <dd>@(item.SubjectUserId?.ToString() ?? "Not recorded")</dd>
+            <dt>Session ID</dt>
+            <dd>@(item.AuthSessionId?.ToString() ?? "Not recorded")</dd>
+            <dt>Token family ID</dt>
+            <dd>@(item.RefreshTokenFamilyId?.ToString() ?? "Not recorded")</dd>
+            <dt>Correlation ID</dt>
+            <dd>@(item.CorrelationId ?? "Not recorded")</dd>
+            <dt>IP address</dt>
+            <dd>@(item.IpAddress ?? "Not recorded")</dd>
+            <dt>User agent</dt>
+            <dd>@(item.UserAgent ?? "Not recorded")</dd>
+        </dl>
+        <MudText Typo="Typo.subtitle1">Additional details</MudText>
+        <JsonDetails Value="@item.DetailsJson" />
+    </ChildContent>
+</RecordDetailsDialog>

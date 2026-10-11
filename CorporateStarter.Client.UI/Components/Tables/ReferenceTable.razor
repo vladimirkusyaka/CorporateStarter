@@ -55,16 +55,6 @@
                            title="Find next (Enter)" aria-label="Find next record" />
         </form>
     </div>
-    @if (_filters.Count > 0 || _searchMessage is not null)
-    {
-        <div class="reference-query-status">
-            <span role="status" aria-live="polite">@_searchMessage</span>
-            @if (_filters.Count > 0)
-            {
-                <button type="button" @onclick="ClearFilters" disabled="@(_loading || _creating || _querying)">Clear filters (@_filters.Count)</button>
-            }
-        </div>
-    }
 
     @if (!_hasLoaded && (_loading || !_loadStarted))
     {

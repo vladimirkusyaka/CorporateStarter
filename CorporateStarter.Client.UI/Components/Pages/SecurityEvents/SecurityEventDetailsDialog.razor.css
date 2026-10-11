@@ -1,0 +1,26 @@
+﻿.event-metadata {
+    display: grid;
+    grid-template-columns: 140px minmax(0,1fr);
+    gap: 8px 16px;
+    margin-bottom: 20px;
+}
+
+    .event-metadata dt {
+        font-weight: 600;
+    }
+
+    .event-metadata dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+@media (max-width:480px) {
+    .event-metadata {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+        .event-metadata dd {
+            margin-bottom: 8px;
+        }
+}

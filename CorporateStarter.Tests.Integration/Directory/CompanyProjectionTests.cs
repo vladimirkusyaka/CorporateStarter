@@ -5,12 +5,15 @@ using System.Text.RegularExpressions;
 using CorporateStarter.Infrastructure.Persistence.Repositories.Directory.Companies;
 using CorporateStarter.Shared.Dtos.Directory.Companies;
 using Xunit;
+using CorporateStarter.Shared.Dtos.Audit;
+using CorporateStarter.Infrastructure.Persistence.Repositories.Audit;
 
 namespace CorporateStarter.Tests.Integration.Directory;
 
 public sealed class CompanyProjectionTests
 {
     [Theory]
+    [InlineData(typeof(SecurityEventTableRepository), typeof(SecurityEventRowDto))]
     [InlineData(typeof(CorporateStarter.Infrastructure.Persistence.Repositories.Audit.ChangeTableRepository), typeof(CorporateStarter.Shared.Dtos.Audit.ChangeListItemDto))]
     [InlineData(typeof(CompanyTableRepository), typeof(CompanyListItemDto))]
     [InlineData(typeof(PersonTableRepository), typeof(PersonListItemDto))]

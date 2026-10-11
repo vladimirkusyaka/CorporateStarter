@@ -51,6 +51,7 @@ public partial class ReferenceTable<TItem, TColumn> : IDisposable where TColumn 
         if (!preserveSelection) ClearSelection();
         else _pendingSelection = null;
         _pageNumberDraft = null;
+        await ClearFilters();
         ResetSearchPosition();
         _loadStarted = true;
         _loading = true;

@@ -463,6 +463,12 @@ function changeRouteAllowed(method, path) {
     return method === "GET" && /^\/api\/Audit\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(path);
 }
 
+function securityEventRouteAllowed(method, path) {
+    if (/^\/api\/security-events\/capabilities$/i.test(path)) return method === "GET";
+    if (/^\/api\/security-events\/(?:query|find|filter-values)$/i.test(path)) return method === "POST";
+    return method === "GET" && /^\/api\/security-events\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(path);
+}
+
 export async function sendApiRequest(request) {
     const guid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     const route = /^\/api\/(?:Countries|Positions|Cities)(?:\/(?:query|find|filter-values|capabilities)|\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?$/i;
@@ -470,7 +476,7 @@ export async function sendApiRequest(request) {
 
     if (!request || typeof request.id !== "string" || !guid.test(request.id) ||
         clientApiRequests.has(request.id) || !methods.includes(request.method) ||
-        typeof request.relativePath !== "string" || !(changeRouteAllowed(request.method, request.relativePath) || personRouteAllowed(request.method, request.relativePath) || companyRouteAllowed(request.method, request.relativePath) || userRouteAllowed(request.method, request.relativePath) || roleRouteAllowed(request.method, request.relativePath) || permissionRouteAllowed(request.method, request.relativePath) || route.test(request.relativePath) || (request.method === "POST" && /^\/api\/Cities\/country-options$/i.test(request.relativePath))) ||
+        typeof request.relativePath !== "string" || !(securityEventRouteAllowed(request.method, request.relativePath) || changeRouteAllowed(request.method, request.relativePath) || personRouteAllowed(request.method, request.relativePath) || companyRouteAllowed(request.method, request.relativePath) || userRouteAllowed(request.method, request.relativePath) || roleRouteAllowed(request.method, request.relativePath) || permissionRouteAllowed(request.method, request.relativePath) || route.test(request.relativePath) || (request.method === "POST" && /^\/api\/Cities\/country-options$/i.test(request.relativePath))) ||
         typeof request.expectedUserId !== "string" || !guid.test(request.expectedUserId) ||
         request.expectedUserId === "00000000-0000-0000-0000-000000000000" ||
         (request.jsonBody != null && typeof request.jsonBody !== "string") ||
@@ -591,4 +597,3 @@ async function readClientApiBody(response) {
         reader.releaseLock();
     }
 }
-

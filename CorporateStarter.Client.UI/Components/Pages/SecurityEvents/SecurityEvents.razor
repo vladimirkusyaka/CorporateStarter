@@ -1,0 +1,7 @@
+﻿@page "/security-events"
+@using CorporateStarter.Client.UI.Components.Tables
+@using CorporateStarter.Shared.Dtos.Audit
+
+<PageTitle>Security events</PageTitle>
+<ReferenceTable TItem="SecurityEventRowDto" TColumn="Column" Client="Client" Columns="Columns" ReadOnly="true"
+                ItemId="@(x => x.Id)" ItemName="@(x => x.EventType)" Title="Security events" Singular="event" OpenDetails="OpenAsync" />

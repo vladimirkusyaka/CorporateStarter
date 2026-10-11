@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using CorporateStarter.Api.Controllers.Audit;
+using CorporateStarter.Application.Audit.Changes.Handlers;
 using CorporateStarter.Application.Common.Interfaces.Repositories.Audit;
 using CorporateStarter.Application.Common.Security;
 using CorporateStarter.Shared.Common;
@@ -24,7 +25,7 @@ public sealed class ChangesApiTests
         using var host = new HostBuilder().ConfigureWebHost(b => b.UseTestServer().ConfigureServices(s =>
         {
             s.AddLogging(); s.AddControllers().AddApplicationPart(typeof(AuditController).Assembly);
-            s.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<CorporateStarter.Application.Audit.Handlers.GetAuditsQueryHandler>());
+            s.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<GetAuditsQueryHandler>());
             s.AddSingleton<IChangeTableRepository>(repo);
             s.AddAuthentication("Test").AddScheme<AuthenticationSchemeOptions, TableTestAuthentication>("Test", _ => { });
             s.AddAuthorization(o => o.AddPolicy(AppPermissions.AuditRead, p => p.RequireClaim("permission", AppPermissions.AuditRead)));

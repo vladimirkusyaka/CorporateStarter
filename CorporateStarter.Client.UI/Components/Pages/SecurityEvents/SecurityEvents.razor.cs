@@ -1,0 +1,29 @@
+﻿using CorporateStarter.Client.Core.Audit;
+using CorporateStarter.Client.UI.Components.Tables;
+using CorporateStarter.Shared.Dtos.Audit;
+using Microsoft.AspNetCore.Components;
+using MudBlazor;
+namespace CorporateStarter.Client.UI.Components.Pages.SecurityEvents;
+
+public partial class SecurityEvents
+{
+    [Inject] private SecurityEventsClient Client { get; set; } = default!;
+    [Inject] private IDialogService Dialogs { get; set; } = default!;
+    private enum Column { Date, Type, Severity, Outcome, User, Ip, Correlation }
+    private static readonly TableColumn<SecurityEventRowDto, Column>[] Columns =
+    [
+        new(Column.Date,"createdAtUtc","Date (UTC)",x => x.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")),
+        new(Column.Type,"eventType","Event",x => x.EventType),
+        new(Column.Severity,"severity","Severity",x => x.Severity),
+        new(Column.Outcome,"outcome","Outcome",x => x.Outcome),
+        new(Column.User,"subjectUserEmail","User",x => x.SubjectUserEmail),
+        new(Column.Ip,"ipAddress","IP address",x => x.IpAddress),
+        new(Column.Correlation,"correlationId","Correlation ID",x => x.CorrelationId)
+    ];
+    private Task<IDialogReference> OpenAsync(SecurityEventRowDto item)
+    {
+        var parameters = new DialogParameters<SecurityEventDetailsDialog>(); parameters.Add(x => x.EventId, item.Id);
+        return Dialogs.ShowAsync<SecurityEventDetailsDialog>("Security event", parameters, new DialogOptions
+        { MaxWidth = MaxWidth.Large, FullWidth = true, CloseButton = true, CloseOnEscapeKey = true, CloseOnNavigation = true });
+    }
+}

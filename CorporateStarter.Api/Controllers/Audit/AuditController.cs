@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using MediatR;
-using CorporateStarter.Application.Audit.Queries;
 using CorporateStarter.Application.Common.Security;
 using CorporateStarter.Shared.Dtos.Audit;
+using CorporateStarter.Application.Audit.Changes.Queries;
 
 namespace CorporateStarter.Api.Controllers.Audit
 {

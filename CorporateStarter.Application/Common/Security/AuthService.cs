@@ -1,3 +1,4 @@
+using CorporateStarter.Application.Common.Interfaces.Repositories.Audit;
 using CorporateStarter.Application.Common.Interfaces.Repositories.Auth;
 using CorporateStarter.Application.Common.Interfaces.Repositories.Security;
 using CorporateStarter.Application.Common.Interfaces.Security;
