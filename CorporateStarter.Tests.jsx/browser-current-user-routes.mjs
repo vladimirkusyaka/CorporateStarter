@@ -1,0 +1,11 @@
+﻿import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const source=fs.readFileSync(new URL('../CorporateStarter.Client.Browser/wwwroot/auth/browser-session.js',import.meta.url),'utf8');
+const start=source.indexOf('function currentUserRouteAllowed(');
+const context=vm.createContext({});
+vm.runInContext(source.slice(start,source.indexOf('export async function sendApiRequest',start)),context);
+assert.equal(context.currentUserRouteAllowed('GET','/api/Auth/me'),true);
+for (const [method,path] of [['POST','/api/Auth/me'],['DELETE','/api/Auth/me'],['GET','/api/Auth/login'],['GET','/api/Auth/me/other'],['GET','https://example.test/api/Auth/me']]) assert.equal(context.currentUserRouteAllowed(method,path),false);
+assert.ok(source.includes('currentUserRouteAllowed(request.method, request.relativePath) ||'));
+console.log('PASS: current user route permits GET me only.');

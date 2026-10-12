@@ -1,0 +1,29 @@
+﻿.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.user-notifications-hidden {
+    display: none;
+}
+
+::deep .user-menu-trigger {
+    min-width: 0;
+    padding: 4px 6px;
+    border-radius: 20px;
+}
+
+::deep .cs-user-name {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width:600px) {
+    ::deep .cs-user-name {
+        max-width: 120px;
+    }
+}

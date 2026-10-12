@@ -42,14 +42,6 @@ namespace CorporateStarter.Client.UI.Components.Layout
         protected string Password { get; set; } = string.Empty;
         protected string? SignInError { get; set; }
 
-        protected string CurrentUserName =>
-            _snapshot.UserId is null ? "guest" : "Signed in";
-
-        protected string CurrentUserInitials =>
-            _snapshot.UserId is null ? "G" : "U";
-
-        protected int UnreadNotifications { get; set; } = 1;
-
         protected bool AppSwitcherVisible => false;
 
         private ClientAuthSnapshot _snapshot = ClientAuthSnapshot.Initial;

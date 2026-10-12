@@ -335,6 +335,18 @@ public sealed class MasterDataClientTests
         Assert.Equal("/api/security-events/query", transport.Path);
     }
 
+    [Fact]
+    public async Task Current_user_profile_uses_me_and_rejects_another_user()
+    {
+        var id = Guid.NewGuid();
+        var transport = new Transport { Response = new(200, JsonSerializer.Serialize(new { id, login = "admin", displayName = "Administrator" }), "application/json") };
+        var client = new CorporateStarter.Client.Core.Auth.CurrentUserClient(CreateApi(transport));
+        var profile = await client.GetAsync(id);
+        Assert.Equal("Administrator", profile.DisplayName);
+        Assert.Equal("/api/Auth/me", transport.Path);
+        await Assert.ThrowsAsync<InvalidDataException>(() => client.GetAsync(Guid.NewGuid()));
+    }
+
     private static ClientApiClient CreateApi(Transport transport)
     {
         var state = new ClientAuthStateStore(NullLogger<ClientAuthStateStore>.Instance);

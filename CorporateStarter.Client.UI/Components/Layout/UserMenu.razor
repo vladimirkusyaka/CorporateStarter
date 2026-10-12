@@ -1,0 +1,25 @@
+﻿@using CorporateStarter.Client.Abstractions.Auth
+@using CorporateStarter.Client.Core.Auth
+@using CorporateStarter.Shared.Dtos.Auth
+
+<div class="user-menu">
+    <MudText Typo="Typo.body2" Class="cs-user-name" title="@Name">@Name</MudText>
+    <span class="user-notifications-hidden" aria-hidden="true">
+        <MudIconButton Icon="@Icons.Material.Filled.NotificationsNone" Color="Color.Inherit" Size="Size.Small" tabindex="-1" />
+    </span>
+    <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Dense="true" AriaLabel="User menu">
+        <ActivatorContent>
+            <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="user-menu-trigger"
+                       OnClick="@context.ToggleAsync" EndIcon="@Icons.Material.Filled.ArrowDropDown" aria-label="@($"User menu: {Name}")">
+                <MudAvatar Size="Size.Small" Class="cs-user-avatar">@Initial</MudAvatar>
+            </MudButton>
+        </ActivatorContent>
+        <ChildContent>
+            <MudMenuItem Icon="@Icons.Material.Filled.Person">Profile</MudMenuItem>
+            <MudMenuItem Icon="@Icons.Material.Filled.Settings">Preferences</MudMenuItem>
+            <MudDivider Class="my-1" />
+            <MudMenuItem Icon="@Icons.Material.Filled.Logout" Disabled="LogoutDisabled" OnClick="Logout">Logout</MudMenuItem>
+        </ChildContent>
+    </MudMenu>
+
+</div>

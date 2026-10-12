@@ -28,6 +28,7 @@ public static class ClientCoreServiceCollectionExtensions
         services.TryAddScoped<CorporateStarter.Client.Core.MasterData.Cities.CitiesClient>();
         services.TryAddScoped<CorporateStarter.Client.Core.Audit.ChangesClient>();
         services.TryAddScoped<CorporateStarter.Client.Core.Audit.SecurityEventsClient>();
+        services.TryAddScoped<CorporateStarter.Client.Core.Auth.CurrentUserClient>();
         return services;
     }
 }

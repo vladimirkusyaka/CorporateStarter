@@ -41,46 +41,8 @@
 
                     <MudDivider Vertical="true" FlexItem="true" />
 
-                    <MudBadge Content="@UnreadNotifications"
-                              Visible="@(UnreadNotifications > 0)"
-                              Color="Color.Primary"
-                              Overlap="true"
-                              Bordered="true">
-                        <MudAvatar Size="Size.Small" Class="cs-user-avatar">
-                            @(CurrentUserInitials)
-                        </MudAvatar>
-                    </MudBadge>
-
-                    <MudText Typo="Typo.body2" Class="cs-user-name">
-                        @CurrentUserName
-                    </MudText>
-
-                    <MudTooltip Text="Notifications">
-                        <MudIconButton Icon="@Icons.Material.Filled.NotificationsNone"
-                                       Color="Color.Inherit"
-                                       Size="Size.Small" />
-                    </MudTooltip>
-
-                    <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown"
-                             Color="Color.Inherit"
-                             Size="Size.Small"
-                             AnchorOrigin="Origin.BottomRight"
-                             TransformOrigin="Origin.TopRight"
-                             Dense="true"
-                             AriaLabel="User menu">
-
-                
-                        <ChildContent>
-                            <MudMenuItem Icon="@Icons.Material.Filled.Person">Profile</MudMenuItem>
-                            <MudMenuItem Icon="@Icons.Material.Filled.Settings">Preferences</MudMenuItem>
-                            <MudDivider Class="my-1" />
-                            <MudMenuItem Icon="@Icons.Material.Filled.Logout"
-                                         Disabled="@(_snapshot.UserId is null || _signingOut || IsSigningIn || Session.IsLogoutPending)"
-                                         OnClick="SignOutAsync">
-                                Logout
-                            </MudMenuItem>
-                        </ChildContent>
-                    </MudMenu>
+                    <UserMenu Logout="SignOutAsync"
+                              LogoutDisabled="@(_snapshot.UserId is null || _signingOut || IsSigningIn || Session.IsLogoutPending)" />
                 </MudStack>
             </MudAppBar>
 

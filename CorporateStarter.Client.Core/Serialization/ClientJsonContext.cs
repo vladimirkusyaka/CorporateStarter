@@ -70,6 +70,7 @@ namespace CorporateStarter.Client.Core.Serialization;
 [JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Audit.AuditLogListItemDto))]
 [JsonSerializable(typeof(PagedResult<SecurityEventRowDto>), TypeInfoPropertyName = "SecurityEventPage")]
 [JsonSerializable(typeof(SecurityEventListItemDto))]
+[JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Auth.UserProfileDto))]
 internal partial class ClientJsonContext : JsonSerializerContext
 {
 }
