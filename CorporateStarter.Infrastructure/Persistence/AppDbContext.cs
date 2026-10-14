@@ -63,6 +63,9 @@ public class AppDbContext : DbContext
         ConfigureRefreshTokenFamilies(modelBuilder);
         ConfigureRefreshTokens(modelBuilder);
         ConfigureSecurityEvents(modelBuilder);
+        modelBuilder.Entity<User>().Property(x => x.PreferredTheme).HasMaxLength(16).HasDefaultValue("System");
+        modelBuilder.Entity<User>().Property(x => x.PreferredPageSize).HasDefaultValue(20);
+        modelBuilder.Entity<User>().Property(x => x.PreferredTimeZone).HasMaxLength(16).HasDefaultValue("UTC");
         ConfigureLoginAttemptStates(modelBuilder);
         ConfigurePasswordHistories(modelBuilder);
         ConfigurePeople(modelBuilder);

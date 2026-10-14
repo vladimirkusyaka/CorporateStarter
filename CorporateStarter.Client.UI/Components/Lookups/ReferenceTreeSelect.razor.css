@@ -72,12 +72,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
+    background: var(--mud-palette-surface);
 }
 
     .tree-group-box.true {
-        background: #111;
-        border-color: #111;
+        background: var(--mud-palette-text-primary);
+        border-color: var(--mud-palette-text-primary);
     }
 
     .tree-group-box.mixed {
@@ -89,7 +89,7 @@
         width: 14px;
         height: 14px;
         fill: none;
-        stroke: #fff;
+        stroke: var(--mud-palette-surface);
         stroke-width: 2;
         stroke-linecap: round;
         stroke-linejoin: round;

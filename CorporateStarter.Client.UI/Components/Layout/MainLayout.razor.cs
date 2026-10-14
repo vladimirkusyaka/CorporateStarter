@@ -72,6 +72,7 @@ namespace CorporateStarter.Client.UI.Components.Layout
                 TextSecondary = "#64748B",
                 Divider = "#E4E7EB"
             },
+            PaletteDark = new PaletteDark { Primary = "#2883EE" },
             LayoutProperties = new LayoutProperties
             {
                 DefaultBorderRadius = "6px",
@@ -81,6 +82,7 @@ namespace CorporateStarter.Client.UI.Components.Layout
 
         protected override void OnInitialized()
         {
+            Preferences.Changed += AppearanceChanged;
             InitializeConnectionMonitoring();
             AuthState.StateChanged += OnAuthStateChanged;
             ApplyCurrentState();
@@ -96,6 +98,7 @@ namespace CorporateStarter.Client.UI.Components.Layout
         {
             if (firstRender)
             {
+                await InitializeAppearanceAsync();
                 await SessionMonitor.StartAsync(
                     () => InvokeAsync(HandleExternalSessionChangeAsync));
 
@@ -294,6 +297,7 @@ namespace CorporateStarter.Client.UI.Components.Layout
 
         public async ValueTask DisposeAsync()
         {
+            Preferences.Changed -= AppearanceChanged;
             if (_disposed)
                 return;
 

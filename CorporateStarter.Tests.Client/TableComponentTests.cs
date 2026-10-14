@@ -125,12 +125,27 @@ public sealed class TableComponentTests
         Assert.Empty(renderer.Errors);
     }
 
+    [Fact]
+    public async Task Table_uses_the_saved_default_page_size()
+    {
+        var client = new FakeTableClient();
+        await using var services = CreateServices(s =>
+        {
+            var preferences = new CorporateStarter.Client.Core.Auth.ProfilePreferences();
+            preferences.Apply(new() { PageSize = 50 }); s.AddSingleton(preferences);
+        });
+        await using var renderer = new TestRenderer(services);
+        await Mount(renderer, client);
+        Assert.Equal(50, client.LastQuery!.PageSize); Assert.Empty(renderer.Errors);
+    }
+
     internal static ServiceProvider CreateServices(Action<IServiceCollection>? configure = null)
     {
         var services = new ServiceCollection();
         services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
         services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
         services.AddMudServices();
+        services.AddSingleton<CorporateStarter.Client.Core.Auth.ProfilePreferences>();
         services.AddSingleton<IJSRuntime, NoBrowser>();
         services.AddSingleton<NavigationManager, TestNavigation>();
         configure?.Invoke(services);

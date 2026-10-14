@@ -694,6 +694,9 @@ namespace CorporateStarter.Infrastructure.Migrations
 
             modelBuilder.Entity("CorporateStarter.Core.Entities.Security.User", b =>
             {
+                b.Property<string>("PreferredTheme").IsRequired().ValueGeneratedOnAdd().HasMaxLength(16).HasColumnType("character varying(16)").HasDefaultValue("System");
+                b.Property<int>("PreferredPageSize").ValueGeneratedOnAdd().HasColumnType("integer").HasDefaultValue(20);
+                b.Property<string>("PreferredTimeZone").IsRequired().ValueGeneratedOnAdd().HasMaxLength(16).HasColumnType("character varying(16)").HasDefaultValue("UTC");
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
                     .HasColumnType("uuid");

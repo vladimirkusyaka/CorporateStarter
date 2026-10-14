@@ -2,7 +2,7 @@
 
 @inherits LayoutComponentBase
 
-<MudThemeProvider Theme="@AppTheme" />
+<MudThemeProvider @ref="_themeProvider" Theme="@AppTheme" IsDarkMode="@DarkAppearance" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -11,7 +11,7 @@
       data-connection-stamp="@ConnectionStamp"
       data-connection-ready="@(CanDismissReconnect ? "true" : "false")"></span>
 
-<div class="cs-layout-root">
+<div class="cs-layout-root" style="color-scheme: @(DarkAppearance ? "dark" : "light")">
     @if (ShowShell)
     {
         <MudLayout Class="cs-shell">
@@ -174,7 +174,7 @@
                              hidden="@(!ShowAuthorizedContent)"
                              inert="@(!IsAuthenticated && !IsQuietSessionCheck)">
                             <SessionContent CanRender="@IsAuthenticated">
-                                @_authorizedBody
+                                <ProfileScope>@_authorizedBody</ProfileScope>
                             </SessionContent>
                         </div>
                     }

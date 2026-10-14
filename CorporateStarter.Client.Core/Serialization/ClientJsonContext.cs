@@ -13,6 +13,11 @@ using CorporateStarter.Shared.Dtos.Audit;
 
 namespace CorporateStarter.Client.Core.Serialization;
 
+[JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Auth.MyProfileDto))]
+[JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Auth.ProfileSettingsDto))]
+[JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Auth.UpdateMyAccountRequest))]
+[JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Auth.ChangeMyPasswordRequest))]
+[JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Auth.ProfileCommandReply))]
 [JsonSourceGenerationOptions(
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     PropertyNameCaseInsensitive = true)]

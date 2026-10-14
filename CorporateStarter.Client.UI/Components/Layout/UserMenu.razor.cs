@@ -11,8 +11,8 @@ namespace CorporateStarter.Client.UI.Components.Layout
 {
     public partial class UserMenu : IDisposable
     {
-        [Inject] IClientAuthState Auth { get; set; }
-        [Inject] CurrentUserClient Client { get; set; }
+        [Inject] IClientAuthState Auth { get; set; } = default!;
+        [Inject] CurrentUserClient Client { get; set; } = default!;
         [Parameter] public bool LogoutDisabled { get; set; }
         [Parameter] public EventCallback Logout { get; set; }
         private UserProfileDto? _profile;
@@ -26,6 +26,7 @@ namespace CorporateStarter.Client.UI.Components.Layout
         {
             _snapshot = Auth.Current;
             Auth.StateChanged += Changed;
+            Client.ProfileChanged += ProfileChanged;
         }
         protected override Task OnAfterRenderAsync(bool firstRender) => firstRender ? LoadAsync() : Task.CompletedTask;
         private void Changed(object? sender, ClientAuthStateChangedEventArgs args) => _ = InvokeAsync(async () =>
@@ -38,6 +39,12 @@ namespace CorporateStarter.Client.UI.Components.Layout
             }
             _snapshot = current;
             StateHasChanged();
+            await LoadAsync();
+        });
+        private void ProfileChanged() => _ = InvokeAsync(async () =>
+        {
+            if (_disposed) return;
+            _request?.Cancel(); _attemptedGeneration = null;
             await LoadAsync();
         });
         private async Task LoadAsync()
@@ -65,7 +72,7 @@ namespace CorporateStarter.Client.UI.Components.Layout
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true; Auth.StateChanged -= Changed; _request?.Cancel(); _profile = null;
+            _disposed = true; Client.ProfileChanged -= ProfileChanged; Auth.StateChanged -= Changed; _request?.Cancel(); _profile = null;
         }
     }
 }

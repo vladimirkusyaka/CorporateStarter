@@ -84,7 +84,7 @@ h1:focus {
 
 .cs-record-editor-panel .mud-dialog-title {
     flex-shrink: 0;
-    border-bottom: 1px solid #e4e7eb;
+    border-bottom: 1px solid var(--mud-palette-divider);
 }
 
 .cs-record-editor-panel .mud-dialog-content {
@@ -97,7 +97,7 @@ h1:focus {
 .cs-record-editor-panel .mud-dialog-actions {
     flex-shrink: 0;
     padding: 16px 24px;
-    border-top: 1px solid #e4e7eb;
+    border-top: 1px solid var(--mud-palette-divider);
 }
 
 .mud-dialog.cs-record-editor-panel {
@@ -241,7 +241,7 @@ h1:focus {
 
 .cs-record-editor-panel .mud-dialog-title {
     flex-shrink: 0;
-    border-bottom: 1px solid #e4e7eb;
+    border-bottom: 1px solid var(--mud-palette-divider);
 }
 
 .cs-record-editor-panel .mud-dialog-content {
@@ -254,7 +254,7 @@ h1:focus {
 .cs-record-editor-panel .mud-dialog-actions {
     flex-shrink: 0;
     padding: 16px 24px;
-    border-top: 1px solid #e4e7eb;
+    border-top: 1px solid var(--mud-palette-divider);
 }
 
 .mud-dialog.cs-record-editor-panel {

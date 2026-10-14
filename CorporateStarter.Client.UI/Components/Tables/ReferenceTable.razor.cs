@@ -24,6 +24,8 @@ public partial class ReferenceTable<TItem, TColumn> : IDisposable where TColumn 
     [Inject]
     private ILogger<ReferenceTable<TItem, TColumn>> Logger { get; set; } = default!;
 
+    [Inject] private CorporateStarter.Client.Core.Auth.ProfilePreferences Preferences { get; set; } = default!;
+
     private static readonly int[] PageSizes = [10, 20, 50];
     private readonly CancellationTokenSource _lifetime = new();
     private IReadOnlyList<TItem> _items = [];
@@ -35,7 +37,10 @@ public partial class ReferenceTable<TItem, TColumn> : IDisposable where TColumn 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
+        {
+            _queryState.PageSize = Preferences.PageSize;
             await LoadAsync();
+        }
         else
             ApplyPendingSelection();
     }

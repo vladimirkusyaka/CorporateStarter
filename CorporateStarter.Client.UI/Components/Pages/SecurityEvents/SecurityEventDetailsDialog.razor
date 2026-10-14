@@ -1,4 +1,5 @@
-﻿@using CorporateStarter.Client.Core.Audit
+﻿@inject CorporateStarter.Client.Core.Auth.ProfilePreferences Preferences
+@using CorporateStarter.Client.Core.Audit
 @using CorporateStarter.Shared.Dtos.Audit
 @using CorporateStarter.Client.UI.Components.Details
 
@@ -6,8 +7,8 @@
 <RecordDetailsDialog TItem="SecurityEventListItemDto" Title="Security event" Load="@(ct => Client.GetDetailsAsync(EventId, ct))">
     <ChildContent Context="item">
         <dl class="event-metadata">
-            <dt>Date (UTC)</dt>
-            <dd>@item.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")</dd>
+            <dt>Date (@Preferences.ZoneLabel)</dt>
+            <dd>@Preferences.Format(item.CreatedAtUtc)</dd>
             <dt>Event</dt>
             <dd>@item.EventType</dd>
             <dt>Severity</dt>

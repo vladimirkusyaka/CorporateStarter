@@ -1,11 +1,12 @@
-﻿@using CorporateStarter.Client.Core.Audit
+﻿@inject CorporateStarter.Client.Core.Auth.ProfilePreferences Preferences
+@using CorporateStarter.Client.Core.Audit
 @using CorporateStarter.Shared.Dtos.Audit
 @using CorporateStarter.Client.UI.Components.Details
 
 <RecordDetailsDialog TItem="AuditLogListItemDto" Title="Change details" Load="@(ct => Client.GetDetailsAsync(ChangeId, ct))">
     <ChildContent Context="item">
         <dl class="change-metadata">
-            <dt>Date (UTC)</dt><dd>@item.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")</dd>
+            <dt>Date (@Preferences.ZoneLabel)</dt><dd>@Preferences.Format(item.CreatedAtUtc)</dd>
             <dt>Entity</dt><dd>@item.EntityName</dd>
             <dt>Record</dt><dd>@item.EntityId</dd>
             <dt>Action</dt><dd>@item.Action</dd>

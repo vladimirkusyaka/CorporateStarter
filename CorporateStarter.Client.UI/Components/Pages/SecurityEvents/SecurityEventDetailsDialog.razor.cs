@@ -9,7 +9,7 @@ namespace CorporateStarter.Client.UI.Components.Pages.SecurityEvents
 {
     public partial class SecurityEventDetailsDialog
     {
-        [Inject] SecurityEventsClient? Client { get; set; }
+        [Inject] SecurityEventsClient Client { get; set; } = default!;
         [Parameter] public Guid EventId { get; set; }
     }
 }

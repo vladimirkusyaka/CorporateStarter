@@ -1,0 +1,10 @@
+﻿import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+const source=fs.readFileSync(new URL('../CorporateStarter.Client.Browser/wwwroot/auth/browser-session.js',import.meta.url),'utf8');
+const context=vm.createContext({});
+vm.runInContext(source.slice(source.indexOf('function profileRouteAllowed('),source.indexOf('function currentUserRouteAllowed(')),context);
+for (const [m,p] of [['GET','/api/profile'],['PUT','/api/profile/account'],['PUT','/api/profile/appearance'],['POST','/api/profile/password']]) assert.equal(context.profileRouteAllowed(m,p),true);
+for (const [m,p] of [['DELETE','/api/profile'],['GET','/api/profile/password'],['POST','/api/profile/account'],['PUT','/api/profile/other/account'],['GET','https://example.test/api/profile'],['GET','/api/profile?userId=other']]) assert.equal(context.profileRouteAllowed(m,p),false);
+assert.ok(source.includes('profileRouteAllowed(request.method, request.relativePath) ||'));
+console.log('Profile route allowlist passed.');

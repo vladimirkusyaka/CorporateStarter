@@ -1,0 +1,28 @@
+﻿.profile-page {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.profile-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 24px;
+    max-width: 620px;
+}
+
+    .profile-fields ::deep .mud-button-root {
+        align-self: flex-start;
+    }
+
+    .profile-fields ul {
+        margin: 0;
+        padding-left: 24px;
+    }
+
+@media (max-width: 600px) {
+    .profile-fields {
+        padding: 16px;
+    }
+}

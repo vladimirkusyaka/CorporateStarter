@@ -68,6 +68,18 @@ namespace CorporateStarter.Application.Common.Security
             string? userAgent,
             CancellationToken cancellationToken)
         {
+            await using var transaction = await _authTransactionFactory.BeginSerializableAsync(cancellationToken);
+            var result = await LoginCoreAsync(request, ipAddress, userAgent, cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+            return result;
+        }
+
+        private async Task<AuthLoginResult?> LoginCoreAsync(
+            LoginRequest request,
+            string? ipAddress,
+            string? userAgent,
+            CancellationToken cancellationToken)
+        {
             var now = DateTime.UtcNow;
             var loginIdentifierHash = CreateLoginIdentifierHash(request.Login);
 

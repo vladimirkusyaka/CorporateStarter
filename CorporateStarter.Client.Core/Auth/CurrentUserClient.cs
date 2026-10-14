@@ -6,6 +6,8 @@ namespace CorporateStarter.Client.Core.Auth;
 
 public sealed class CurrentUserClient(ClientApiClient api)
 {
+    public event Action? ProfileChanged;
+    public void NotifyChanged() => ProfileChanged?.Invoke();
     public async Task<UserProfileDto> GetAsync(Guid expectedUserId, CancellationToken ct = default)
     {
         var profile = await api.GetJsonAsync("/api/Auth/me", ClientJsonContext.Default.UserProfileDto, ct);

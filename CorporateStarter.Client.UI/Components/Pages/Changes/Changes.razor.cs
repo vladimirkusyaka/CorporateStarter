@@ -9,10 +9,11 @@ public partial class Changes
 {
     [Inject] private ChangesClient Client { get; set; } = default!;
     [Inject] private IDialogService Dialogs { get; set; } = default!;
+    [Inject] private CorporateStarter.Client.Core.Auth.ProfilePreferences Preferences { get; set; } = default!;
     private enum Column { Date, Entity, Record, Action, User }
-    private static readonly TableColumn<ChangeListItemDto, Column>[] Columns =
+    private TableColumn<ChangeListItemDto, Column>[] Columns =>
     [
-        new(Column.Date, "createdAtUtc", "Date (UTC)", x => x.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")),
+        new(Column.Date, "createdAtUtc", "Date (filter: UTC)", x => Preferences.Format(x.CreatedAtUtc)),
         new(Column.Entity, "entityName", "Entity", x => x.EntityName),
         new(Column.Record, "entityId", "Record", x => x.EntityId),
         new(Column.Action, "action", "Action", x => x.Action),

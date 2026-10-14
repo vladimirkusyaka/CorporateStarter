@@ -5,6 +5,10 @@ namespace CorporateStarter.Core.Entities.Security;
 
 public class User : BaseEntity
 {
+    public string PreferredTheme { get; set; } = "System";
+    public int PreferredPageSize { get; set; } = 20;
+    public string PreferredTimeZone { get; set; } = "UTC";
+
     public string Login { get; set; } = string.Empty;
 
     public string Email { get; set; } = string.Empty;

@@ -1,0 +1,9 @@
+﻿@using CorporateStarter.Client.Core.Auth
+
+@if (_loaded) { @ChildContent }
+else if (_error)
+{
+    <MudAlert Severity="Severity.Warning">Could not load profile settings.</MudAlert>
+    <MudButton OnClick="LoadAsync" Disabled="_busy">Retry</MudButton>
+}
+else { <MudProgressCircular Indeterminate="true" aria-label="Loading profile" /> }

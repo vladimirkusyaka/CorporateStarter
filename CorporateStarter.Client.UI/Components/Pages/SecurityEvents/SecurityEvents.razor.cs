@@ -9,10 +9,11 @@ public partial class SecurityEvents
 {
     [Inject] private SecurityEventsClient Client { get; set; } = default!;
     [Inject] private IDialogService Dialogs { get; set; } = default!;
+    [Inject] private CorporateStarter.Client.Core.Auth.ProfilePreferences Preferences { get; set; } = default!;
     private enum Column { Date, Type, Severity, Outcome, User, Ip, Correlation }
-    private static readonly TableColumn<SecurityEventRowDto, Column>[] Columns =
+    private TableColumn<SecurityEventRowDto, Column>[] Columns =>
     [
-        new(Column.Date,"createdAtUtc","Date (UTC)",x => x.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")),
+        new(Column.Date,"createdAtUtc","Date (filter: UTC)",x => Preferences.Format(x.CreatedAtUtc)),
         new(Column.Type,"eventType","Event",x => x.EventType),
         new(Column.Severity,"severity","Severity",x => x.Severity),
         new(Column.Outcome,"outcome","Outcome",x => x.Outcome),

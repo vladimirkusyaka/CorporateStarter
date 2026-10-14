@@ -44,10 +44,12 @@ public sealed class AuthController : ControllerBase
     [FromBody] LoginRequest request,
     CancellationToken cancellationToken)
     {
-        var result = await _authService.LoginAsync(
-            request,
-            HttpContext.Connection.RemoteIpAddress?.ToString(),
-            Request.Headers.UserAgent.ToString(),
+        var result = await _authOperationExecutor.ExecuteAsync(
+            (service, token) => service.LoginAsync(
+                request,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                Request.Headers.UserAgent.ToString(),
+                token),
             cancellationToken);
 
         if (result is null)
