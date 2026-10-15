@@ -31,6 +31,8 @@ public static class ClientCoreServiceCollectionExtensions
         services.TryAddScoped<CorporateStarter.Client.Core.Auth.CurrentUserClient>();
         services.TryAddScoped<ProfilePreferences>();
         services.TryAddScoped<ProfileClient>();
+        services.TryAddScoped<CorporateStarter.Client.Core.Configuration.ApplicationBranding>();
+        services.TryAddScoped<CorporateStarter.Client.Core.Configuration.PreferencesClient>();
         return services;
     }
 }

@@ -54,6 +54,20 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<CorporateStarter.Core.Entities.Configuration.ApplicationPreferences>(entity =>
+        {
+            entity.ToTable("ApplicationPreferences");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Id).ValueGeneratedNever();
+            entity.Property(x => x.Name).HasMaxLength(100).IsRequired();
+            entity.Property(x => x.Revision).IsConcurrencyToken();
+            entity.HasData(new CorporateStarter.Core.Entities.Configuration.ApplicationPreferences
+            {
+                Id = 1,
+                Name = "CorporateStarter",
+                Revision = new Guid("6d397019-ff4c-4b25-87a7-4f62b5ab28fd")
+            });
+        });
         ConfigureUsers(modelBuilder);
         ConfigureRoles(modelBuilder);
         ConfigureUserRoles(modelBuilder);

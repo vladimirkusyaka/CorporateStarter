@@ -18,6 +18,10 @@ namespace CorporateStarter.Client.Core.Serialization;
 [JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Auth.UpdateMyAccountRequest))]
 [JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Auth.ChangeMyPasswordRequest))]
 [JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Auth.ProfileCommandReply))]
+[JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Configuration.PreferencesDto))]
+[JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Configuration.GeneralPreferencesDto))]
+[JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Configuration.UpdateGeneralPreferencesRequest))]
+[JsonSerializable(typeof(CorporateStarter.Shared.Dtos.Configuration.ConnectionInfoDto))]
 [JsonSourceGenerationOptions(
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     PropertyNameCaseInsensitive = true)]

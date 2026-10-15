@@ -1,0 +1,10 @@
+﻿import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+const source=fs.readFileSync(new URL('../CorporateStarter.Client.Browser/wwwroot/auth/browser-session.js',import.meta.url),'utf8');
+const context=vm.createContext({});
+vm.runInContext(source.slice(source.indexOf('function preferencesRouteAllowed('),source.indexOf('function profileRouteAllowed(')),context);
+for (const [m,p] of [['GET','/api/preferences'],['GET','/api/preferences/connections'],['PUT','/api/preferences/general']]) assert.equal(context.preferencesRouteAllowed(m,p),true);
+for (const [m,p] of [['POST','/api/preferences'],['PUT','/api/preferences/connections'],['GET','https://example.test/api/preferences'],['PUT','/api/preferences/general?name=x'],['DELETE','/api/preferences/general']]) assert.equal(context.preferencesRouteAllowed(m,p),false);
+assert.ok(source.includes('preferencesRouteAllowed(request.method, request.relativePath) ||'));
+console.log('Preferences allowlist passed.');

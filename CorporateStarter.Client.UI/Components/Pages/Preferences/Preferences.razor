@@ -1,0 +1,112 @@
+﻿@page "/preferences"
+@using CorporateStarter.Shared.Common
+@using Microsoft.AspNetCore.Components.Web
+<PageTitle>Preferences</PageTitle>
+<div class="preferences-page">
+    <MudText Typo="Typo.h5" HtmlTag="h1" Class="mb-4">Preferences</MudText>
+    @if (_info is null)
+    {
+        @if (_error is not null)
+        {
+            <MudAlert Severity="Severity.Error">@_error</MudAlert>
+            <MudButton OnClick="LoadAsync" Disabled="_busy">Retry</MudButton>
+        }
+        else
+        {
+
+            <MudProgressCircular Indeterminate="true" aria-label="Loading preferences" />
+        }
+    }
+    else
+    {
+        <MudPaper Outlined="true">
+            <MudTabs ActivePanelIndex="_tab" ActivePanelIndexChanged="ChangeTabAsync" KeepPanelsAlive="true">
+                <MudTabPanel Text="General" Disabled="_busy">
+                    <div class="preferences-content">
+                        <MudTextField @bind-Value="_name" Label="Application name" Variant="Variant.Outlined" Immediate="true" MaxLength="100" ReadOnly="@(!_info.CanUpdate)" Disabled="_busy" />
+                        <MudTextField Value="@_info.Environment" Label="Environment (API)" Variant="Variant.Outlined" ReadOnly="true" />
+                        <MudText Typo="Typo.caption">The name is shared by all users. Environment and deployment settings are managed outside this page.</MudText>
+                        @if (_info.CanUpdate)
+                        {
+                            <MudButton OnClick="SaveAsync" Disabled="_busy" Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+                        }
+                        else
+                        {
+
+                            <MudText Typo="Typo.body2">You have read-only access.</MudText>
+                        }
+                        <MudButton OnClick="LoadAsync" Disabled="_busy">Reload saved values</MudButton>
+                    </div>
+                </MudTabPanel>
+                <MudTabPanel Text="About" Disabled="_busy">
+                    <div class="preferences-content">
+                        <dl>
+                            <dt>Application</dt>
+                            <dd>@_info.Name</dd>
+                            <dt>Client mode</dt>
+                            <dd>@ClientMode</dd>
+                            <dt>Client UI version</dt>
+                            <dd>@BuildInformation.Version(typeof(Preferences).Assembly)</dd>
+                            <dt>Client UI build (UTC)</dt>
+                            <dd>@BuildDate(BuildInformation.BuiltAtUtc(typeof(Preferences).Assembly))</dd>
+                            <dt>API version</dt>
+                            <dd>@_info.ApiVersion</dd>
+                            <dt>API build (UTC)</dt>
+                            <dd>@BuildDate(_info.ApiBuildUtc)</dd>
+                            <dt>Environment (API)</dt>
+                            <dd>@_info.Environment</dd>
+                        </dl>
+                    </div>
+                </MudTabPanel>
+                <MudTabPanel Text="Connections" Disabled="_busy">
+                    <div class="preferences-content">
+                        @if (!_info.CanViewConnections)
+                        {
+                            <MudAlert Severity="Severity.Info">Administrator permission is required to view connections.</MudAlert>
+                        }
+                        else
+                        {
+                            <MudTextField Value="@BrowserApiEndpoint" Label="API endpoint (browser)" ReadOnly="true" Variant="Variant.Outlined" />
+                            <MudText Typo="Typo.caption">Requests use this site's /api proxy. This is not the internal API server address.</MudText>
+                            @if (_connections is not null)
+                            {
+                                <dl>
+                                    <dt>Database provider</dt>
+                                    <dd>@_connections.Provider</dd>
+                                    <dt>Database server</dt>
+                                    <dd>@_connections.Server</dd>
+                                    <dt>Database port</dt>
+                                    <dd>@_connections.Port</dd>
+                                    <dt>Database name</dt>
+                                    <dd>@_connections.Database</dd>
+                                </dl>
+                                <MudText Typo="Typo.caption">Connections are read-only. Credentials and full connection strings are not exposed.</MudText>
+                            }
+                            @if (_connectionsBusy)
+                            {
+                                <MudProgressCircular Indeterminate="true" aria-label="Loading connections" />
+                            }
+                            @if (_connectionsError is not null)
+                            {
+                                <MudAlert Severity="Severity.Error">@_connectionsError</MudAlert>
+                            }
+                            <MudButton OnClick="LoadConnectionsAsync" Disabled="_connectionsBusy">Refresh connections</MudButton>
+                        }
+                    </div>
+                </MudTabPanel>
+            </MudTabs>
+            @if (_busy)
+            {
+                <MudProgressLinear Indeterminate="true" />
+            }
+            @if (_error is not null)
+            {
+                <MudAlert Severity="Severity.Error" Class="ma-4" role="alert">@_error</MudAlert>
+            }
+            @if (_saved)
+            {
+                <MudAlert Severity="Severity.Success" Class="ma-4" role="status">Application name saved.</MudAlert>
+            }
+        </MudPaper>
+    }
+</div>

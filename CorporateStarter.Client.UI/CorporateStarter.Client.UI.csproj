@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
@@ -7,12 +7,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Components\Lookups\ReferenceMultiSelect.razor.cs" />
-	
+		<Compile Remove="Components\Lookups\ReferenceMultiSelect.razor.cs" />
+
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="Components\Lookups\ReferenceMultiSelect.razor.cs" />
+		<Content Include="Components\Lookups\ReferenceMultiSelect.razor.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -26,5 +26,7 @@
 		<ProjectReference Include="..\CorporateStarter.Client.Browser\CorporateStarter.Client.Browser.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<AssemblyMetadata Include="BuildUtc" Value="$([System.DateTime]::UtcNow.ToString('O'))" />
+	</ItemGroup>
 </Project>
-

@@ -22,6 +22,16 @@ namespace CorporateStarter.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("CorporateStarter.Core.Entities.Configuration.ApplicationPreferences", b =>
+            {
+                b.Property<int>("Id").HasColumnType("integer");
+                b.Property<string>("Name").IsRequired().HasMaxLength(100).HasColumnType("character varying(100)");
+                b.Property<Guid>("Revision").IsConcurrencyToken().HasColumnType("uuid");
+                b.HasKey("Id");
+                b.ToTable("ApplicationPreferences");
+                b.HasData(new { Id = 1, Name = "CorporateStarter", Revision = new Guid("6d397019-ff4c-4b25-87a7-4f62b5ab28fd") });
+            });
+
             modelBuilder.Entity("CorporateStarter.Core.Entities.Audit.AuditLog", b =>
             {
                 b.Property<Guid>("Id")

@@ -22,6 +22,7 @@ using CorporateStarter.Infrastructure.Persistence.Repositories.Directory.Persons
 using CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Cities;
 using CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Countries;
 using CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Positions;
+using CorporateStarter.Infrastructure.Persistence.Repositories.Preferences;
 using CorporateStarter.Infrastructure.Persistence.Repositories.Security;
 using CorporateStarter.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -39,6 +40,7 @@ const string CorsPolicyName = "DefaultCorsPolicy";
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<CorporateStarter.Application.Common.Interfaces.Repositories.Preferences.IPreferencesRepository, PreferencesRepository>();
 
 builder.Services.AddRateLimiter(options =>
 {

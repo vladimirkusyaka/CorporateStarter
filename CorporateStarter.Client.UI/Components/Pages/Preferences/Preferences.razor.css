@@ -1,0 +1,46 @@
+﻿.preferences-page {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.preferences-content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 24px;
+}
+
+    .preferences-content ::deep .mud-button-root {
+        align-self: flex-start;
+    }
+
+    .preferences-content dl {
+        display: grid;
+        grid-template-columns: minmax(120px,180px) minmax(0,1fr);
+        gap: 12px 20px;
+    }
+
+    .preferences-content dt {
+        font-weight: 600;
+    }
+
+    .preferences-content dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+@media (max-width: 600px) {
+    .preferences-content {
+        padding: 16px;
+    }
+
+        .preferences-content dl {
+            grid-template-columns: 1fr;
+            gap: 6px;
+        }
+
+        .preferences-content dd {
+            margin-bottom: 12px;
+        }
+}

@@ -21,8 +21,9 @@ namespace CorporateStarter.Client.UI.Components.Layout
         private CorporateStarter.Client.Browser.Auth.BrowserSessionMonitor SessionMonitor { get; set; } = default!;
 
 
-        protected const string PageTitle = "CorporateStarter";
-        protected const string BuildVersion = "DEV 1.0.0.0";
+        [Inject] private CorporateStarter.Client.Core.Configuration.ApplicationBranding Branding { get; set; } = default!;
+        protected string PageTitle => Branding.Name;
+        protected string BuildVersion => CorporateStarter.Shared.Common.BuildInformation.Version(typeof(MainLayout).Assembly);
 
         protected bool DrawerOpen { get; set; } = true;
 
@@ -83,6 +84,7 @@ namespace CorporateStarter.Client.UI.Components.Layout
         protected override void OnInitialized()
         {
             Preferences.Changed += AppearanceChanged;
+            Branding.Changed += AppearanceChanged;
             InitializeConnectionMonitoring();
             AuthState.StateChanged += OnAuthStateChanged;
             ApplyCurrentState();
@@ -298,6 +300,7 @@ namespace CorporateStarter.Client.UI.Components.Layout
         public async ValueTask DisposeAsync()
         {
             Preferences.Changed -= AppearanceChanged;
+            Branding.Changed -= AppearanceChanged;
             if (_disposed)
                 return;
 

@@ -6,6 +6,8 @@ namespace CorporateStarter.Application.Common.Security
 {
     public static class AppPermissions
     {
+        public const string PreferencesUpdate = "preferences.update";
+        public const string PreferencesConnectionsRead = "preferences.connections.read";
         public const string AuditRead = "audit.read";
 
         public const string CompaniesRead = "companies.read";
@@ -51,6 +53,8 @@ namespace CorporateStarter.Application.Common.Security
 
         public static IReadOnlyList<PermissionDefinition> All { get; } =
         [
+            new(PreferencesUpdate, "Update application preferences", "Preferences"),
+            new(PreferencesConnectionsRead, "View application connections", "Preferences"),
             new(AuditRead, "Read audit log", "Security"),
 
         new(CompaniesRead, "Read companies", "Companies"),
