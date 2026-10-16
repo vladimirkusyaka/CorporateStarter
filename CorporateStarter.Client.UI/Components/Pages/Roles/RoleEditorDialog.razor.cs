@@ -44,6 +44,7 @@ public partial class RoleEditorDialog : RecordEditorBase<UpdateRoleRequest, Guid
     protected override bool IsDirty => (_model.Name, _model.Description, _model.IsActive) != _baseline || !_baselineIds.SetEquals(_selected);
     protected override void CaptureBaseline()
     {
+        OriginalActive = _model.IsActive;
         _baseline = (_model.Name, _model.Description, _model.IsActive);
         _baselineIds = _selected.ToHashSet();
     }

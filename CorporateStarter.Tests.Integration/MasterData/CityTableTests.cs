@@ -56,6 +56,12 @@ public sealed class CityTableTests(CorporateStarterApiFactory factory) : IClassF
             Assert.Equal(HttpStatusCode.Forbidden, (await client.PostAsJsonAsync("/api/Cities/" + endpoint, new { })).StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, (await client.GetAsync("/api/Cities/capabilities")).StatusCode);
         Permissions(AppPermissions.CitiesRead);
+        var restricted = await Post<PagedResult<CityListItemDto>>("query", query);
+        Assert.Equal(1, restricted.TotalCount);
+        Assert.Null((await Post<TableFindResult>("find", new TableFindRequest { Query = query, LocateId = inactiveId })).Id);
+        Assert.Equal(HttpStatusCode.Forbidden, (await client.PostAsJsonAsync("/api/Cities/filter-values",
+            new TableValuesRequest { Query = query, Field = "isActive" })).StatusCode);
+        Permissions(AppPermissions.CitiesRead, AppPermissions.CitiesViewInactive);
         var capabilities = (await client.GetFromJsonAsync<TableCapabilities>("/api/Cities/capabilities"))!;
         Assert.True(capabilities.ViewInactive);
         Assert.False(capabilities.CanUpdate);
@@ -85,7 +91,7 @@ public sealed class CityTableTests(CorporateStarterApiFactory factory) : IClassF
         query.PageSize = 1;
         query.Sorts = [new("name; DROP TABLE Cities")];
         Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync("/api/Cities/query", query)).StatusCode);
-        Permissions(AppPermissions.CitiesRead, AppPermissions.CitiesUpdate);
+        Permissions(AppPermissions.CitiesRead, AppPermissions.CitiesViewInactive, AppPermissions.CitiesRestore, AppPermissions.CitiesUpdate);
         var options = await Post<LookupOption[]>("country-options", new LookupRequest { Text = prefix, Limit = 1 });
         Assert.Equal(countryId, Assert.Single(options).Id);
         Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync("/api/Cities/country-options", new LookupRequest { Limit = 51 })).StatusCode);
@@ -93,7 +99,7 @@ public sealed class CityTableTests(CorporateStarterApiFactory factory) : IClassF
         updated.EnsureSuccessStatusCode();
         Assert.True((await updated.Content.ReadFromJsonAsync<CityDetailsDto>())!.IsActive);
         Assert.Equal(HttpStatusCode.Forbidden, (await client.DeleteAsync($"/api/Cities/{activeId}")).StatusCode);
-        Permissions(AppPermissions.CitiesRead, AppPermissions.CitiesDelete);
+        Permissions(AppPermissions.CitiesRead, AppPermissions.CitiesViewInactive, AppPermissions.CitiesDelete);
         Assert.Equal(HttpStatusCode.NoContent, (await client.DeleteAsync($"/api/Cities/{activeId}")).StatusCode);
         Assert.False((await client.GetFromJsonAsync<CityDetailsDto>($"/api/Cities/{activeId}"))!.IsActive);
         Permissions(AppPermissions.CitiesRead, AppPermissions.CitiesCreate);

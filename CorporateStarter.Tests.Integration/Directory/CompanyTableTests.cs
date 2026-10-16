@@ -39,7 +39,7 @@ public sealed class CompanyTableTests(CorporateStarterApiFactory factory) : ICla
             var b = new Company { Id = Guid.NewGuid(), Name = prefix + " B", IsActive = false, CityId = city.Id };
             db.Companies.AddRange(a, b); await db.SaveChangesAsync(); aId = a.Id; bId = b.Id;
         }
-        client.DefaultRequestHeaders.Add("X-Test-Permissions", string.Join(',', AppPermissions.CompaniesRead, AppPermissions.CompaniesUpdate));
+        client.DefaultRequestHeaders.Add("X-Test-Permissions", string.Join(',', AppPermissions.CompaniesViewInactive, AppPermissions.CompaniesRestore, AppPermissions.CompaniesRead, AppPermissions.CompaniesUpdate));
         var query = new TableRequest { PageSize = 1, Filters = [new("name", "contains", JsonSerializer.SerializeToElement(prefix))] };
         var page = await Post<PagedResult<CompanyListItemDto>>("query", query);
         Assert.Equal(2, page.TotalCount); Assert.Equal(aId, Assert.Single(page.Items).Id); Assert.Null(page.Items[0].CityId);

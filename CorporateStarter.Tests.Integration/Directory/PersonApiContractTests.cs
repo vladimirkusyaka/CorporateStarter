@@ -34,6 +34,8 @@ public sealed class PersonApiContractTests : IDisposable
         _host = new HostBuilder().ConfigureWebHost(builder => builder.UseTestServer().ConfigureServices(services =>
         {
             services.AddLogging();
+            services.AddHttpContextAccessor();
+            services.AddScoped<IEntityAccess, CorporateStarter.Api.Security.EntityAccess>();
             services.AddControllers().AddApplicationPart(typeof(PersonsController).Assembly);
             services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<CreatePersonCommandHandler>());
             services.AddSingleton<IPersonReadRepository>(_repository);
@@ -61,7 +63,7 @@ public sealed class PersonApiContractTests : IDisposable
         Assert.Equal(HttpStatusCode.Forbidden, (await _client.PostAsJsonAsync("/api/Persons/query", new TableRequest())).StatusCode);
         Permissions(AppPermissions.PersonsRead);
         var caps = (await _client.GetFromJsonAsync<TableCapabilities>("/api/Persons/capabilities"))!;
-        Assert.False(caps.CanCreate); Assert.False(caps.CanUpdate); Assert.True(caps.ViewInactive);
+        Assert.False(caps.CanCreate); Assert.False(caps.CanUpdate); Assert.False(caps.ViewInactive);
         Assert.Equal(HttpStatusCode.OK, (await _client.PostAsJsonAsync("/api/Persons/query", new TableRequest())).StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, (await _client.PostAsJsonAsync("/api/Persons/query", new TableRequest { PageSize = 101 })).StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, (await _client.PostAsJsonAsync("/api/Persons", new CreatePersonRequest { FirstName = "Example" })).StatusCode);
@@ -107,6 +109,19 @@ public sealed class PersonApiContractTests : IDisposable
         Assert.Equal(HttpStatusCode.NotFound, (await _client.PostAsJsonAsync("/api/Persons", new CreatePersonRequest { FirstName = "Alex", PositionId = Guid.NewGuid() })).StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, (await _client.PostAsJsonAsync("/api/Persons", new CreatePersonRequest { FirstName = new string('x', 101) })).StatusCode);
         Assert.Equal(0, _repository.Writes);
+    }
+    [Fact]
+    public async Task Unchanged_hidden_reference_is_preserved_but_new_hidden_reference_is_rejected()
+    {
+        Permissions(AppPermissions.PersonsUpdate);
+        var linked = Guid.NewGuid(); var id = Guid.NewGuid();
+        _repository.Item = new() { Id = id, FirstName = "Existing", CompanyId = linked, IsActive = true };
+        _repository.MissingCompany = true;
+        var request = new UpdatePersonRequest { FirstName = "Existing", CompanyId = linked, IsActive = true };
+        Assert.Equal(HttpStatusCode.OK, (await _client.PutAsJsonAsync("/api/Persons/" + id, request)).StatusCode);
+        request.CompanyId = Guid.NewGuid();
+        Assert.Equal(HttpStatusCode.NotFound, (await _client.PutAsJsonAsync("/api/Persons/" + id, request)).StatusCode);
+        Assert.Equal(1, _repository.Writes);
     }
     public void Dispose() { _client.Dispose(); _host.Dispose(); }
 

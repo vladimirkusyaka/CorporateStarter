@@ -17,7 +17,10 @@
                           Margin="Margin.Dense" Immediate="true" Disabled="@(Blocked || _system)" Validation="@(new Func<string, string?>(Required))" />
             <MudTextField @bind-Value="_model.Description" Label="Description" MaxLength="500" Lines="3" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="@(Blocked || _system)" />
-            <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@(Blocked || _system)" Label="Active" />
+            @if (_capabilities.ViewInactive)
+            {
+                <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@(Blocked || _system || !CanChangeActive)" Label="Active" />
+            }
         </MudTabPanel>
         <MudTabPanel Text="Permissions" Disabled="@(Blocked || _confirmDiscard || _validating)">
             <ReferenceTreeSelect Label="Permissions" Options="_options" Selected="_selected" SelectedChanged="PermissionsChanged"

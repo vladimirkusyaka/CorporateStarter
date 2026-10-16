@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Shared.Common;
+using Microsoft.EntityFrameworkCore;
 using Mapster;
 using CorporateStarter.Application.Common.Interfaces.Repositories.Security;
 using CorporateStarter.Shared.Dtos.Permissions;
@@ -6,14 +8,15 @@ using CorporateStarter.Shared.Dtos.Security.Roles;
 
 namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
 {
-    public sealed class RoleReadRepository(AppDbContext dbContext) : IRoleReadRepository
+    public sealed class RoleReadRepository(AppDbContext dbContext, IEntityAccess access) : IRoleReadRepository
     {
         private readonly AppDbContext _dbContext = dbContext;
+        private readonly IEntityAccess _access = access;
 
         public async Task<IReadOnlyList<RoleListItemDto>> GetListAsync(
             CancellationToken cancellationToken)
         {
-            return await _dbContext.Roles
+            return await _dbContext.Roles.VisibleTo(_access, "roles")
                 .AsNoTracking()
                 .OrderBy(x => x.Name)
                 .Select(x => new RoleListItemDto
@@ -31,7 +34,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
             Guid id,
             CancellationToken cancellationToken)
         {
-            return await _dbContext.Roles
+            return await _dbContext.Roles.VisibleTo(_access, "roles")
                 .AsNoTracking()
                 .Where(x => x.Id == id)
                 .Select(x => new RoleDetailsDto
@@ -62,7 +65,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
             Guid id,
             CancellationToken cancellationToken)
         {
-            return _dbContext.Roles
+            return _dbContext.Roles.VisibleTo(_access, "roles")
                 .AsNoTracking()
                 .AnyAsync(x => x.Id == id, cancellationToken);
         }

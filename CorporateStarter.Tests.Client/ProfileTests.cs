@@ -85,7 +85,7 @@ public sealed class ProfileTests
     private static ProfileClient Client(Transport t, ClientAuthStateStore s, ProfilePreferences prefs)
     {
         var api = new ClientApiClient(t, s, new ClientSessionCoordinator(s, t, t, t));
-        return new(api, s, prefs, new CurrentUserClient(api));
+        return new(api, s, prefs, new CurrentUserClient(api), new ClientPermissions(s));
     }
     private sealed class Transport : IClientApiTransport, IClientSessionTransport, IClientLoginTransport, IClientLogoutTransport
     {

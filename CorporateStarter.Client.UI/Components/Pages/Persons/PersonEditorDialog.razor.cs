@@ -16,7 +16,7 @@ public partial class PersonEditorDialog : RecordEditorBase<UpdatePersonRequest, 
     private bool _validating;
     private (string?, string, string?, string?, string?, string?, string?, DateOnly?, Guid?, Guid?, bool) _baseline;
     protected override bool IsDirty => (_model.Code, _model.FirstName, _model.MiddleName, _model.LastName, _model.Email, _model.Phone, _model.Description, _model.DateOfBirth, _model.CompanyId, _model.PositionId, _model.IsActive) != _baseline;
-    protected override void CaptureBaseline() => _baseline = (_model.Code, _model.FirstName, _model.MiddleName, _model.LastName, _model.Email, _model.Phone, _model.Description, _model.DateOfBirth, _model.CompanyId, _model.PositionId, _model.IsActive);
+    protected override void CaptureBaseline() { OriginalActive = _model.IsActive; _baseline = (_model.Code, _model.FirstName, _model.MiddleName, _model.LastName, _model.Email, _model.Phone, _model.Description, _model.DateOfBirth, _model.CompanyId, _model.PositionId, _model.IsActive); }
     // DateOnly is kept at the API boundary; the calendar does not convert time zones.
     private DateTime? BirthDate
     {

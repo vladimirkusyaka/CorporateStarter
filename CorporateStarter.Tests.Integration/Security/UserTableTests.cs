@@ -46,7 +46,7 @@ public sealed class UserTableTests(CorporateStarterApiFactory factory) : IClassF
             db.UserRoles.AddRange(new UserRole { UserId = a.Id, RoleId = role.Id }, new UserRole { UserId = a.Id, RoleId = activeRole.Id });
             await db.SaveChangesAsync(); first = a.Id; second = b.Id; inactiveRole = role.Id;
         }
-        client.DefaultRequestHeaders.Add("X-Test-Permissions", string.Join(',', AppPermissions.UsersRead, AppPermissions.UsersUpdate, AppPermissions.UsersDelete));
+        client.DefaultRequestHeaders.Add("X-Test-Permissions", string.Join(',', AppPermissions.UsersViewInactive, AppPermissions.UsersRestore, AppPermissions.UsersRead, AppPermissions.UsersUpdate, AppPermissions.UsersDelete));
         var query = new TableRequest { PageSize = 1, Filters = [new("login", "contains", JsonSerializer.SerializeToElement(prefix))] };
         var page = await Post<PagedResult<UserTableItemDto>>("query", query);
         Assert.Equal(2, page.TotalCount); Assert.Equal(first, Assert.Single(page.Items).Id);

@@ -9,11 +9,8 @@ namespace CorporateStarter.Api.Controllers.Security;
 public sealed partial class UsersController
 {
     [HttpGet("capabilities"), Authorize(Policy = AppPermissions.UsersRead)]
-    public ActionResult<UserCapabilities> Capabilities() => Ok(new UserCapabilities(
-        new TableCapabilities(User.HasClaim("permission", AppPermissions.UsersCreate),
-            User.HasClaim("permission", AppPermissions.UsersUpdate),
-            User.HasClaim("permission", AppPermissions.UsersDelete), true,
-            User.HasClaim("permission", AppPermissions.UsersUpdate)),
+    public ActionResult<UserCapabilities> Capabilities([FromServices] IEntityAccess access) => Ok(new UserCapabilities(
+        access.For("users"),
         User.HasClaim("permission", AppPermissions.UsersChangePassword)));
 
     // Options belong to the user editor, so Roles.Read is not additionally required.

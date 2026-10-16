@@ -17,6 +17,8 @@ public abstract class RecordEditorBase<TModel, TDetails> : ComponentBase, IDispo
     protected TModel _model = new();
     protected TableCapabilities _capabilities = new(false, false, false, false, false);
     protected abstract bool IsDirty { get; }
+    protected bool OriginalActive = true;
+    protected bool CanChangeActive => _capabilities.CanChangeStatus(OriginalActive);
     protected abstract Task<TableCapabilities> LoadCapabilitiesAsync(CancellationToken ct);
     protected abstract Task<TModel> ReadModelAsync(Guid id, CancellationToken ct);
     protected abstract Task<TDetails> WriteModelAsync(CancellationToken ct);

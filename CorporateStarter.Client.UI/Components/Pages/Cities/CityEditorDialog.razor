@@ -14,8 +14,8 @@
                   Validation="@(new Func<string, string?>(Required))" />
     <MudTextField @bind-Value="_model.Region" Label="Region" MaxLength="150" Variant="Variant.Outlined"
                   Margin="Margin.Dense" Immediate="true" Disabled="@Blocked" />
-    @if (IsEditing)
+    @if (IsEditing && _capabilities.ViewInactive)
     {
-        <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@Blocked" Label="Active" />
+        <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@(Blocked || !CanChangeActive)" Label="Active" />
     }
 </EditorDialogFrame>

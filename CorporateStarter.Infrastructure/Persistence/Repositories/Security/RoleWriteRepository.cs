@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Shared.Common;
+using System;
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
@@ -9,14 +11,16 @@ using CorporateStarter.Core.Entities.Security;
 
 namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
 {
-    public sealed class RoleWriteRepository(AppDbContext dbContext) : IRoleWriteRepository
+    public sealed class RoleWriteRepository(AppDbContext dbContext, IEntityAccess access) : IRoleWriteRepository
     {
         private readonly AppDbContext _dbContext = dbContext;
+        private readonly IEntityAccess _access = access;
 
         public async Task<Guid> AddAsync(
             RoleWriteValues values,
             CancellationToken cancellationToken)
         {
+            _access.For("roles").RequireStatusChange(true, values.IsActive);
             var role = values.Adapt<Role>();
 
             role.Id = Guid.NewGuid();
@@ -37,13 +41,14 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
             if (!values.Id.HasValue)
                 return;
 
-            var role = await _dbContext.Roles
+            var role = await _dbContext.Roles.VisibleTo(_access, "roles")
                 .Include(x => x.RolePermissions)
                 .FirstOrDefaultAsync(x => x.Id == values.Id.Value, cancellationToken);
 
             if (role is null)
                 return;
 
+            _access.For("roles").RequireStatusChange(role.IsActive, values.IsActive);
             role.Name = values.Name;
             role.Description = values.Description;
             role.IsActive = values.IsActive;
@@ -57,7 +62,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
             Guid id,
             CancellationToken cancellationToken)
         {
-            var role = await _dbContext.Roles
+            var role = await _dbContext.Roles.VisibleTo(_access, "roles")
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
             if (role is null)

@@ -323,17 +323,6 @@
             background: rgba(40, 131, 238, .08);
         }
 
-.cs-nav-popup-title {
-    min-width: 200px;
-    padding: 10px 16px;
-    margin-bottom: 4px;
-    color: #2883ee;
-    background: #eef5fe;
-    border-bottom: 1px solid #dbeafe;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.5;
-}
 
 @media (max-height: 480px) {
     .cs-login-form-wrap {

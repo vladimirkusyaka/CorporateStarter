@@ -1,18 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Shared.Common;
+using Microsoft.EntityFrameworkCore;
 using Mapster;
 using CorporateStarter.Application.Common.Interfaces.Repositories.Directory.Persons;
 using CorporateStarter.Shared.Dtos.Directory.Persons;
 
 namespace CorporateStarter.Infrastructure.Persistence.Repositories.Directory.Persons
 {
-    public class PersonReadRepository(AppDbContext dbContext) : IPersonReadRepository
+    public class PersonReadRepository(AppDbContext dbContext, IEntityAccess access) : IPersonReadRepository
     {
         private readonly AppDbContext _dbContext = dbContext;
+        private readonly IEntityAccess _access = access;
 
         public async Task<IReadOnlyList<PersonListItemDto>> GetListAsync(
             CancellationToken cancellationToken)
         {
-            return await _dbContext.People
+            return await _dbContext.People.VisibleTo(_access, "persons")
                 .AsNoTracking()
                 .Include(x => x.Company)
                 .Include(x => x.Position)
@@ -28,7 +31,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Directory.Per
             Guid id,
             CancellationToken cancellationToken)
         {
-            return await _dbContext.People
+            return await _dbContext.People.VisibleTo(_access, "persons")
                 .AsNoTracking()
                 .Include(x => x.Company)
                 .Include(x => x.Position)
@@ -41,7 +44,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Directory.Per
             Guid id,
             CancellationToken cancellationToken)
         {
-            return await _dbContext.People
+            return await _dbContext.People.VisibleTo(_access, "persons")
                 .AsNoTracking()
                 .AnyAsync(x => x.Id == id, cancellationToken);
         }

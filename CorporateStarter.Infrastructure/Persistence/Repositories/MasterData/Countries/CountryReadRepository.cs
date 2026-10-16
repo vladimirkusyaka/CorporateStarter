@@ -10,8 +10,8 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Co
     {
         private readonly AppDbContext _dbContext;
 
-        private readonly ICountryAccess _access;
-        public CountryReadRepository(AppDbContext dbContext, ICountryAccess access)
+        private readonly IEntityAccess _access;
+        public CountryReadRepository(AppDbContext dbContext, IEntityAccess access)
         {
             _dbContext = dbContext;
             _access = access;
@@ -20,9 +20,8 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Co
         public async Task<IReadOnlyList<CountryListItemDto>> GetListAsync(
             CancellationToken cancellationToken)
         {
-            return await _dbContext.Countries
+            return await _dbContext.Countries.VisibleTo(_access, "countries")
                 .AsNoTracking()
-                .Where(x => x.IsActive || _access.Capabilities.ViewInactive)
                 .OrderBy(x => x.Name)
                 .ProjectToType<CountryListItemDto>()
                 .ToListAsync(cancellationToken);
@@ -32,9 +31,9 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Co
             Guid id,
             CancellationToken cancellationToken)
         {
-            return await _dbContext.Countries
+            return await _dbContext.Countries.VisibleTo(_access, "countries")
                 .AsNoTracking()
-                .Where(x => x.Id == id && (x.IsActive || _access.Capabilities.ViewInactive))
+                .Where(x => x.Id == id)
                 .ProjectToType<CountryDetailsDto>()
                 .FirstOrDefaultAsync(cancellationToken);
         }
@@ -43,9 +42,9 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Co
             Guid id,
             CancellationToken cancellationToken)
         {
-            return await _dbContext.Countries
+            return await _dbContext.Countries.VisibleTo(_access, "countries")
                 .AsNoTracking()
-                .AnyAsync(x => x.Id == id && (x.IsActive || _access.Capabilities.ViewInactive), cancellationToken);
+                .AnyAsync(x => x.Id == id, cancellationToken);
         }
 
         public async Task<bool> ExistsByCodeAsync(

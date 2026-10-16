@@ -9,11 +9,7 @@ namespace CorporateStarter.Api.Controllers.MasterData;
 public sealed partial class PositionsController
 {
     [HttpGet("capabilities"), Authorize(Policy = AppPermissions.PositionsRead)]
-    public ActionResult<TableCapabilities> Capabilities() => Ok(new TableCapabilities(
-        User.HasClaim("permission", AppPermissions.PositionsCreate),
-        User.HasClaim("permission", AppPermissions.PositionsUpdate),
-        User.HasClaim("permission", AppPermissions.PositionsDelete),
-        true, User.HasClaim("permission", AppPermissions.PositionsUpdate)));
+    public ActionResult<TableCapabilities> Capabilities([FromServices] IEntityAccess access) => Ok(access.For("positions"));
     [HttpPost("query"), Authorize(Policy = AppPermissions.PositionsRead)]
     public async Task<ActionResult<PagedResult<PositionListItemDto>>> Query(TableRequest request,
         [FromServices] IPositionTableRepository repository, CancellationToken ct) => Ok(await repository.QueryAsync(request, ct));

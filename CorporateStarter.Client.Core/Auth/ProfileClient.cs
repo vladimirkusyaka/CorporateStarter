@@ -10,14 +10,15 @@ public sealed class ProfileClient : IDisposable
     private readonly IClientAuthState _auth;
     private readonly ProfilePreferences _preferences;
     private readonly CurrentUserClient _identity;
+    private readonly ClientPermissions _permissions;
     private ClientAuthSnapshot _snapshot;
     private bool _disposed;
-    public ProfileClient(ClientApiClient api, IClientAuthState auth, ProfilePreferences preferences, CurrentUserClient identity)
-    { _api = api; _auth = auth; _preferences = preferences; _identity = identity; _snapshot = auth.Current; auth.StateChanged += Changed; }
+    public ProfileClient(ClientApiClient api, IClientAuthState auth, ProfilePreferences preferences, CurrentUserClient identity, ClientPermissions permissions)
+    { _api = api; _auth = auth; _preferences = preferences; _identity = identity; _permissions = permissions; _snapshot = auth.Current; auth.StateChanged += Changed; }
     private void Changed(object? sender, ClientAuthStateChangedEventArgs args)
     {
         var next = _auth.Current;
-        if (next.UserId != _snapshot.UserId || next.SessionGeneration != _snapshot.SessionGeneration) _preferences.Apply(new());
+        if (next.UserId != _snapshot.UserId || next.SessionGeneration != _snapshot.SessionGeneration) { _preferences.Apply(new()); _permissions.Clear(); }
         _snapshot = next;
     }
     private void Check(ClientAuthSnapshot start)
@@ -33,6 +34,7 @@ public sealed class ProfileClient : IDisposable
         Check(start);
         if (result.Account.Id != start.UserId) throw new InvalidDataException("Unexpected profile.");
         _preferences.Apply(result.Appearance);
+        _permissions.Apply(result.Account, start);
         return result;
     }
     public async Task SaveAccountAsync(string? displayName, CancellationToken ct = default)

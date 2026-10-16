@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Shared.Common;
+using Microsoft.EntityFrameworkCore;
 using Mapster;
 using CorporateStarter.Shared.Dtos.Directory.Companies;
 using CorporateStarter.Application.Common.Interfaces.Repositories.Directory.Companies;
@@ -8,16 +10,18 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Directory.Com
     public sealed class CompanyReadRepository : ICompanyReadRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly IEntityAccess _access;
 
-        public CompanyReadRepository(AppDbContext dbContext)
+        public CompanyReadRepository(AppDbContext dbContext, IEntityAccess access)
         {
             _dbContext = dbContext;
+            _access = access;
         }
 
         public async Task<IReadOnlyList<CompanyListItemDto>> GetListAsync(
             CancellationToken cancellationToken)
         {
-            return await _dbContext.Companies
+            return await _dbContext.Companies.VisibleTo(_access, "companies")
                 .AsNoTracking()
                 .Include(x => x.City)
                 .ThenInclude(x => x!.Country)
@@ -31,7 +35,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Directory.Com
             Guid id,
             CancellationToken cancellationToken)
         {
-            return await _dbContext.Companies
+            return await _dbContext.Companies.VisibleTo(_access, "companies")
                 .AsNoTracking()
                 .Include(x => x.City)
                 .ThenInclude(x => x!.Country)
@@ -44,7 +48,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Directory.Com
             Guid id,
             CancellationToken cancellationToken)
         {
-            return await _dbContext.Companies
+            return await _dbContext.Companies.VisibleTo(_access, "companies")
                 .AsNoTracking()
                 .AnyAsync(x => x.Id == id, cancellationToken);
         }

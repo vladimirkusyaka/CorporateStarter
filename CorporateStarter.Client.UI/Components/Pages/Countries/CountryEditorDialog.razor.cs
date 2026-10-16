@@ -13,8 +13,7 @@ public partial class CountryEditorDialog : RecordEditorBase<UpdateCountryRequest
     protected override Guid? RecordId => CountryId;
     private (string, string, string?, string?, bool?) _baseline;
     protected override bool IsDirty => (_model.Code, _model.Name, _model.NativeName, _model.PhoneCode, _model.IsActive) != _baseline;
-    protected override void CaptureBaseline() => _baseline = (_model.Code, _model.Name, _model.NativeName, _model.PhoneCode, _model.IsActive);
-    private bool CanChangeActive => _capabilities.ViewInactive && (_baseline.Item5 == true ? _capabilities.CanDelete : _capabilities.CanRestore);
+    protected override void CaptureBaseline() { OriginalActive = _model.IsActive ?? true; _baseline = (_model.Code, _model.Name, _model.NativeName, _model.PhoneCode, _model.IsActive); }
     private bool ActiveValue { get => _model.IsActive ?? true; set => _model.IsActive = value; }
     protected override string ConflictMessage => "A country with this code or name already exists.";
     protected override Task<TableCapabilities> LoadCapabilitiesAsync(CancellationToken ct) => Client.GetCapabilitiesAsync(ct);

@@ -4,8 +4,8 @@ using CorporateStarter.Infrastructure.Persistence.Tables;
 using CorporateStarter.Shared.Dtos.MasterData.Countries;
 namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Countries;
 
-public sealed class CountryTableRepository(AppDbContext db, ICountryAccess access)
-    : SqlTableRepository<CountryListItemDto>(db), ICountryTableRepository
+public sealed class CountryTableRepository(AppDbContext db, IEntityAccess access)
+    : ActiveSqlTableRepository<CountryListItemDto>(db, access, "countries"), ICountryTableRepository
 {
     protected override string Table => "\"Countries\"";
     protected override string Projection => "\"Id\", \"Code\", \"Name\", \"NativeName\", \"PhoneCode\", \"IsActive\"";
@@ -18,7 +18,4 @@ public sealed class CountryTableRepository(AppDbContext db, ICountryAccess acces
         ["isActive"] = new("\"IsActive\"", true)
     };
     protected override IReadOnlyDictionary<string, SqlTableColumn> Columns => ColumnMap;
-    protected override string SecurityPredicate => access.Capabilities.ViewInactive ? "TRUE" : "\"IsActive\" = TRUE";
-    protected override ISet<string> ForbiddenColumns => new HashSet<string>(
-        access.Capabilities.ViewInactive ? [] : ["isActive"], StringComparer.OrdinalIgnoreCase);
 }

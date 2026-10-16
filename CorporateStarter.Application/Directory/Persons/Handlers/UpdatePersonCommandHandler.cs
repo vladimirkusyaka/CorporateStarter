@@ -34,11 +34,15 @@ namespace CorporateStarter.Application.Directory.Persons.Handlers
             UpdatePersonCommand request,
             CancellationToken cancellationToken)
         {
+            var current = await _personReadRepository.GetByIdAsync(request.Id, cancellationToken);
+            if (current is null)
+                return CommandResult<PersonDetailsDto>.Failure("person.not_found", "Person was not found.");
+
             var values = request.Request.Adapt<PersonWriteValues>();
             values.Id = request.Id;
             values.Normalize();
 
-            var validationError = await ValidateAsync(values, cancellationToken);
+            var validationError = await ValidateAsync(values, current, cancellationToken);
 
             if (validationError is not null)
                 return validationError;
@@ -67,6 +71,7 @@ namespace CorporateStarter.Application.Directory.Persons.Handlers
 
         private async Task<CommandResult<PersonDetailsDto>?> ValidateAsync(
             PersonWriteValues values,
+            PersonDetailsDto current,
             CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(values.FirstName))
@@ -76,7 +81,7 @@ namespace CorporateStarter.Application.Directory.Persons.Handlers
                     "Person first name is required.");
             }
 
-            if (values.CompanyId is not null
+            if (values.CompanyId != current.CompanyId && values.CompanyId is not null
                 && !await _companyReadRepository.ExistsByIdAsync(values.CompanyId.Value, cancellationToken))
             {
                 return CommandResult<PersonDetailsDto>.Failure(
@@ -84,7 +89,7 @@ namespace CorporateStarter.Application.Directory.Persons.Handlers
                     "Company was not found.");
             }
 
-            if (values.PositionId is not null
+            if (values.PositionId != current.PositionId && values.PositionId is not null
                 && !await _positionReadRepository.ExistsByIdAsync(values.PositionId.Value, cancellationToken))
             {
                 return CommandResult<PersonDetailsDto>.Failure(

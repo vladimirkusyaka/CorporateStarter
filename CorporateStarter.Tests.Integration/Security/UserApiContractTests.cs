@@ -32,6 +32,8 @@ public sealed class UserApiContractTests : IDisposable
         _host = new HostBuilder().ConfigureWebHost(builder => builder.UseTestServer().ConfigureServices(services =>
         {
             services.AddLogging();
+            services.AddHttpContextAccessor();
+            services.AddScoped<IEntityAccess, CorporateStarter.Api.Security.EntityAccess>();
             services.AddControllers().AddApplicationPart(typeof(UsersController).Assembly);
             services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<UpdateUserCommandHandler>());
             services.AddSingleton<IUserReadRepository>(_repository);

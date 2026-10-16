@@ -55,6 +55,12 @@ public sealed class PermissionTableTests(CorporateStarterApiFactory factory) : I
             Assert.Equal(HttpStatusCode.Forbidden, (await client.PostAsJsonAsync("/api/Permissions/" + endpoint, new { })).StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, (await client.GetAsync("/api/Permissions/capabilities")).StatusCode);
         Permissions(AppPermissions.PermissionsRead);
+        var restricted = await Post<PagedResult<PermissionListItemDto>>("query", query);
+        Assert.Equal(1, restricted.TotalCount);
+        Assert.Null((await Post<TableFindResult>("find", new TableFindRequest { Query = query, LocateId = inactiveId })).Id);
+        Assert.Equal(HttpStatusCode.Forbidden, (await client.PostAsJsonAsync("/api/Permissions/filter-values",
+            new TableValuesRequest { Query = query, Field = "isActive" })).StatusCode);
+        Permissions(AppPermissions.PermissionsRead, AppPermissions.PermissionsViewInactive);
         var capabilities = (await client.GetFromJsonAsync<TableCapabilities>("/api/Permissions/capabilities"))!;
         Assert.True(capabilities.ViewInactive);
         Assert.False(capabilities.CanCreate);

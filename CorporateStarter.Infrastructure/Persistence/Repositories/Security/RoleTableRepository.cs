@@ -1,12 +1,13 @@
-﻿using CorporateStarter.Application.Common.Interfaces.Repositories.Security;
+﻿using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Shared.Common;
+using CorporateStarter.Application.Common.Interfaces.Repositories.Security;
 using CorporateStarter.Infrastructure.Persistence.Tables;
 using CorporateStarter.Shared.Dtos.Security.Roles;
 
 namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security;
 
-// The existing Roles.Read policy includes the entire system catalog.
-public sealed class RoleTableRepository(AppDbContext db)
-    : SqlTableRepository<RoleListItemDto>(db), IRoleTableRepository
+public sealed class RoleTableRepository(AppDbContext db, IEntityAccess access)
+    : ActiveSqlTableRepository<RoleListItemDto>(db, access, "roles"), IRoleTableRepository
 {
     protected override string Table => "\"Roles\"";
     protected override string Projection => "\"Id\", \"Name\", \"Description\", \"IsSystemRole\", \"IsActive\"";

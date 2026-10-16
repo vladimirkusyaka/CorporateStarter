@@ -1,12 +1,13 @@
-﻿using CorporateStarter.Application.Common.Interfaces.Repositories.Security;
+﻿using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Shared.Common;
+using CorporateStarter.Application.Common.Interfaces.Repositories.Security;
 using CorporateStarter.Infrastructure.Persistence.Tables;
 using CorporateStarter.Shared.Dtos.Permissions;
 
 namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security;
 
-// The existing Permissions.Read policy includes the entire system catalog.
-public sealed class PermissionTableRepository(AppDbContext db)
-    : SqlTableRepository<PermissionListItemDto>(db), IPermissionTableRepository
+public sealed class PermissionTableRepository(AppDbContext db, IEntityAccess access)
+    : ActiveSqlTableRepository<PermissionListItemDto>(db, access, "permissions"), IPermissionTableRepository
 {
     protected override string Table => "\"Permissions\"";
     protected override string Projection => "\"Id\", \"Code\", \"Name\", \"Description\", \"Group\", \"IsActive\"";

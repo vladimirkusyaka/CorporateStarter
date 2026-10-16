@@ -30,6 +30,8 @@ public sealed class RoleApiContractTests : IDisposable
         _host = new HostBuilder().ConfigureWebHost(builder => builder.UseTestServer().ConfigureServices(services =>
         {
             services.AddLogging();
+            services.AddHttpContextAccessor();
+            services.AddScoped<IEntityAccess, CorporateStarter.Api.Security.EntityAccess>();
             services.AddControllers().AddApplicationPart(typeof(RolesController).Assembly);
             services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<CreateRoleCommandHandler>());
             services.AddSingleton<IRoleReadRepository>(_repository);

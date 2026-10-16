@@ -1,3 +1,5 @@
+using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Shared.Common;
 using System;
 using System.Text;
 using System.Collections.Generic;
@@ -8,15 +10,17 @@ using CorporateStarter.Core.Entities.Security;
 
 namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
 {
-    public sealed class UserWriteRepository(AppDbContext dbContext) : IUserWriteRepository
+    public sealed class UserWriteRepository(AppDbContext dbContext, IEntityAccess access) : IUserWriteRepository
     {
         private readonly AppDbContext _dbContext = dbContext;
+        private readonly IEntityAccess _access = access;
 
         public async Task<Guid> AddAsync(
             UserWriteValues values,
             string passwordHash,
             CancellationToken cancellationToken)
         {
+            _access.For("users").RequireStatusChange(true, values.IsActive);
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -43,13 +47,14 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
             if (!values.Id.HasValue)
                 return;
 
-            var user = await _dbContext.Users
+            var user = await _dbContext.Users.VisibleTo(_access, "users")
                 .Include(x => x.UserRoles)
                 .FirstOrDefaultAsync(x => x.Id == values.Id.Value, cancellationToken);
 
             if (user is null)
                 return;
 
+            _access.For("users").RequireStatusChange(user.IsActive, values.IsActive);
             user.Login = values.Login;
             user.Email = values.Email;
             user.DisplayName = values.DisplayName;
@@ -65,7 +70,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
             string passwordHash,
             CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users
+            var user = await _dbContext.Users.VisibleTo(_access, "users")
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
             if (user is null)
@@ -79,7 +84,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
             Guid id,
             CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users
+            var user = await _dbContext.Users.VisibleTo(_access, "users")
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
             if (user is null)

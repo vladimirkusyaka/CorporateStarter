@@ -1,3 +1,5 @@
+using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Shared.Common;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using CorporateStarter.Application.Common.Interfaces.Repositories.Security;
@@ -5,14 +7,15 @@ using CorporateStarter.Shared.Dtos.Security.Users;
 
 namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
 {
-    public sealed class UserReadRepository(AppDbContext dbContext) : IUserReadRepository
+    public sealed class UserReadRepository(AppDbContext dbContext, IEntityAccess access) : IUserReadRepository
     {
         private readonly AppDbContext _dbContext = dbContext;
+        private readonly IEntityAccess _access = access;
 
         public async Task<IReadOnlyList<UserListItemDto>> GetListAsync(
             CancellationToken cancellationToken)
         {
-            return await _dbContext.Users
+            return await _dbContext.Users.VisibleTo(_access, "users")
                 .AsNoTracking()
                 .OrderBy(x => x.DisplayName)
                 .ThenBy(x => x.Email)
@@ -44,7 +47,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
             Guid id,
             CancellationToken cancellationToken)
         {
-            return await _dbContext.Users
+            return await _dbContext.Users.VisibleTo(_access, "users")
                 .AsNoTracking()
                 .Where(x => x.Id == id)
                 .Select(x => new UserDetailsDto
@@ -74,7 +77,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security
             Guid id,
             CancellationToken cancellationToken)
         {
-            return _dbContext.Users
+            return _dbContext.Users.VisibleTo(_access, "users")
                 .AsNoTracking()
                 .AnyAsync(x => x.Id == id, cancellationToken);
         }

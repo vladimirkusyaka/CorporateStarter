@@ -9,11 +9,7 @@ namespace CorporateStarter.Api.Controllers.Directory;
 public sealed partial class CompaniesController
 {
     [HttpGet("capabilities"), Authorize(Policy = AppPermissions.CompaniesRead)]
-    public ActionResult<TableCapabilities> Capabilities() => Ok(new TableCapabilities(
-        User.HasClaim("permission", AppPermissions.CompaniesCreate),
-        User.HasClaim("permission", AppPermissions.CompaniesUpdate),
-        User.HasClaim("permission", AppPermissions.CompaniesDelete),
-        true, User.HasClaim("permission", AppPermissions.CompaniesUpdate)));
+    public ActionResult<TableCapabilities> Capabilities([FromServices] IEntityAccess access) => Ok(access.For("companies"));
     [HttpPost("query"), Authorize(Policy = AppPermissions.CompaniesRead)]
     public async Task<ActionResult<PagedResult<CompanyListItemDto>>> Query(TableRequest request,
         [FromServices] ICompanyTableRepository repository, CancellationToken ct) => Ok(await repository.QueryAsync(request, ct));

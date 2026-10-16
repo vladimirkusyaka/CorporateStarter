@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Shared.Common;
+using Microsoft.EntityFrameworkCore;
 using Mapster;
 using CorporateStarter.Application.Common.Interfaces.Repositories.MasterData.Cities;
 using CorporateStarter.Application.MasterData.Cities.Models;
@@ -9,16 +11,19 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Ci
     public sealed class CityWriteRepository : ICityWriteRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly IEntityAccess _access;
 
-        public CityWriteRepository(AppDbContext dbContext)
+        public CityWriteRepository(AppDbContext dbContext, IEntityAccess access)
         {
             _dbContext = dbContext;
+            _access = access;
         }
 
         public async Task<City> AddAsync(
             CityWriteValues values,
             CancellationToken cancellationToken)
         {
+            _access.For("cities").RequireStatusChange(true, values.IsActive);
             var city = values.Adapt<City>();
             city.Id = Guid.NewGuid();
             city.CreatedAtUtc = DateTime.UtcNow;
@@ -36,12 +41,13 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Ci
             if (values.Id is null)
                 return false;
 
-            var city = await _dbContext.Cities
+            var city = await _dbContext.Cities.VisibleTo(_access, "cities")
                 .FirstOrDefaultAsync(x => x.Id == values.Id.Value, cancellationToken);
 
             if (city is null)
                 return false;
 
+            _access.For("cities").RequireStatusChange(city.IsActive, values.IsActive);
             values.Adapt(city);
             city.UpdatedAtUtc = DateTime.UtcNow;
 
@@ -52,7 +58,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Ci
             Guid id,
             CancellationToken cancellationToken)
         {
-            var city = await _dbContext.Cities
+            var city = await _dbContext.Cities.VisibleTo(_access, "cities")
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
             if (city is null)

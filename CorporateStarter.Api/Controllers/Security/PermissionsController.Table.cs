@@ -9,7 +9,7 @@ namespace CorporateStarter.Api.Controllers.Security;
 public sealed partial class PermissionsController
 {
     [HttpGet("capabilities"), Authorize(Policy = AppPermissions.PermissionsRead)]
-    public ActionResult<TableCapabilities> Capabilities() => Ok(new TableCapabilities(false, false, false, true, false));
+    public ActionResult<TableCapabilities> Capabilities([FromServices] IEntityAccess access) => Ok(new TableCapabilities(false, false, false, access.For("permissions").ViewInactive, false));
     [HttpPost("query"), Authorize(Policy = AppPermissions.PermissionsRead)]
     public async Task<ActionResult<PagedResult<PermissionListItemDto>>> Query(TableRequest request,
         [FromServices] IPermissionTableRepository repository, CancellationToken ct) => Ok(await repository.QueryAsync(request, ct));

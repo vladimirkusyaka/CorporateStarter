@@ -21,7 +21,7 @@ public sealed class CompanyProjectionTests
     {
         // Read the compiled C# value: checking source text missed raw-string delimiters.
         // This property does not access the database.
-        var repository = Activator.CreateInstance(repositoryType, new object?[] { null })!;
+        var repository = Activator.CreateInstance(repositoryType, new object?[repositoryType.GetConstructors().Single().GetParameters().Length])!;
         var projection = (string)repositoryType
             .GetProperty("Projection", BindingFlags.Instance | BindingFlags.NonPublic)!
             .GetValue(repository)!;

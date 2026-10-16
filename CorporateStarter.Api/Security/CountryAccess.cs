@@ -2,9 +2,15 @@
 using CorporateStarter.Shared.Dtos.MasterData.Countries;
 namespace CorporateStarter.Api.Security;
 
-public sealed class CountryAccess(IHttpContextAccessor context) : ICountryAccess
+// Keep the existing Countries contract while using the shared permission rules.
+public sealed class CountryAccess(IEntityAccess access) : ICountryAccess
 {
-    private bool Has(string code) => context.HttpContext?.User.HasClaim("permission", code) == true;
-    public CountryCapabilities Capabilities => new(Has(AppPermissions.CountriesCreate), Has(AppPermissions.CountriesUpdate),
-        Has(AppPermissions.CountriesDelete), Has(AppPermissions.CountriesViewInactive), Has(AppPermissions.CountriesRestore));
+    public CountryCapabilities Capabilities
+    {
+        get
+        {
+            var caps = access.For("countries");
+            return new(caps.CanCreate, caps.CanUpdate, caps.CanDelete, caps.ViewInactive, caps.CanRestore);
+        }
+    }
 }

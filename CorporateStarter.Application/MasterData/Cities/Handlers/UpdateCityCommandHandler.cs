@@ -33,12 +33,17 @@ namespace CorporateStarter.Application.MasterData.Cities.Handlers
             UpdateCityCommand request,
             CancellationToken cancellationToken)
         {
+            var current = await _cityReadRepository.GetByIdAsync(request.Id, cancellationToken);
+            if (current is null)
+                return CommandResult<CityDetailsDto>.Failure("city.not_found", "City was not found.");
+
             var values = request.Request.Adapt<CityWriteValues>();
             values.Id = request.Id;
             values.Normalize();
 
             var validationError = await ValidateAsync(
                 values,
+                current,
                 excludeId: request.Id,
                 cancellationToken);
 
@@ -67,6 +72,7 @@ namespace CorporateStarter.Application.MasterData.Cities.Handlers
 
         private async Task<CommandResult<CityDetailsDto>?> ValidateAsync(
             CityWriteValues values,
+            CityDetailsDto current,
             Guid? excludeId,
             CancellationToken cancellationToken)
         {
@@ -84,7 +90,7 @@ namespace CorporateStarter.Application.MasterData.Cities.Handlers
                     "Country is required.");
             }
 
-            if (!await _countryReadRepository.ExistsByIdAsync(
+            if (values.CountryId != current.CountryId && !await _countryReadRepository.ExistsByIdAsync(
                     values.CountryId,
                     cancellationToken))
             {

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Shared.Common;
+using Microsoft.EntityFrameworkCore;
 using Mapster;
 using CorporateStarter.Application.Common.Interfaces.Repositories.MasterData.Cities;
 using CorporateStarter.Shared.Dtos.MasterData.Cities;
@@ -8,16 +10,18 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Ci
     public sealed class CityReadRepository : ICityReadRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly IEntityAccess _access;
 
-        public CityReadRepository(AppDbContext dbContext)
+        public CityReadRepository(AppDbContext dbContext, IEntityAccess access)
         {
             _dbContext = dbContext;
+            _access = access;
         }
 
         public async Task<IReadOnlyList<CityListItemDto>> GetListAsync(
             CancellationToken cancellationToken)
         {
-            return await _dbContext.Cities
+            return await _dbContext.Cities.VisibleTo(_access, "cities")
                 .AsNoTracking()
                 .Include(x => x.Country)
                 .OrderBy(x => x.Country.Name)
@@ -30,7 +34,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Ci
             Guid id,
             CancellationToken cancellationToken)
         {
-            return await _dbContext.Cities
+            return await _dbContext.Cities.VisibleTo(_access, "cities")
                 .AsNoTracking()
                 .Include(x => x.Country)
                 .Where(x => x.Id == id)
@@ -42,7 +46,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Ci
             Guid id,
             CancellationToken cancellationToken)
         {
-            return await _dbContext.Cities
+            return await _dbContext.Cities.VisibleTo(_access, "cities")
                 .AsNoTracking()
                 .AnyAsync(x => x.Id == id, cancellationToken);
         }

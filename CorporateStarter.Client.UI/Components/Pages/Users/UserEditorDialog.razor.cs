@@ -25,6 +25,7 @@ public partial class UserEditorDialog : RecordEditorBase<CreateUserRequest, Guid
         !_baselineIds.SetEquals(_selected) || _confirmation.Length > 0;
     protected override void CaptureBaseline()
     {
+        OriginalActive = _model.IsActive;
         _baseline = (_model.Login, _model.Email, _model.DisplayName, _model.IsActive, _model.Password);
         _baselineIds = _selected.ToHashSet();
     }
@@ -49,8 +50,14 @@ public partial class UserEditorDialog : RecordEditorBase<CreateUserRequest, Guid
         _options = _options.Concat(item.Roles.Where(x => !_options.Any(o => o.Id == x.RoleId))
             .Select(x => new SelectionOption(x.RoleId, x.Name + " (unavailable)", "Other roles", false))).ToArray();
         _personName = item.PersonName;
-        return new() { Login = item.Login, Email = item.Email, DisplayName = item.DisplayName,
-            IsActive = item.IsActive, PersonId = item.PersonId };
+        return new()
+        {
+            Login = item.Login,
+            Email = item.Email,
+            DisplayName = item.DisplayName,
+            IsActive = item.IsActive,
+            PersonId = item.PersonId
+        };
     }
     private void RolesChanged(IReadOnlySet<Guid> ids) => _selected = ids;
     private void ChangeTab(int index) { if (!Blocked && !_confirmDiscard && !_validating) _tab = index; }
@@ -73,13 +80,21 @@ public partial class UserEditorDialog : RecordEditorBase<CreateUserRequest, Guid
     protected override Task<Guid> WriteModelAsync(CancellationToken ct) => UserId is { } id
         ? Client.UpdateAsync(id, new()
         {
-            Login = _model.Login.Trim(), Email = _model.Email.Trim(), DisplayName = Optional(_model.DisplayName),
-            IsActive = _model.IsActive, PersonId = _model.PersonId,
+            Login = _model.Login.Trim(),
+            Email = _model.Email.Trim(),
+            DisplayName = Optional(_model.DisplayName),
+            IsActive = _model.IsActive,
+            PersonId = _model.PersonId,
             RoleIds = _baselineIds.SetEquals(_selected) ? null : _selected.ToArray()
         }, ct)
         : Client.CreateAsync(new()
         {
-            Login = _model.Login.Trim(), Email = _model.Email.Trim(), DisplayName = Optional(_model.DisplayName),
-            IsActive = _model.IsActive, PersonId = _model.PersonId, Password = _model.Password, RoleIds = _selected.ToArray()
+            Login = _model.Login.Trim(),
+            Email = _model.Email.Trim(),
+            DisplayName = Optional(_model.DisplayName),
+            IsActive = _model.IsActive,
+            PersonId = _model.PersonId,
+            Password = _model.Password,
+            RoleIds = _selected.ToArray()
         }, ct);
 }

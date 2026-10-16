@@ -1,14 +1,17 @@
-﻿using CorporateStarter.Application.Common.Interfaces.Repositories.Directory.Companies;
-using CorporateStarter.Infrastructure.Persistence.Tables;
+﻿using CorporateStarter.Application.Common.Security;
 using CorporateStarter.Shared.Common;
+using CorporateStarter.Application.Common.Interfaces.Repositories.Directory.Companies;
+using CorporateStarter.Infrastructure.Persistence.Tables;
 using CorporateStarter.Shared.Dtos.Directory.Companies;
 using Microsoft.EntityFrameworkCore;
 namespace CorporateStarter.Infrastructure.Persistence.Repositories.Directory.Companies;
 
-public sealed class CompanyTableRepository : SqlTableRepository<CompanyListItemDto>, ICompanyTableRepository
+public sealed class CompanyTableRepository : ActiveSqlTableRepository<CompanyListItemDto>, ICompanyTableRepository
 {
     private readonly AppDbContext _db;
-    public CompanyTableRepository(AppDbContext db) : base(db) => _db = db;
+    private readonly IEntityAccess _access;
+    public CompanyTableRepository(AppDbContext db, IEntityAccess access) : base(db, access, "companies")
+    { _db = db; _access = access; }
     // LEFT JOIN preserves companies whose optional city has not been selected.
     protected override string Table => """
         (SELECT c."Id", c."Code", c."Name", c."LegalName", c."TaxNumber", c."VatId", c."Email", c."Phone", c."Website", c."Street", c."HouseNumber", c."PostalCode", c."Description", c."CityId", c."IsActive",
@@ -37,7 +40,7 @@ public sealed class CompanyTableRepository : SqlTableRepository<CompanyListItemD
             throw new ArgumentException("Invalid city lookup request.");
         var text = (request.Text ?? "").Trim().ToLowerInvariant();
         // Company writes already accept existing inactive cities; show their status.
-        return await _db.Cities.AsNoTracking()
+        return await _db.Cities.VisibleTo(_access, "cities").AsNoTracking()
             .Where(x => x.Name.ToLower().Contains(text) || (x.Region != null && x.Region.ToLower().Contains(text)) ||
                 x.Country.Name.ToLower().Contains(text) || x.Country.Code.ToLower().Contains(text))
             .OrderBy(x => x.Country.Name).ThenBy(x => x.Name).ThenBy(x => x.Region).ThenBy(x => x.Id)

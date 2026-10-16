@@ -30,6 +30,10 @@ namespace CorporateStarter.Application.Directory.Companies.Handlers
             UpdateCompanyCommand request,
             CancellationToken cancellationToken)
         {
+            var current = await _companyReadRepository.GetByIdAsync(request.Id, cancellationToken);
+            if (current is null)
+                return CommandResult<CompanyDetailsDto>.Failure("company.not_found", "Company was not found.");
+
             var values = request.Request.Adapt<CompanyWriteValues>();
             values.Id = request.Id;
             values.Normalize();
@@ -54,7 +58,7 @@ namespace CorporateStarter.Application.Directory.Companies.Handlers
                     "Company name already exists.");
             }
 
-            if (values.CityId is not null
+            if (values.CityId != current.CityId && values.CityId is not null
                 && !await _cityReadRepository.ExistsByIdAsync(values.CityId.Value, cancellationToken))
             {
                 return CommandResult<CompanyDetailsDto>.Failure(

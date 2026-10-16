@@ -39,7 +39,7 @@ public sealed class PersonTableTests(CorporateStarterApiFactory factory) : IClas
             var b = new Person { Id = Guid.NewGuid(), FirstName = prefix + " B", IsActive = false, CompanyId = company.Id, PositionId = position.Id, DateOfBirth = new(1990, 2, 3) };
             db.People.AddRange(a, b); await db.SaveChangesAsync(); aId = a.Id; bId = b.Id;
         }
-        client.DefaultRequestHeaders.Add("X-Test-Permissions", string.Join(',', AppPermissions.PersonsRead, AppPermissions.PersonsUpdate));
+        client.DefaultRequestHeaders.Add("X-Test-Permissions", string.Join(',', AppPermissions.PersonsViewInactive, AppPermissions.PersonsRestore, AppPermissions.PersonsRead, AppPermissions.PersonsUpdate));
         var query = new TableRequest { PageSize = 1, Filters = [new("firstName", "contains", JsonSerializer.SerializeToElement(prefix))] };
         var page = await Post<PagedResult<PersonListItemDto>>("query", query);
         Assert.Equal(2, page.TotalCount); Assert.Equal(aId, Assert.Single(page.Items).Id); Assert.Null(page.Items[0].CompanyId); Assert.Null(page.Items[0].PositionId);

@@ -204,15 +204,35 @@ public sealed class TableComponentTests
         });
         Assert.Empty(renderer.Errors);
     }
+    [Fact]
+    public async Task Losing_view_inactive_hides_status_and_removes_its_sort()
+    {
+        var client = new FakeTableClient();
+        await using var services = CreateServices();
+        await using var renderer = new TestRenderer(services);
+        var table = await Mount(renderer, client);
+        await renderer.Dispatcher.InvokeAsync(async () =>
+        {
+            await (Task)Invoke(table, "SortBy", Column.Status)!;
+            Assert.Contains(client.LastQuery!.Sorts, x => x.Field == "isActive");
+            client.ViewInactive = false;
+            await (Task)table.GetType().GetMethod("LoadAsync", BindingFlags.Instance | BindingFlags.NonPublic,
+                null, Type.EmptyTypes, null)!.Invoke(table, null)!;
+        });
+        Assert.DoesNotContain(Column.Status, Read<IEnumerable<Column>>(table, "VisibleColumns"));
+        Assert.DoesNotContain(client.LastQuery!.Sorts, x => x.Field == "isActive");
+        Assert.Empty(renderer.Errors);
+    }
     private sealed class FakeTableClient : ITableClient<PositionListItemDto>
     {
         public PositionListItemDto[] Items { get; } =
         [new() { Id = Guid.NewGuid(), Name = "Alpha", IsActive = true }, new() { Id = Guid.NewGuid(), Name = "Beta", IsActive = false }];
         public IReadOnlyList<PositionListItemDto>? Visible { get; set; }
         public bool LocateMissing { get; set; }
+        public bool ViewInactive { get; set; } = true;
         public TableRequest? LastQuery { get; private set; }
         public TableFindRequest? LastFind { get; private set; }
-        public Task<TableCapabilities> GetCapabilitiesAsync(CancellationToken ct = default) => Task.FromResult(new TableCapabilities(true, true, true, true, true));
+        public Task<TableCapabilities> GetCapabilitiesAsync(CancellationToken ct = default) => Task.FromResult(new TableCapabilities(true, true, true, ViewInactive, true));
         public Task<PagedResult<PositionListItemDto>> QueryAsync(TableRequest request, CancellationToken ct = default)
         {
             LastQuery = request;

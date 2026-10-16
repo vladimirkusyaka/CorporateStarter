@@ -32,6 +32,8 @@ public sealed class CompanyApiContractTests : IDisposable
         _host = new HostBuilder().ConfigureWebHost(builder => builder.UseTestServer().ConfigureServices(services =>
         {
             services.AddLogging();
+            services.AddHttpContextAccessor();
+            services.AddScoped<IEntityAccess, CorporateStarter.Api.Security.EntityAccess>();
             services.AddControllers().AddApplicationPart(typeof(CompaniesController).Assembly);
             services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<CreateCompanyCommandHandler>());
             services.AddSingleton<ICompanyReadRepository>(_repository);
@@ -58,7 +60,7 @@ public sealed class CompanyApiContractTests : IDisposable
         Assert.Equal(HttpStatusCode.Forbidden, (await _client.PostAsJsonAsync("/api/Companies/query", new TableRequest())).StatusCode);
         Permissions(AppPermissions.CompaniesRead);
         var caps = (await _client.GetFromJsonAsync<TableCapabilities>("/api/Companies/capabilities"))!;
-        Assert.False(caps.CanCreate); Assert.False(caps.CanUpdate); Assert.True(caps.ViewInactive);
+        Assert.False(caps.CanCreate); Assert.False(caps.CanUpdate); Assert.False(caps.ViewInactive);
         Assert.Equal(HttpStatusCode.OK, (await _client.PostAsJsonAsync("/api/Companies/query", new TableRequest())).StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, (await _client.PostAsJsonAsync("/api/Companies/query", new TableRequest { PageSize = 101 })).StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, (await _client.PostAsJsonAsync("/api/Companies", new CreateCompanyRequest { Name = "Example" })).StatusCode);
@@ -102,6 +104,19 @@ public sealed class CompanyApiContractTests : IDisposable
         Assert.Equal(HttpStatusCode.NotFound, (await _client.PostAsJsonAsync("/api/Companies", new CreateCompanyRequest { Name = "Example", CityId = Guid.NewGuid() })).StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, (await _client.PostAsJsonAsync("/api/Companies", new CreateCompanyRequest { Name = "Example", PostalCode = new string('x', 21) })).StatusCode);
         Assert.Equal(0, _repository.Writes);
+    }
+    [Fact]
+    public async Task Unchanged_hidden_reference_is_preserved_but_new_hidden_reference_is_rejected()
+    {
+        Permissions(AppPermissions.CompaniesUpdate);
+        var linked = Guid.NewGuid(); var id = Guid.NewGuid();
+        _repository.Item = new() { Id = id, Name = "Existing", CityId = linked, IsActive = true };
+        _repository.MissingCity = true;
+        var request = new UpdateCompanyRequest { Name = "Existing", CityId = linked, IsActive = true };
+        Assert.Equal(HttpStatusCode.OK, (await _client.PutAsJsonAsync("/api/Companies/" + id, request)).StatusCode);
+        request.CityId = Guid.NewGuid();
+        Assert.Equal(HttpStatusCode.NotFound, (await _client.PutAsJsonAsync("/api/Companies/" + id, request)).StatusCode);
+        Assert.Equal(1, _repository.Writes);
     }
     public void Dispose() { _client.Dispose(); _host.Dispose(); }
 

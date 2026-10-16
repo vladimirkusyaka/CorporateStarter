@@ -1,14 +1,17 @@
-﻿using CorporateStarter.Application.Common.Interfaces.Repositories.Directory.Persons;
-using CorporateStarter.Infrastructure.Persistence.Tables;
+﻿using CorporateStarter.Application.Common.Security;
 using CorporateStarter.Shared.Common;
+using CorporateStarter.Application.Common.Interfaces.Repositories.Directory.Persons;
+using CorporateStarter.Infrastructure.Persistence.Tables;
 using CorporateStarter.Shared.Dtos.Directory.Persons;
 using Microsoft.EntityFrameworkCore;
 namespace CorporateStarter.Infrastructure.Persistence.Repositories.Directory.Persons;
 
-public sealed class PersonTableRepository : SqlTableRepository<PersonListItemDto>, IPersonTableRepository
+public sealed class PersonTableRepository : ActiveSqlTableRepository<PersonListItemDto>, IPersonTableRepository
 {
     private readonly AppDbContext _db;
-    public PersonTableRepository(AppDbContext db) : base(db) => _db = db;
+    private readonly IEntityAccess _access;
+    public PersonTableRepository(AppDbContext db, IEntityAccess access) : base(db, access, "persons")
+    { _db = db; _access = access; }
     // Persons is the API name; the existing database table is People.
     // Optional relationships must not remove people from the result.
     protected override string Table => """
@@ -43,8 +46,7 @@ public sealed class PersonTableRepository : SqlTableRepository<PersonListItemDto
     public async Task<LookupOption[]> SearchCompaniesAsync(LookupRequest request, CancellationToken ct)
     {
         var text = LookupText(request);
-        // Preserve existing API behavior: inactive references may be assigned too.
-        return await _db.Companies.AsNoTracking()
+        return await _db.Companies.VisibleTo(_access, "companies").AsNoTracking()
             .Where(x => x.Name.ToLower().Contains(text) || (x.Code != null && x.Code.ToLower().Contains(text)))
             .OrderBy(x => x.Name).ThenBy(x => x.Id).Take(request.Limit)
             .Select(x => new LookupOption(x.Id, (x.Code == null ? "" : x.Code + " — ") + x.Name + (x.IsActive ? "" : " (Inactive)")))
@@ -53,7 +55,7 @@ public sealed class PersonTableRepository : SqlTableRepository<PersonListItemDto
     public async Task<LookupOption[]> SearchPositionsAsync(LookupRequest request, CancellationToken ct)
     {
         var text = LookupText(request);
-        return await _db.Positions.AsNoTracking().Where(x => x.Name.ToLower().Contains(text))
+        return await _db.Positions.VisibleTo(_access, "positions").AsNoTracking().Where(x => x.Name.ToLower().Contains(text))
             .OrderBy(x => x.Name).ThenBy(x => x.Id).Take(request.Limit)
             .Select(x => new LookupOption(x.Id, x.Name + (x.IsActive ? "" : " (Inactive)")))
             .ToArrayAsync(ct);

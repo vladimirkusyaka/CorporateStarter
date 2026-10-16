@@ -9,11 +9,8 @@ namespace CorporateStarter.Api.Controllers.Security;
 public sealed partial class RolesController
 {
     [HttpGet("capabilities"), Authorize(Policy = AppPermissions.RolesRead)]
-    public ActionResult<RoleCapabilities> Capabilities() => Ok(new RoleCapabilities(
-        new TableCapabilities(User.HasClaim("permission", AppPermissions.RolesCreate),
-            User.HasClaim("permission", AppPermissions.RolesUpdate),
-            User.HasClaim("permission", AppPermissions.RolesDelete), true,
-            User.HasClaim("permission", AppPermissions.RolesUpdate)),
+    public ActionResult<RoleCapabilities> Capabilities([FromServices] IEntityAccess access) => Ok(new RoleCapabilities(
+        access.For("roles"),
         User.HasClaim("permission", AppPermissions.RolesManagePermissions)));
 
     [HttpGet("permission-options"), Authorize(Policy = AppPermissions.RolesRead),

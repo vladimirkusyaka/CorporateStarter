@@ -19,9 +19,9 @@
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
             <MudDatePicker @bind-Date="BirthDate" Label="Date of birth" DateFormat="yyyy-MM-dd" Clearable="true"
                            Editable="true" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="Blocked" />
-            @if (IsEditing)
+            @if (IsEditing && _capabilities.ViewInactive)
             {
-                <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="Blocked" Label="Active" />
+                <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@(Blocked || !CanChangeActive)" Label="Active" />
             }
         </MudTabPanel>
         <MudTabPanel Text="Contacts" Disabled="@(Blocked || _confirmDiscard || _validating)">

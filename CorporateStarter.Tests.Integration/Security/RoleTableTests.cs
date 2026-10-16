@@ -55,6 +55,12 @@ public sealed class RoleTableTests(CorporateStarterApiFactory factory) : IClassF
             Assert.Equal(HttpStatusCode.Forbidden, (await client.PostAsJsonAsync("/api/Roles/" + endpoint, new { })).StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, (await client.GetAsync("/api/Roles/capabilities")).StatusCode);
         Permissions(AppPermissions.RolesRead);
+        var restricted = await Post<PagedResult<RoleListItemDto>>("query", query);
+        Assert.Equal(1, restricted.TotalCount);
+        Assert.Null((await Post<TableFindResult>("find", new TableFindRequest { Query = query, LocateId = inactiveId })).Id);
+        Assert.Equal(HttpStatusCode.Forbidden, (await client.PostAsJsonAsync("/api/Roles/filter-values",
+            new TableValuesRequest { Query = query, Field = "isActive" })).StatusCode);
+        Permissions(AppPermissions.RolesRead, AppPermissions.RolesViewInactive);
         var capabilities = (await client.GetFromJsonAsync<RoleCapabilities>("/api/Roles/capabilities"))!.Table;
         Assert.True(capabilities.ViewInactive);
         Assert.False(capabilities.CanCreate);
@@ -94,7 +100,7 @@ public sealed class RoleTableTests(CorporateStarterApiFactory factory) : IClassF
         var details = (await client.GetFromJsonAsync<RoleDetailsDto>($"/api/Roles/{id}"))!;
         Assert.Equal(permissionId, Assert.Single(details.Permissions).Id);
         Assert.Equal(HttpStatusCode.Forbidden, (await client.PutAsJsonAsync($"/api/Roles/{id}", new UpdateRoleRequest { Name = details.Name, PermissionIds = [] })).StatusCode);
-        Permissions(AppPermissions.RolesRead, AppPermissions.RolesUpdate, AppPermissions.RolesDelete, AppPermissions.RolesManagePermissions);
+        Permissions(AppPermissions.RolesRead, AppPermissions.RolesViewInactive, AppPermissions.RolesUpdate, AppPermissions.RolesDelete, AppPermissions.RolesManagePermissions);
         (await client.PutAsJsonAsync($"/api/Roles/{id}", new UpdateRoleRequest { Name = details.Name, PermissionIds = [] })).EnsureSuccessStatusCode();
         Assert.Empty((await client.GetFromJsonAsync<RoleDetailsDto>($"/api/Roles/{id}"))!.Permissions);
         (await client.DeleteAsync($"/api/Roles/{id}")).EnsureSuccessStatusCode();

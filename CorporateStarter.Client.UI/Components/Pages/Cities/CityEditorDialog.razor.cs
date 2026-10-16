@@ -13,7 +13,7 @@ public partial class CityEditorDialog : RecordEditorBase<UpdateCityRequest, City
     private LookupOption? _country;
     private (string, string?, Guid, bool) _baseline;
     protected override bool IsDirty => (_model.Name, _model.Region, _model.CountryId, _model.IsActive) != _baseline;
-    protected override void CaptureBaseline() => _baseline = (_model.Name, _model.Region, _model.CountryId, _model.IsActive);
+    protected override void CaptureBaseline() { OriginalActive = _model.IsActive; _baseline = (_model.Name, _model.Region, _model.CountryId, _model.IsActive); }
     protected override string ConflictMessage => "A city with this name and region already exists in the selected country.";
     protected override string SaveNotFoundMessage => "The city or selected country no longer exists. Reload the record or select another country.";
     protected override Task<TableCapabilities> LoadCapabilitiesAsync(CancellationToken ct) => Client.GetCapabilitiesAsync(ct);

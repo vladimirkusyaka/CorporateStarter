@@ -57,111 +57,7 @@
                     <MudIcon Icon="@Icons.Material.Filled.GridView" Size="Size.Small" Class="cs-drawer-header-icon" />
                 </MudStack>
 
-                <MudNavMenu Dense="true" Class="cs-nav">
-                    <MudNavLink Href="/"
-                                Match="NavLinkMatch.All"
-                                Icon="@Icons.Material.Filled.Dashboard"
-                                Class="cs-nav-link">
-                        Dashboard
-                    </MudNavLink>
-
-                    @if (DrawerOpen)
-                    {
-                        <MudNavGroup Title="Directory"
-                                     Icon="@Icons.Material.Filled.Business"
-                                     Expanded="true"
-                                     Class="cs-nav-group">
-                            <MudNavLink Href="/companies" Icon="@Icons.Material.Filled.Apartment">Companies</MudNavLink>
-                            <MudNavLink Href="/persons" Icon="@Icons.Material.Filled.People">Persons</MudNavLink>
-                        </MudNavGroup>
-                    }
-                    else
-                    {
-                        <MudMenu Icon="@Icons.Material.Filled.Business" AriaLabel="Directory"
-                                 ActivationEvent="MouseEvent.MouseOver"
-                                 AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopLeft"
-                                 Dense="true" Class="cs-nav-flyout" PopoverClass="cs-nav-popup">
-                            <ChildContent>
-                                <div class="cs-nav-popup-title">Directory</div>
-                                <MudMenuItem Href="/companies" Icon="@Icons.Material.Filled.Apartment">Companies</MudMenuItem>
-                                <MudMenuItem Href="/persons" Icon="@Icons.Material.Filled.People">Persons</MudMenuItem>
-                            </ChildContent>
-                        </MudMenu>
-                    }
-
-                    @if (DrawerOpen)
-                    {
-                        <MudNavGroup Title="Master Data"
-                                     Icon="@Icons.Material.Filled.Storage"
-                                     Class="cs-nav-group">
-                            <MudNavLink Href="/countries" Icon="@Icons.Material.Filled.Public">Countries</MudNavLink>
-                            <MudNavLink Href="/cities" Icon="@Icons.Material.Filled.LocationCity">Cities</MudNavLink>
-                            <MudNavLink Href="/positions" Icon="@Icons.Material.Filled.Badge">Positions</MudNavLink>
-                        </MudNavGroup>
-                    }
-                    else
-                    {
-                        <MudMenu Icon="@Icons.Material.Filled.Storage" AriaLabel="Master Data"
-                                 ActivationEvent="MouseEvent.MouseOver"
-                                 AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopLeft"
-                                 Dense="true" Class="cs-nav-flyout" PopoverClass="cs-nav-popup">
-                            <ChildContent>
-                                <div class="cs-nav-popup-title">Master Data</div>
-                                <MudMenuItem Href="/countries" Icon="@Icons.Material.Filled.Public">Countries</MudMenuItem>
-                                <MudMenuItem Href="/cities" Icon="@Icons.Material.Filled.LocationCity">Cities</MudMenuItem>
-                                <MudMenuItem Href="/positions" Icon="@Icons.Material.Filled.Badge">Positions</MudMenuItem>
-                            </ChildContent>
-                        </MudMenu>
-                    }
-
-                    @if (DrawerOpen)
-                    {
-                        <MudNavGroup Title="Security"
-                                     Icon="@Icons.Material.Filled.Security"
-                                     Class="cs-nav-group">
-                            <MudNavLink Href="/users" Icon="@Icons.Material.Filled.ManageAccounts">Users</MudNavLink>
-                            <MudNavLink Href="/roles" Icon="@Icons.Material.Filled.AdminPanelSettings">Roles</MudNavLink>
-                            <MudNavLink Href="/permissions" Icon="@Icons.Material.Filled.Key">Permissions</MudNavLink>
-                        </MudNavGroup>
-                    }
-                    else
-                    {
-                        <MudMenu Icon="@Icons.Material.Filled.Security" AriaLabel="Security"
-                                 ActivationEvent="MouseEvent.MouseOver"
-                                 AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopLeft"
-                                 Dense="true" Class="cs-nav-flyout" PopoverClass="cs-nav-popup">
-                            <ChildContent>
-                                <div class="cs-nav-popup-title">Security</div>
-                                <MudMenuItem Href="/users" Icon="@Icons.Material.Filled.ManageAccounts">Users</MudMenuItem>
-                                <MudMenuItem Href="/roles" Icon="@Icons.Material.Filled.AdminPanelSettings">Roles</MudMenuItem>
-                                <MudMenuItem Href="/permissions" Icon="@Icons.Material.Filled.Key">Permissions</MudMenuItem>
-                            </ChildContent>
-                        </MudMenu>
-                    }
-
-                    @if (DrawerOpen)
-                    {
-                        <MudNavGroup Title="Audit"
-                                     Icon="@Icons.Material.Filled.History"
-                                     Class="cs-nav-group">
-                            <MudNavLink Href="/changes" Icon="@Icons.Material.Filled.Feed">Changes</MudNavLink>
-                            <MudNavLink Href="/security-events" Icon="@Icons.Material.Filled.Security">Security events</MudNavLink>
-                        </MudNavGroup>
-                    }
-                    else
-                    {
-                        <MudMenu Icon="@Icons.Material.Filled.History" AriaLabel="Audit"
-                                 ActivationEvent="MouseEvent.MouseOver"
-                                 AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopLeft"
-                                 Dense="true" Class="cs-nav-flyout" PopoverClass="cs-nav-popup">
-                            <ChildContent>
-                                <div class="cs-nav-popup-title">Audit</div>
-                                <MudNavLink Href="/changes" Icon="@Icons.Material.Filled.Feed">Changes</MudNavLink>
-                                <MudNavLink Href="/security-events" Icon="@Icons.Material.Filled.Security">Security events</MudNavLink>
-                            </ChildContent>
-                        </MudMenu>
-                    }
-                </MudNavMenu>
+                <PermissionNavigation Expanded="DrawerOpen" @key="_snapshot.SessionGeneration" />
             </MudDrawer>
 
             <MudMainContent Class="cs-main">
@@ -172,7 +68,7 @@
                              hidden="@(!ShowAuthorizedContent)"
                              inert="@(!IsAuthenticated && !IsQuietSessionCheck)">
                             <SessionContent CanRender="@IsAuthenticated">
-                                <ProfileScope>@_authorizedBody</ProfileScope>
+                                <ProfileScope><PermissionContent>@_authorizedBody</PermissionContent></ProfileScope>
                             </SessionContent>
                         </div>
                     }

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Shared.Common;
+using Microsoft.EntityFrameworkCore;
 using Mapster;
 using CorporateStarter.Application.Common.Interfaces.Repositories;
 using CorporateStarter.Application.Common.Interfaces.Repositories.MasterData.Positions;
@@ -9,16 +11,18 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Po
 public sealed class PositionReadRepository : IPositionReadRepository
 {
     private readonly AppDbContext _dbContext;
+    private readonly IEntityAccess _access;
 
-    public PositionReadRepository(AppDbContext dbContext)
+    public PositionReadRepository(AppDbContext dbContext, IEntityAccess access)
     {
         _dbContext = dbContext;
+        _access = access;
     }
 
     public async Task<IReadOnlyList<PositionListItemDto>> GetListAsync(
         CancellationToken cancellationToken)
     {
-        return await _dbContext.Positions
+        return await _dbContext.Positions.VisibleTo(_access, "positions")
             .AsNoTracking()
             .OrderBy(x => x.Name)
             .ProjectToType<PositionListItemDto>()
@@ -29,7 +33,7 @@ public sealed class PositionReadRepository : IPositionReadRepository
         Guid id,
         CancellationToken cancellationToken)
     {
-        return await _dbContext.Positions
+        return await _dbContext.Positions.VisibleTo(_access, "positions")
             .AsNoTracking()
             .Where(x => x.Id == id)
             .ProjectToType<PositionDetailsDto>()
@@ -40,7 +44,7 @@ public sealed class PositionReadRepository : IPositionReadRepository
     Guid id,
     CancellationToken cancellationToken)
     {
-        return await _dbContext.Positions
+        return await _dbContext.Positions.VisibleTo(_access, "positions")
             .AsNoTracking()
             .AnyAsync(x => x.Id == id, cancellationToken);
     }

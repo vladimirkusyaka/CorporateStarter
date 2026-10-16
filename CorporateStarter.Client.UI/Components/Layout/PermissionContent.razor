@@ -1,0 +1,15 @@
+﻿@using CorporateStarter.Client.Core.Auth
+@using Microsoft.AspNetCore.Components.Routing
+
+@if (Permissions.IsLoaded)
+{
+    @if (NavigationCatalog.RequiredPermission(Navigation.ToBaseRelativePath(Navigation.Uri)) is { } code && !Permissions.Has(code))
+    {
+        <MudAlert Severity="Severity.Warning" role="alert">You do not have permission to open this page.</MudAlert>
+    }
+    else
+    {
+
+        @ChildContent
+    }
+}

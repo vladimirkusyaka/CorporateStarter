@@ -1,10 +1,12 @@
+using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Shared.Common;
 using CorporateStarter.Application.Common.Interfaces.Repositories.Security;
 using CorporateStarter.Infrastructure.Persistence.Tables;
 using CorporateStarter.Shared.Dtos.Security.Users;
 namespace CorporateStarter.Infrastructure.Persistence.Repositories.Security;
 
-public sealed class UserTableRepository(AppDbContext db)
-    : SqlTableRepository<UserTableItemDto>(db), IUserTableRepository
+public sealed class UserTableRepository(AppDbContext db, IEntityAccess access)
+    : ActiveSqlTableRepository<UserTableItemDto>(db, access, "users"), IUserTableRepository
 {
     protected override string Table => "\"Users\"";
     protected override string Projection => "\"Id\", \"Login\", \"Email\", \"DisplayName\", \"IsActive\"";

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CorporateStarter.Application.Common.Security;
+using CorporateStarter.Shared.Common;
+using Microsoft.EntityFrameworkCore;
 using Mapster;
 using CorporateStarter.Application.Common.Interfaces.Repositories.MasterData.Positions;
 using CorporateStarter.Application.MasterData.Positions.Models;
@@ -9,13 +11,16 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.MasterData.Po
 public sealed class PositionWriteRepository : IPositionWriteRepository
 {
     private readonly AppDbContext _dbContext;
+    private readonly IEntityAccess _access;
 
-    public PositionWriteRepository(AppDbContext dbContext) => _dbContext = dbContext;
+    public PositionWriteRepository(AppDbContext dbContext, IEntityAccess access)
+    { _dbContext = dbContext; _access = access; }
 
     public async Task<Position> AddAsync(
         PositionWriteValues values,
         CancellationToken cancellationToken)
     {
+        _access.For("positions").RequireStatusChange(true, values.IsActive);
         var position = values.Adapt<Position>();
         position.Id = Guid.NewGuid();
         position.CreatedAtUtc = DateTime.UtcNow;
@@ -33,12 +38,13 @@ public sealed class PositionWriteRepository : IPositionWriteRepository
         if (values.Id is null)
             return false;
 
-        var position = await _dbContext.Positions
+        var position = await _dbContext.Positions.VisibleTo(_access, "positions")
             .FirstOrDefaultAsync(x => x.Id == values.Id.Value, cancellationToken);
 
         if (position is null)
             return false;
 
+        _access.For("positions").RequireStatusChange(position.IsActive, values.IsActive);
         values.Adapt(position);
         position.UpdatedAtUtc = DateTime.UtcNow;
 
@@ -49,7 +55,7 @@ public sealed class PositionWriteRepository : IPositionWriteRepository
         Guid id,
         CancellationToken cancellationToken)
     {
-        var position = await _dbContext.Positions
+        var position = await _dbContext.Positions.VisibleTo(_access, "positions")
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         if (position is null)

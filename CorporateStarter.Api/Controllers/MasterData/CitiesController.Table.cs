@@ -9,11 +9,7 @@ namespace CorporateStarter.Api.Controllers.MasterData;
 public sealed partial class CitiesController
 {
     [HttpGet("capabilities"), Authorize(Policy = AppPermissions.CitiesRead)]
-    public ActionResult<TableCapabilities> Capabilities() => Ok(new TableCapabilities(
-        User.HasClaim("permission", AppPermissions.CitiesCreate),
-        User.HasClaim("permission", AppPermissions.CitiesUpdate),
-        User.HasClaim("permission", AppPermissions.CitiesDelete),
-        true, User.HasClaim("permission", AppPermissions.CitiesUpdate)));
+    public ActionResult<TableCapabilities> Capabilities([FromServices] IEntityAccess access) => Ok(access.For("cities"));
     [HttpPost("query"), Authorize(Policy = AppPermissions.CitiesRead)]
     public async Task<ActionResult<PagedResult<CityListItemDto>>> Query(TableRequest request,
         [FromServices] ICityTableRepository repository, CancellationToken ct) => Ok(await repository.QueryAsync(request, ct));

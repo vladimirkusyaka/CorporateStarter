@@ -54,6 +54,12 @@ public sealed class PositionTableTests(CorporateStarterApiFactory factory) : ICl
             Assert.Equal(HttpStatusCode.Forbidden, (await client.PostAsJsonAsync("/api/Positions/" + endpoint, new { })).StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, (await client.GetAsync("/api/Positions/capabilities")).StatusCode);
         Permissions(AppPermissions.PositionsRead);
+        var restricted = await Post<PagedResult<PositionListItemDto>>("query", query);
+        Assert.Equal(1, restricted.TotalCount);
+        Assert.Null((await Post<TableFindResult>("find", new TableFindRequest { Query = query, LocateId = inactiveId })).Id);
+        Assert.Equal(HttpStatusCode.Forbidden, (await client.PostAsJsonAsync("/api/Positions/filter-values",
+            new TableValuesRequest { Query = query, Field = "isActive" })).StatusCode);
+        Permissions(AppPermissions.PositionsRead, AppPermissions.PositionsViewInactive);
         var capabilities = (await client.GetFromJsonAsync<TableCapabilities>("/api/Positions/capabilities"))!;
         Assert.True(capabilities.ViewInactive);
         Assert.False(capabilities.CanUpdate);
@@ -78,11 +84,26 @@ public sealed class PositionTableTests(CorporateStarterApiFactory factory) : ICl
         query.Sorts = [new("name; DROP TABLE Positions")];
         Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync("/api/Positions/query", query)).StatusCode);
         Permissions(AppPermissions.PositionsRead, AppPermissions.PositionsUpdate);
+        Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync($"/api/Positions/{inactiveId}")).StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, (await client.PutAsJsonAsync($"/api/Positions/{activeId}",
+            new UpdatePositionRequest { Name = prefix + " Alpha", IsActive = false })).StatusCode);
+        Permissions(AppPermissions.PositionsRead, AppPermissions.PositionsUpdate, AppPermissions.PositionsViewInactive);
+        Assert.Equal(HttpStatusCode.Forbidden, (await client.PutAsJsonAsync($"/api/Positions/{inactiveId}",
+            new UpdatePositionRequest { Name = prefix + " Beta", IsActive = true })).StatusCode);
+        var unchanged = await client.PutAsJsonAsync($"/api/Positions/{inactiveId}",
+            new UpdatePositionRequest { Name = prefix + " Beta", IsActive = false, Description = "Still inactive" });
+        unchanged.EnsureSuccessStatusCode();
+        Permissions(AppPermissions.PositionsRead, AppPermissions.PositionsUpdate, AppPermissions.PositionsViewInactive, AppPermissions.PositionsDelete);
+        var deactivated = await client.PutAsJsonAsync($"/api/Positions/{activeId}",
+            new UpdatePositionRequest { Name = prefix + " Alpha", IsActive = false });
+        deactivated.EnsureSuccessStatusCode();
+        Assert.False((await deactivated.Content.ReadFromJsonAsync<PositionDetailsDto>())!.IsActive);
+        Permissions(AppPermissions.PositionsRead, AppPermissions.PositionsViewInactive, AppPermissions.PositionsRestore, AppPermissions.PositionsUpdate);
         var updated = await client.PutAsJsonAsync($"/api/Positions/{inactiveId}", new UpdatePositionRequest { Name = prefix + " Beta", IsActive = true });
         updated.EnsureSuccessStatusCode();
         Assert.True((await updated.Content.ReadFromJsonAsync<PositionDetailsDto>())!.IsActive);
         Assert.Equal(HttpStatusCode.Forbidden, (await client.DeleteAsync($"/api/Positions/{activeId}")).StatusCode);
-        Permissions(AppPermissions.PositionsRead, AppPermissions.PositionsDelete);
+        Permissions(AppPermissions.PositionsRead, AppPermissions.PositionsViewInactive, AppPermissions.PositionsDelete);
         Assert.Equal(HttpStatusCode.NoContent, (await client.DeleteAsync($"/api/Positions/{activeId}")).StatusCode);
         Assert.False((await client.GetFromJsonAsync<PositionDetailsDto>($"/api/Positions/{activeId}"))!.IsActive);
         Permissions(AppPermissions.PositionsRead, AppPermissions.PositionsCreate);
