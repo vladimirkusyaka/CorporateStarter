@@ -66,6 +66,9 @@ namespace CorporateStarter.Infrastructure.Migrations
                     .HasMaxLength(256)
                     .HasColumnType("character varying(256)");
 
+                b.Property<string>("EntityDisplayName").HasColumnType("text");
+                b.Property<string>("CorrelationId").HasMaxLength(100).HasColumnType("character varying(100)");
+                b.HasIndex("CorrelationId");
                 b.HasKey("Id");
 
                 b.ToTable("AuditLogs", (string)null);
@@ -685,6 +688,7 @@ namespace CorporateStarter.Infrastructure.Migrations
                     .HasMaxLength(512)
                     .HasColumnType("character varying(512)");
 
+                b.Property<string>("SubjectUserDisplayName").HasColumnType("text");
                 b.HasKey("Id");
 
                 b.HasIndex("CorrelationId");

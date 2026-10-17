@@ -8,7 +8,10 @@ public sealed class SecurityEventRowDto
     public string EventType { get; set; } = "";
     public string Severity { get; set; } = "";
     public string Outcome { get; set; } = "";
+    public Guid? SubjectUserId { get; set; }
     public string? SubjectUserEmail { get; set; }
+    public string? SubjectUserDisplayName { get; set; }
+
     public string? IpAddress { get; set; }
     public string? CorrelationId { get; set; }
 }

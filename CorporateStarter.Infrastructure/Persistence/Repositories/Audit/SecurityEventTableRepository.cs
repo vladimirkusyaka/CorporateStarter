@@ -11,7 +11,7 @@ public sealed class SecurityEventTableRepository : SqlTableRepository<SecurityEv
     public SecurityEventTableRepository(AppDbContext db) : base(db) => _db = db;
     protected override string Table => "\"SecurityEvents\"";
     protected override string Projection => """
-        "Id", "CreatedAtUtc", "EventType", "Severity", "Outcome", "SubjectUserEmail", "IpAddress", "CorrelationId"
+        "Id", "CreatedAtUtc", "EventType", "Severity", "Outcome", "SubjectUserEmail", "SubjectUserDisplayName", "SubjectUserId", "IpAddress", "CorrelationId"
         """;
     protected override string DefaultOrder => "\"CreatedAtUtc\" desc";
     protected override IReadOnlyDictionary<string, SqlTableColumn> Columns { get; } = new Dictionary<string, SqlTableColumn>(StringComparer.OrdinalIgnoreCase)
@@ -20,6 +20,9 @@ public sealed class SecurityEventTableRepository : SqlTableRepository<SecurityEv
         ["eventType"] = new("\"EventType\""),
         ["severity"] = new("\"Severity\""),
         ["outcome"] = new("\"Outcome\""),
+        ["id"] = new("\"Id\"::text"),
+        ["subjectUserId"] = new("\"SubjectUserId\"::text"),
+        ["subjectUserDisplayName"] = new("coalesce(\"SubjectUserDisplayName\", \"SubjectUserEmail\", \"SubjectUserId\"::text)"),
         ["subjectUserEmail"] = new("\"SubjectUserEmail\""),
         ["ipAddress"] = new("\"IpAddress\""),
         ["correlationId"] = new("\"CorrelationId\"")
@@ -35,6 +38,7 @@ public sealed class SecurityEventTableRepository : SqlTableRepository<SecurityEv
             Outcome = x.Outcome,
             SubjectUserId = x.SubjectUserId,
             SubjectUserEmail = x.SubjectUserEmail,
+            SubjectUserDisplayName = x.SubjectUserDisplayName,
             AuthSessionId = x.AuthSessionId,
             RefreshTokenFamilyId = x.RefreshTokenFamilyId,
             CorrelationId = x.CorrelationId,

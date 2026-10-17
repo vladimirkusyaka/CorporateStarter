@@ -8,7 +8,10 @@
         <dl class="change-metadata">
             <dt>Date (@Preferences.ZoneLabel)</dt><dd>@Preferences.Format(item.CreatedAtUtc)</dd>
             <dt>Entity</dt><dd>@item.EntityName</dd>
-            <dt>Record</dt><dd>@item.EntityId</dd>
+            <dt>Record</dt><dd>@(item.EntityDisplayName ?? item.EntityId)</dd>
+            <dt>Record ID</dt><dd><CopyIdentifier Value="@item.EntityId" Label="record ID" /></dd>
+            <dt>Change ID</dt><dd><CopyIdentifier Value="@(item.Id.ToString())" Label="change ID" /></dd>
+            <dt>Correlation ID</dt><dd><CopyIdentifier Value="@item.CorrelationId" Label="correlation ID" /></dd>
             <dt>Action</dt><dd>@item.Action</dd>
             <dt>User</dt><dd>@(item.UserEmail ?? "—")</dd>
         </dl>

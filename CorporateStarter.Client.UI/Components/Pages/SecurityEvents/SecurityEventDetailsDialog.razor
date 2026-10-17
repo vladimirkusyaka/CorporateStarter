@@ -16,15 +16,17 @@
             <dt>Outcome</dt>
             <dd>@item.Outcome</dd>
             <dt>User</dt>
-            <dd>@(item.SubjectUserEmail ?? "Not recorded")</dd>
+            <dd>@(item.SubjectUserDisplayName ?? item.SubjectUserEmail ?? item.SubjectUserId?.ToString() ?? "Not recorded")</dd>
+            <dt>Email</dt><dd>@(item.SubjectUserEmail ?? "Not recorded")</dd>
+            <dt>Event ID</dt><dd><CopyIdentifier Value="@(item.Id.ToString())" Label="event ID" /></dd>
             <dt>User ID</dt>
-            <dd>@(item.SubjectUserId?.ToString() ?? "Not recorded")</dd>
+            <dd><CopyIdentifier Value="@(item.SubjectUserId?.ToString())" Label="user ID" /></dd>
             <dt>Session ID</dt>
             <dd>@(item.AuthSessionId?.ToString() ?? "Not recorded")</dd>
             <dt>Token family ID</dt>
             <dd>@(item.RefreshTokenFamilyId?.ToString() ?? "Not recorded")</dd>
             <dt>Correlation ID</dt>
-            <dd>@(item.CorrelationId ?? "Not recorded")</dd>
+            <dd><CopyIdentifier Value="@item.CorrelationId" Label="correlation ID" /></dd>
             <dt>IP address</dt>
             <dd>@(item.IpAddress ?? "Not recorded")</dd>
             <dt>User agent</dt>

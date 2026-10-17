@@ -109,6 +109,7 @@ namespace CorporateStarter.Infrastructure.Persistence.Repositories.Audit
                     Outcome = x.Outcome,
                     SubjectUserId = x.SubjectUserId,
                     SubjectUserEmail = x.SubjectUserEmail,
+                    SubjectUserDisplayName = x.SubjectUserDisplayName,
                     AuthSessionId = x.AuthSessionId,
                     RefreshTokenFamilyId = x.RefreshTokenFamilyId,
                     CorrelationId = x.CorrelationId,

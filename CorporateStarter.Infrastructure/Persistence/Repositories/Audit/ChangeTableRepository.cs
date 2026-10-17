@@ -12,7 +12,7 @@ public sealed class ChangeTableRepository : SqlTableRepository<ChangeListItemDto
     private static readonly string[] TechnicalEntities = ["SecurityEvent", "AuthSession", "RefreshToken", "RefreshTokenFamily", "LoginAttemptState", "PasswordHistory"];
     protected override string Table => "\"AuditLogs\"";
     protected override string Projection => """
-        "Id", "EntityName", "EntityId", "Action", "UserEmail", "CreatedAtUtc"
+        "Id", "EntityName", "EntityId", "EntityDisplayName", "CorrelationId", "Action", "UserEmail", "CreatedAtUtc"
         """;
     protected override string SecurityPredicate => "\"EntityName\" NOT IN (" + string.Join(",", TechnicalEntities.Select(x => "'" + x + "'")) + ")";
     protected override string DefaultOrder => "\"CreatedAtUtc\" desc";
@@ -21,6 +21,9 @@ public sealed class ChangeTableRepository : SqlTableRepository<ChangeListItemDto
         ["createdAtUtc"] = new("to_char(\"CreatedAtUtc\" AT TIME ZONE 'UTC', 'YYYY-MM-DD HH24:MI:SS')"),
         ["entityName"] = new("\"EntityName\""),
         ["entityId"] = new("\"EntityId\""),
+        ["id"] = new("\"Id\"::text"),
+        ["entityDisplayName"] = new("coalesce(\"EntityDisplayName\", \"EntityId\")"),
+        ["correlationId"] = new("\"CorrelationId\""),
         ["action"] = new("\"Action\""),
         ["userEmail"] = new("\"UserEmail\"")
     };
@@ -31,6 +34,8 @@ public sealed class ChangeTableRepository : SqlTableRepository<ChangeListItemDto
             Id = x.Id,
             EntityName = x.EntityName,
             EntityId = x.EntityId,
+            EntityDisplayName = x.EntityDisplayName,
+            CorrelationId = x.CorrelationId,
             Action = x.Action,
             UserEmail = x.UserEmail,
             CreatedAtUtc = x.CreatedAtUtc,

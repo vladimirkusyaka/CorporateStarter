@@ -7,6 +7,9 @@ public class AuditLog
     public string EntityName { get; set; } = string.Empty;
 
     public string EntityId { get; set; } = string.Empty;
+    public string? EntityDisplayName { get; set; }
+    public string? CorrelationId { get; set; }
+
 
     public string Action { get; set; } = string.Empty;
 

@@ -1,0 +1,7 @@
+﻿<span>@(string.IsNullOrWhiteSpace(Value) ? "Not recorded" : Value)</span>
+@if (!string.IsNullOrWhiteSpace(Value))
+{
+    <MudIconButton Icon="@Icons.Material.Outlined.ContentCopy" Size="Size.Small"
+                   OnClick="CopyAsync" aria-label="@($"Copy {Label}")" title="@($"Copy {Label}")" />
+}
+<span role="status" aria-live="polite">@_status</span>

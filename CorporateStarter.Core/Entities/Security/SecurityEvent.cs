@@ -19,6 +19,8 @@ namespace CorporateStarter.Core.Entities.Security
         public Guid? SubjectUserId { get; set; }
 
         public string? SubjectUserEmail { get; set; }
+        public string? SubjectUserDisplayName { get; set; }
+
 
         public Guid? AuthSessionId { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using CorporateStarter.Application.Common.Interfaces.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using CorporateStarter.Application.Common.Interfaces;
@@ -33,21 +34,25 @@ public class AppDbContext : DbContext
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     private readonly ICurrentUserService? _currentUserService;
+    private readonly ICorrelationIdProvider? _correlationIdProvider;
 
     public AppDbContext(
         DbContextOptions<AppDbContext> options,
-        ICurrentUserService? currentUserService = null)
+        ICurrentUserService? currentUserService = null,
+        ICorrelationIdProvider? correlationIdProvider = null)
         : base(options)
     {
         _currentUserService = currentUserService;
+        _correlationIdProvider = correlationIdProvider;
     }
 
-    public override Task<int> SaveChangesAsync(
+    public override async Task<int> SaveChangesAsync(
     CancellationToken cancellationToken = default)
     {
+        await CaptureSecurityEventNamesAsync(cancellationToken);
         AddAuditLogs();
 
-        return base.SaveChangesAsync(cancellationToken);
+        return await base.SaveChangesAsync(cancellationToken);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -90,6 +95,37 @@ public class AppDbContext : DbContext
         ConfigureCities(modelBuilder);
 
         ConfigureAuditLogs(modelBuilder);
+        modelBuilder.Entity<AuditLog>().Property(x => x.EntityDisplayName).HasColumnType("text");
+        modelBuilder.Entity<AuditLog>().Property(x => x.CorrelationId).HasMaxLength(100);
+        modelBuilder.Entity<AuditLog>().HasIndex(x => x.CorrelationId);
+        modelBuilder.Entity<SecurityEvent>().Property(x => x.SubjectUserDisplayName).HasColumnType("text");
+    }
+
+    private async Task CaptureSecurityEventNamesAsync(CancellationToken ct)
+    {
+        var events = ChangeTracker.Entries<SecurityEvent>()
+            .Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToArray();
+        if (events.Length == 0) return;
+
+        // Auth flows normally already track the user. Query missing users once per save,
+        // never when reading historical events and never from the client.
+        var users = ChangeTracker.Entries<User>().ToDictionary(x => x.Entity.Id, x => x.Entity);
+        var missing = events.Where(x => x.SubjectUserDisplayName is null && x.SubjectUserId.HasValue)
+            .Select(x => x.SubjectUserId!.Value).Distinct().Where(x => !users.ContainsKey(x)).ToArray();
+        if (missing.Length > 0)
+        {
+            var stored = await Users.AsNoTracking().Where(x => missing.Contains(x.Id))
+                .Select(x => new { x.Id, x.DisplayName, x.Login }).ToListAsync(ct);
+            foreach (var user in stored)
+                users[user.Id] = new User { Id = user.Id, DisplayName = user.DisplayName, Login = user.Login };
+        }
+        foreach (var item in events)
+        {
+            item.CorrelationId ??= _correlationIdProvider?.CorrelationId;
+            if (item.SubjectUserDisplayName is null && item.SubjectUserId is { } id && users.TryGetValue(id, out var user))
+                item.SubjectUserDisplayName = AuditRecordName.FromValues("User", new Dictionary<string, object?>
+                { ["DisplayName"] = user.DisplayName, ["Login"] = user.Login });
+        }
     }
 
     private void AddAuditLogs()
@@ -131,6 +167,8 @@ public class AppDbContext : DbContext
         {
             EntityName = entityName,
             EntityId = entityId,
+            EntityDisplayName = AuditRecordName.FromValues(entityName, newValues ?? oldValues!),
+            CorrelationId = _correlationIdProvider?.CorrelationId,
             Action = action,
             UserEmail = GetAuditUser(),
             OldValuesJson = oldValues is null ? null : JsonSerializer.Serialize(oldValues),

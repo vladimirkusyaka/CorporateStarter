@@ -24,9 +24,13 @@ public sealed partial class ClientApiClient
         _session = session;
     }
 
-    public async Task<ClientApiResponse> GetAsync(
+    public Task<ClientApiResponse> GetAsync(
         string relativePath,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default) =>
+        SendReadAsync(HttpMethod.Get, relativePath, null, cancellationToken);
+
+    private async Task<ClientApiResponse> SendReadAsync(
+        HttpMethod method, string relativePath, string? jsonBody, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(relativePath);
         cancellationToken.ThrowIfCancellationRequested();
@@ -50,8 +54,8 @@ public sealed partial class ClientApiClient
             try
             {
                 response = await _transport.SendAsync(
-                    HttpMethod.Get, relativePath, requestSession.UserId!.Value,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
+                    method, relativePath, requestSession.UserId!.Value,
+                    jsonBody, cancellationToken).ConfigureAwait(false);
 
                 if (response is null)
                     throw new ClientApiTransportException("The API transport returned no response.");
