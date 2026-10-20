@@ -1,0 +1,1305 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <data name=" (active)" xml:space="preserve">
+    <value> (активен)</value>
+  </data>
+  <data name=" (inactive)" xml:space="preserve">
+    <value> (неактивна)</value>
+  </data>
+  <data name=" (unavailable)" xml:space="preserve">
+    <value> (недоступна)</value>
+  </data>
+  <data name="(Empty)" xml:space="preserve">
+    <value>(Пусто)</value>
+  </data>
+  <data name="A city with this name and region already exists in the selected country." xml:space="preserve">
+    <value>Город с таким названием и регионом уже существует в выбранной стране.</value>
+  </data>
+  <data name="A company with this code already exists." xml:space="preserve">
+    <value>Компания с таким кодом уже существует.</value>
+  </data>
+  <data name="A company with this name already exists." xml:space="preserve">
+    <value>Компания с таким названием уже существует.</value>
+  </data>
+  <data name="A company with this name or code already exists." xml:space="preserve">
+    <value>Компания с таким названием или кодом уже существует.</value>
+  </data>
+  <data name="A country with this code or name already exists." xml:space="preserve">
+    <value>Страна с таким кодом или названием уже существует.</value>
+  </data>
+  <data name="A position with this name already exists." xml:space="preserve">
+    <value>Должность с таким названием уже существует.</value>
+  </data>
+  <data name="A role with this name already exists." xml:space="preserve">
+    <value>Роль с таким названием уже существует.</value>
+  </data>
+  <data name="A secure context and Web Locks support are required." xml:space="preserve">
+    <value>Требуются безопасное соединение и поддержка Web Locks.</value>
+  </data>
+  <data name="A shared workspace for your team, your data and your daily work." xml:space="preserve">
+    <value>Общее пространство для вашей команды, данных и ежедневной работы.</value>
+  </data>
+  <data name="A user with this email already exists." xml:space="preserve">
+    <value>Пользователь с таким email уже существует.</value>
+  </data>
+  <data name="A user with this login already exists." xml:space="preserve">
+    <value>Пользователь с таким логином уже существует.</value>
+  </data>
+  <data name="A user with this login or email already exists." xml:space="preserve">
+    <value>Пользователь с таким логином или email уже существует.</value>
+  </data>
+  <data name="A valid sign-in is required to load records." xml:space="preserve">
+    <value>Для загрузки записей необходимо войти в систему.</value>
+  </data>
+  <data name="API build (UTC)" xml:space="preserve">
+    <value>Сборка API (UTC)</value>
+  </data>
+  <data name="API endpoint (browser)" xml:space="preserve">
+    <value>Адрес API (браузер)</value>
+  </data>
+  <data name="API version" xml:space="preserve">
+    <value>Версия API</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>О приложении</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>Учётная запись</value>
+  </data>
+  <data name="Account saved." xml:space="preserve">
+    <value>Учётная запись сохранена.</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Действие</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Активен</value>
+  </data>
+  <data name="Add city" xml:space="preserve">
+    <value>Добавить город</value>
+  </data>
+  <data name="Add company" xml:space="preserve">
+    <value>Добавить компанию</value>
+  </data>
+  <data name="Add country" xml:space="preserve">
+    <value>Добавить страну</value>
+  </data>
+  <data name="Add person" xml:space="preserve">
+    <value>Добавить персону</value>
+  </data>
+  <data name="Add position" xml:space="preserve">
+    <value>Добавить должность</value>
+  </data>
+  <data name="Add record" xml:space="preserve">
+    <value>Добавить запись</value>
+  </data>
+  <data name="Add role" xml:space="preserve">
+    <value>Добавить роль</value>
+  </data>
+  <data name="Add tab" xml:space="preserve">
+    <value>Добавить вкладку</value>
+  </data>
+  <data name="Add user" xml:space="preserve">
+    <value>Добавить пользователя</value>
+  </data>
+  <data name="Additional details" xml:space="preserve">
+    <value>Дополнительные сведения</value>
+  </data>
+  <data name="Additional verification is required. This sign-in screen does not support it yet." xml:space="preserve">
+    <value>Требуется дополнительная проверка. Эта страница входа её пока не поддерживает.</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Адрес</value>
+  </data>
+  <data name="Administrator permission is required to view connections." xml:space="preserve">
+    <value>Для просмотра подключений требуются права администратора.</value>
+  </data>
+  <data name="After" xml:space="preserve">
+    <value>После</value>
+  </data>
+  <data name="An error occurred while processing your request." xml:space="preserve">
+    <value>При обработке запроса произошла ошибка.</value>
+  </data>
+  <data name="Another administrator changed the name. Reload saved values before editing again." xml:space="preserve">
+    <value>Другой администратор изменил название. Загрузите сохранённые значения перед редактированием.</value>
+  </data>
+  <data name="Appearance" xml:space="preserve">
+    <value>Оформление</value>
+  </data>
+  <data name="Appearance saved." xml:space="preserve">
+    <value>Оформление сохранено.</value>
+  </data>
+  <data name="Application" xml:space="preserve">
+    <value>Приложение</value>
+  </data>
+  <data name="Application name" xml:space="preserve">
+    <value>Название приложения</value>
+  </data>
+  <data name="Application name saved." xml:space="preserve">
+    <value>Название приложения сохранено.</value>
+  </data>
+  <data name="Applications" xml:space="preserve">
+    <value>Приложения</value>
+  </data>
+  <data name="Applies to date display in audit lists and details. Date filters and search use UTC. The default page size applies when a table opens." xml:space="preserve">
+    <value>Применяется к датам в журналах. Фильтры дат и поиск используют UTC. Размер страницы применяется при открытии таблицы.</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="Audit" xml:space="preserve">
+    <value>Аудит</value>
+  </data>
+  <data name="Avoid your login, email and recently used passwords." xml:space="preserve">
+    <value>Не используйте логин, email и недавно использованные пароли.</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="Before" xml:space="preserve">
+    <value>До</value>
+  </data>
+  <data name="Browser check" xml:space="preserve">
+    <value>Проверка браузера</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Cancel edit" xml:space="preserve">
+    <value>Отменить редактирование</value>
+  </data>
+  <data name="Change ID" xml:space="preserve">
+    <value>ID изменения</value>
+  </data>
+  <data name="Change details" xml:space="preserve">
+    <value>Детали изменения</value>
+  </data>
+  <data name="Change password" xml:space="preserve">
+    <value>Изменить пароль</value>
+  </data>
+  <data name="Changed fields only" xml:space="preserve">
+    <value>Только изменённые поля</value>
+  </data>
+  <data name="Changes" xml:space="preserve">
+    <value>Изменения</value>
+  </data>
+  <data name="Changing your password signs you out on all devices, including this one." xml:space="preserve">
+    <value>Изменение пароля завершит сессии на всех устройствах, включая это.</value>
+  </data>
+  <data name="Check the record fields and try again." xml:space="preserve">
+    <value>Проверьте поля записи и повторите попытку.</value>
+  </data>
+  <data name="Checking browser capabilities…" xml:space="preserve">
+    <value>Проверка возможностей браузера…</value>
+  </data>
+  <data name="Checking session…" xml:space="preserve">
+    <value>Проверка сессии…</value>
+  </data>
+  <data name="Choose a password you have not used recently." xml:space="preserve">
+    <value>Выберите пароль, который не использовался недавно.</value>
+  </data>
+  <data name="Cities" xml:space="preserve">
+    <value>Города</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Город</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Очистить</value>
+  </data>
+  <data name="Client UI build (UTC)" xml:space="preserve">
+    <value>Сборка интерфейса (UTC)</value>
+  </data>
+  <data name="Client UI version" xml:space="preserve">
+    <value>Версия интерфейса</value>
+  </data>
+  <data name="Client mode" xml:space="preserve">
+    <value>Режим клиента</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Close and check list" xml:space="preserve">
+    <value>Закрыть и проверить список</value>
+  </data>
+  <data name="Close editor" xml:space="preserve">
+    <value>Закрыть редактор</value>
+  </data>
+  <data name="Close tab" xml:space="preserve">
+    <value>Закрыть вкладку</value>
+  </data>
+  <data name="Close this dialog to refresh the list before selecting records again." xml:space="preserve">
+    <value>Закройте диалог, чтобы обновить список перед повторным выбором записей.</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Код</value>
+  </data>
+  <data name="Code must contain two letters." xml:space="preserve">
+    <value>Код должен содержать две буквы.</value>
+  </data>
+  <data name="Collapse" xml:space="preserve">
+    <value>Свернуть</value>
+  </data>
+  <data name="Collapse group" xml:space="preserve">
+    <value>Свернуть группу</value>
+  </data>
+  <data name="Commit edit" xml:space="preserve">
+    <value>Сохранить изменения</value>
+  </data>
+  <data name="Companies" xml:space="preserve">
+    <value>Компании</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>Компания</value>
+  </data>
+  <data name="Company: {0}" xml:space="preserve">
+    <value>Компания: {0}</value>
+  </data>
+  <data name="Confirm new password" xml:space="preserve">
+    <value>Подтвердите новый пароль</value>
+  </data>
+  <data name="Confirm password" xml:space="preserve">
+    <value>Подтвердите пароль</value>
+  </data>
+  <data name="Connections" xml:space="preserve">
+    <value>Подключения</value>
+  </data>
+  <data name="Connections are read-only. Credentials and full connection strings are not exposed." xml:space="preserve">
+    <value>Подключения доступны только для чтения. Учётные данные и полные строки подключения не показываются.</value>
+  </data>
+  <data name="Contacts" xml:space="preserve">
+    <value>Контакты</value>
+  </data>
+  <data name="Contains" xml:space="preserve">
+    <value>Содержит</value>
+  </data>
+  <data name="Conversion error: {0}" xml:space="preserve">
+    <value>Ошибка преобразования: {0}</value>
+  </data>
+  <data name="Conversion from {0} to {1} failed: {2}" xml:space="preserve">
+    <value>Ошибка преобразования {0} в {1}: {2}</value>
+  </data>
+  <data name="Conversion to type {0} not implemented" xml:space="preserve">
+    <value>Преобразование в {0} не реализовано</value>
+  </data>
+  <data name="Copied" xml:space="preserve">
+    <value>Скопировано</value>
+  </data>
+  <data name="Copy {0}" xml:space="preserve">
+    <value>Копировать: {0}</value>
+  </data>
+  <data name="Correlation ID" xml:space="preserve">
+    <value>Correlation ID</value>
+  </data>
+  <data name="Could not check the browser. Check your connection and retry." xml:space="preserve">
+    <value>Не удалось проверить браузер. Проверьте соединение и повторите попытку.</value>
+  </data>
+  <data name="Could not copy. Select and copy the identifier manually." xml:space="preserve">
+    <value>Не удалось скопировать. Выделите и скопируйте идентификатор вручную.</value>
+  </data>
+  <data name="Could not load connection information. Please retry." xml:space="preserve">
+    <value>Не удалось загрузить сведения о подключении. Повторите попытку.</value>
+  </data>
+  <data name="Could not load options. Reopen the list or change the search to retry." xml:space="preserve">
+    <value>Не удалось загрузить варианты. Откройте список снова или измените запрос.</value>
+  </data>
+  <data name="Could not load preferences. Please retry." xml:space="preserve">
+    <value>Не удалось загрузить настройки. Повторите попытку.</value>
+  </data>
+  <data name="Could not load profile settings." xml:space="preserve">
+    <value>Не удалось загрузить настройки профиля.</value>
+  </data>
+  <data name="Could not load records. Please retry." xml:space="preserve">
+    <value>Не удалось загрузить записи. Повторите попытку.</value>
+  </data>
+  <data name="Could not load the filter. Please retry." xml:space="preserve">
+    <value>Не удалось загрузить фильтр. Повторите попытку.</value>
+  </data>
+  <data name="Could not load the record. Please retry after session verification." xml:space="preserve">
+    <value>Не удалось загрузить запись. Повторите попытку после проверки сессии.</value>
+  </data>
+  <data name="Could not load the record. Please retry." xml:space="preserve">
+    <value>Не удалось загрузить запись. Повторите попытку.</value>
+  </data>
+  <data name="Could not load the record. Retry after session verification." xml:space="preserve">
+    <value>Не удалось загрузить запись. Повторите попытку после проверки сессии.</value>
+  </data>
+  <data name="Could not load your profile. Please retry." xml:space="preserve">
+    <value>Не удалось загрузить профиль. Повторите попытку.</value>
+  </data>
+  <data name="Could not receive a response from the service. Please retry." xml:space="preserve">
+    <value>Не удалось получить ответ сервиса. Повторите попытку.</value>
+  </data>
+  <data name="Countries" xml:space="preserve">
+    <value>Страны</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Страна</value>
+  </data>
+  <data name="Country code" xml:space="preserve">
+    <value>Код страны</value>
+  </data>
+  <data name="Current page {0}" xml:space="preserve">
+    <value>Текущая страница {0}</value>
+  </data>
+  <data name="Current password" xml:space="preserve">
+    <value>Текущий пароль</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Пользовательская</value>
+  </data>
+  <data name="Custom roles" xml:space="preserve">
+    <value>Пользовательские роли</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Тёмная</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Главная</value>
+  </data>
+  <data name="Database name" xml:space="preserve">
+    <value>Название базы данных</value>
+  </data>
+  <data name="Database port" xml:space="preserve">
+    <value>Порт базы данных</value>
+  </data>
+  <data name="Database provider" xml:space="preserve">
+    <value>Провайдер базы данных</value>
+  </data>
+  <data name="Database server" xml:space="preserve">
+    <value>Сервер базы данных</value>
+  </data>
+  <data name="Date (filter: UTC)" xml:space="preserve">
+    <value>Дата (фильтр: UTC)</value>
+  </data>
+  <data name="Date ({0})" xml:space="preserve">
+    <value>Дата ({0})</value>
+  </data>
+  <data name="Date of birth" xml:space="preserve">
+    <value>Дата рождения</value>
+  </data>
+  <data name="Decrement" xml:space="preserve">
+    <value>Уменьшить</value>
+  </data>
+  <data name="Default rows per page" xml:space="preserve">
+    <value>Строк на странице по умолчанию</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Delete {0}" xml:space="preserve">
+    <value>Удалить: {0}</value>
+  </data>
+  <data name="Deleting… {0} / {1}" xml:space="preserve">
+    <value>Удаление… {0} / {1}</value>
+  </data>
+  <data name="Deletion stopped. {0} of {1} deletions confirmed. {2}" xml:space="preserve">
+    <value>Удаление остановлено. Подтверждено удалений: {0} из {1}. {2}</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Сведения</value>
+  </data>
+  <data name="Development Mode" xml:space="preserve">
+    <value>Режим разработки</value>
+  </data>
+  <data name="Device time zone" xml:space="preserve">
+    <value>Часовой пояс устройства</value>
+  </data>
+  <data name="Digit" xml:space="preserve">
+    <value>Цифра</value>
+  </data>
+  <data name="Directory" xml:space="preserve">
+    <value>Справочники</value>
+  </data>
+  <data name="Discard" xml:space="preserve">
+    <value>Отменить изменения</value>
+  </data>
+  <data name="Discard unsaved changes?" xml:space="preserve">
+    <value>Отменить несохранённые изменения?</value>
+  </data>
+  <data name="Dismiss error" xml:space="preserve">
+    <value>Закрыть сообщение об ошибке</value>
+  </data>
+  <data name="Display name" xml:space="preserve">
+    <value>Отображаемое имя</value>
+  </data>
+  <data name="Do not enable Development on deployed applications: exception details can expose sensitive information." xml:space="preserve">
+    <value>Не включайте Development в развёрнутом приложении: детали исключений могут раскрыть конфиденциальные сведения.</value>
+  </data>
+  <data name="Do you really want to delete {0} {1}?" xml:space="preserve">
+    <value>Удалить записи ({1}): {0}?</value>
+  </data>
+  <data name="Do you really want to delete {0}: {1}?" xml:space="preserve">
+    <value>Удалить {0}: {1}?</value>
+  </data>
+  <data name="Edit city" xml:space="preserve">
+    <value>Изменить город</value>
+  </data>
+  <data name="Edit company" xml:space="preserve">
+    <value>Изменить компанию</value>
+  </data>
+  <data name="Edit country" xml:space="preserve">
+    <value>Изменить страну</value>
+  </data>
+  <data name="Edit person" xml:space="preserve">
+    <value>Изменить персону</value>
+  </data>
+  <data name="Edit position" xml:space="preserve">
+    <value>Изменить должность</value>
+  </data>
+  <data name="Edit record" xml:space="preserve">
+    <value>Изменить запись</value>
+  </data>
+  <data name="Edit role" xml:space="preserve">
+    <value>Изменить роль</value>
+  </data>
+  <data name="Edit row" xml:space="preserve">
+    <value>Изменить строку</value>
+  </data>
+  <data name="Edit user" xml:space="preserve">
+    <value>Изменить пользователя</value>
+  </data>
+  <data name="Editor steps" xml:space="preserve">
+    <value>Шаги редактирования</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Включено</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>Конец</value>
+  </data>
+  <data name="End date" xml:space="preserve">
+    <value>Дата окончания</value>
+  </data>
+  <data name="Enter a company name." xml:space="preserve">
+    <value>Введите название компании.</value>
+  </data>
+  <data name="Enter a first name." xml:space="preserve">
+    <value>Введите имя.</value>
+  </data>
+  <data name="Enter a login of 3–100 characters." xml:space="preserve">
+    <value>Введите логин длиной 3–100 символов.</value>
+  </data>
+  <data name="Enter a page number and press Enter" xml:space="preserve">
+    <value>Введите номер страницы и нажмите Enter</value>
+  </data>
+  <data name="Enter a password." xml:space="preserve">
+    <value>Введите пароль.</value>
+  </data>
+  <data name="Enter a valid email address." xml:space="preserve">
+    <value>Введите корректный email.</value>
+  </data>
+  <data name="Enter an application name (1-100 characters, without control characters)." xml:space="preserve">
+    <value>Введите название приложения (1–100 символов, без управляющих символов).</value>
+  </data>
+  <data name="Enter username and password." xml:space="preserve">
+    <value>Введите имя пользователя и пароль.</value>
+  </data>
+  <data name="Enter your credentials to access your workspace." xml:space="preserve">
+    <value>Введите учётные данные для доступа к приложению.</value>
+  </data>
+  <data name="Enter your current and new passwords." xml:space="preserve">
+    <value>Введите текущий и новый пароли.</value>
+  </data>
+  <data name="Entity" xml:space="preserve">
+    <value>Сущность</value>
+  </data>
+  <data name="Environment (API)" xml:space="preserve">
+    <value>Среда (API)</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="Event" xml:space="preserve">
+    <value>Событие</value>
+  </data>
+  <data name="Event ID" xml:space="preserve">
+    <value>ID события</value>
+  </data>
+  <data name="Everything you need." xml:space="preserve">
+    <value>Всё, что вам нужно.</value>
+  </data>
+  <data name="Expand" xml:space="preserve">
+    <value>Развернуть</value>
+  </data>
+  <data name="Expand group" xml:space="preserve">
+    <value>Развернуть группу</value>
+  </data>
+  <data name="Failed to rejoin. Please retry or reload the page." xml:space="preserve">
+    <value>Не удалось восстановить соединение. Повторите попытку или перезагрузите страницу.</value>
+  </data>
+  <data name="Failed to resume the session. Please retry or reload the page." xml:space="preserve">
+    <value>Не удалось возобновить сессию. Повторите попытку или перезагрузите страницу.</value>
+  </data>
+  <data name="Field" xml:space="preserve">
+    <value>Поле</value>
+  </data>
+  <data name="Filter options" xml:space="preserve">
+    <value>Параметры фильтра</value>
+  </data>
+  <data name="Filter {0}" xml:space="preserve">
+    <value>Фильтр: {0}</value>
+  </data>
+  <data name="Find in current list" xml:space="preserve">
+    <value>Найти в текущем списке</value>
+  </data>
+  <data name="Find next (Enter)" xml:space="preserve">
+    <value>Найти далее (Enter)</value>
+  </data>
+  <data name="Find next record" xml:space="preserve">
+    <value>Найти следующую запись</value>
+  </data>
+  <data name="Find option or group" xml:space="preserve">
+    <value>Найти элемент или группу</value>
+  </data>
+  <data name="First name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="First page" xml:space="preserve">
+    <value>Первая страница</value>
+  </data>
+  <data name="Found: {0}" xml:space="preserve">
+    <value>Найдено: {0}</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Общие</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Группа</value>
+  </data>
+  <data name="House number" xml:space="preserve">
+    <value>Номер дома</value>
+  </data>
+  <data name="IP address" xml:space="preserve">
+    <value>IP-адрес</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Неактивен</value>
+  </data>
+  <data name="Increment" xml:space="preserve">
+    <value>Увеличить</value>
+  </data>
+  <data name="Keep editing" xml:space="preserve">
+    <value>Продолжить редактирование</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="Language changes immediately. Save appearance to keep it in your profile." xml:space="preserve">
+    <value>Язык переключается сразу. Сохраните оформление, чтобы записать его в профиль.</value>
+  </data>
+  <data name="Last name" xml:space="preserve">
+    <value>Фамилия</value>
+  </data>
+  <data name="Last page" xml:space="preserve">
+    <value>Последняя страница</value>
+  </data>
+  <data name="Legal name" xml:space="preserve">
+    <value>Юридическое название</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Светлая</value>
+  </data>
+  <data name="Linked person" xml:space="preserve">
+    <value>Связанная персона</value>
+  </data>
+  <data name="Loading application…" xml:space="preserve">
+    <value>Загрузка приложения…</value>
+  </data>
+  <data name="Loading connections" xml:space="preserve">
+    <value>Загрузка подключений</value>
+  </data>
+  <data name="Loading preferences" xml:space="preserve">
+    <value>Загрузка настроек</value>
+  </data>
+  <data name="Loading profile" xml:space="preserve">
+    <value>Загрузка профиля</value>
+  </data>
+  <data name="Loading record" xml:space="preserve">
+    <value>Загрузка записи</value>
+  </data>
+  <data name="Loading {0}…" xml:space="preserve">
+    <value>Загрузка: {0}…</value>
+  </data>
+  <data name="Loading…" xml:space="preserve">
+    <value>Загрузка…</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Логин</value>
+  </data>
+  <data name="Login, email, linked person and roles are managed by an administrator." xml:space="preserve">
+    <value>Логином, email, связанной персоной и ролями управляет администратор.</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
+  <data name="Lowercase letter" xml:space="preserve">
+    <value>Строчная буква</value>
+  </data>
+  <data name="Master Data" xml:space="preserve">
+    <value>Основные данные</value>
+  </data>
+  <data name="Middle name" xml:space="preserve">
+    <value>Отчество</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="Native name" xml:space="preserve">
+    <value>Местное название</value>
+  </data>
+  <data name="New password" xml:space="preserve">
+    <value>Новый пароль</value>
+  </data>
+  <data name="New passwords do not match." xml:space="preserve">
+    <value>Новые пароли не совпадают.</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Далее</value>
+  </data>
+  <data name="Next month {0}" xml:space="preserve">
+    <value>Следующий месяц {0}</value>
+  </data>
+  <data name="Next page" xml:space="preserve">
+    <value>Следующая страница</value>
+  </data>
+  <data name="Next year {0}" xml:space="preserve">
+    <value>Следующий год {0}</value>
+  </data>
+  <data name="No additional details." xml:space="preserve">
+    <value>Дополнительных сведений нет.</value>
+  </data>
+  <data name="No field differences recorded." xml:space="preserve">
+    <value>Изменений полей не записано.</value>
+  </data>
+  <data name="No match in the filtered list. Try clearing the filters." xml:space="preserve">
+    <value>В отфильтрованном списке совпадений нет. Попробуйте очистить фильтры.</value>
+  </data>
+  <data name="No matching options." xml:space="preserve">
+    <value>Подходящих вариантов нет.</value>
+  </data>
+  <data name="No matching record found." xml:space="preserve">
+    <value>Подходящая запись не найдена.</value>
+  </data>
+  <data name="No matching records. Try another search." xml:space="preserve">
+    <value>Записи не найдены. Измените запрос.</value>
+  </data>
+  <data name="No records found." xml:space="preserve">
+    <value>Записи не найдены.</value>
+  </data>
+  <data name="No records match the filters." xml:space="preserve">
+    <value>Нет записей, соответствующих фильтрам.</value>
+  </data>
+  <data name="No roles assigned." xml:space="preserve">
+    <value>Роли не назначены.</value>
+  </data>
+  <data name="Not Found" xml:space="preserve">
+    <value>Не найдено</value>
+  </data>
+  <data name="Not a valid GUID" xml:space="preserve">
+    <value>Некорректный GUID</value>
+  </data>
+  <data name="Not a valid boolean" xml:space="preserve">
+    <value>Некорректное логическое значение</value>
+  </data>
+  <data name="Not a valid date time" xml:space="preserve">
+    <value>Некорректная дата или время</value>
+  </data>
+  <data name="Not a valid number" xml:space="preserve">
+    <value>Некорректное число</value>
+  </data>
+  <data name="Not a valid time span" xml:space="preserve">
+    <value>Некорректный интервал времени</value>
+  </data>
+  <data name="Not a valid {0}" xml:space="preserve">
+    <value>Некорректное значение {0}</value>
+  </data>
+  <data name="Not a value of {0}" xml:space="preserve">
+    <value>Недопустимое значение {0}</value>
+  </data>
+  <data name="Not linked" xml:space="preserve">
+    <value>Не связана</value>
+  </data>
+  <data name="Not recorded" xml:space="preserve">
+    <value>Не записано</value>
+  </data>
+  <data name="One or more selected roles are unavailable. Reload the user and select active roles." xml:space="preserve">
+    <value>Некоторые выбранные роли недоступны. Загрузите пользователя заново и выберите активные роли.</value>
+  </data>
+  <data name="One place to work." xml:space="preserve">
+    <value>Одно место для работы.</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="Open the application over HTTPS in a supported browser." xml:space="preserve">
+    <value>Откройте приложение по HTTPS в поддерживаемом браузере.</value>
+  </data>
+  <data name="Other roles" xml:space="preserve">
+    <value>Другие роли</value>
+  </data>
+  <data name="Outcome" xml:space="preserve">
+    <value>Результат</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Страница</value>
+  </data>
+  <data name="Page number" xml:space="preserve">
+    <value>Номер страницы</value>
+  </data>
+  <data name="Page {0}" xml:space="preserve">
+    <value>Страница {0}</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Password changed. Sign in with your new password." xml:space="preserve">
+    <value>Пароль изменён. Войдите с новым паролем.</value>
+  </data>
+  <data name="Password requirements: {0}–{1} characters." xml:space="preserve">
+    <value>Требования к паролю: {0}–{1} символов.</value>
+  </data>
+  <data name="Passwords do not match." xml:space="preserve">
+    <value>Пароли не совпадают.</value>
+  </data>
+  <data name="Permissions" xml:space="preserve">
+    <value>Разрешения</value>
+  </data>
+  <data name="Person" xml:space="preserve">
+    <value>Персона</value>
+  </data>
+  <data name="Person: {0}" xml:space="preserve">
+    <value>Персона: {0}</value>
+  </data>
+  <data name="Persons" xml:space="preserve">
+    <value>Персоны</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Телефон</value>
+  </data>
+  <data name="Phone code" xml:space="preserve">
+    <value>Телефонный код</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>Должность</value>
+  </data>
+  <data name="Position: {0}" xml:space="preserve">
+    <value>Должность: {0}</value>
+  </data>
+  <data name="Positions" xml:space="preserve">
+    <value>Должности</value>
+  </data>
+  <data name="Postal code" xml:space="preserve">
+    <value>Почтовый индекс</value>
+  </data>
+  <data name="Preferences" xml:space="preserve">
+    <value>Настройки приложения</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="Previous month {0}" xml:space="preserve">
+    <value>Предыдущий месяц {0}</value>
+  </data>
+  <data name="Previous page" xml:space="preserve">
+    <value>Предыдущая страница</value>
+  </data>
+  <data name="Previous year {0}" xml:space="preserve">
+    <value>Предыдущий год {0}</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  <data name="Protected" xml:space="preserve">
+    <value>Защищено</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Готово</value>
+  </data>
+  <data name="Record" xml:space="preserve">
+    <value>Запись</value>
+  </data>
+  <data name="Record ID" xml:space="preserve">
+    <value>ID записи</value>
+  </data>
+  <data name="Record created." xml:space="preserve">
+    <value>Запись создана.</value>
+  </data>
+  <data name="Record deleted (set to inactive)." xml:space="preserve">
+    <value>Запись удалена (деактивирована).</value>
+  </data>
+  <data name="Record updated." xml:space="preserve">
+    <value>Запись обновлена.</value>
+  </data>
+  <data name="Records" xml:space="preserve">
+    <value>Записи</value>
+  </data>
+  <data name="Refresh connections" xml:space="preserve">
+    <value>Обновить подключения</value>
+  </data>
+  <data name="Refresh {0}" xml:space="preserve">
+    <value>Обновить: {0}</value>
+  </data>
+  <data name="Region" xml:space="preserve">
+    <value>Регион</value>
+  </data>
+  <data name="Rejoining the server…" xml:space="preserve">
+    <value>Восстановление соединения с сервером…</value>
+  </data>
+  <data name="Reload" xml:space="preserve">
+    <value>Перезагрузить</value>
+  </data>
+  <data name="Reload saved values" xml:space="preserve">
+    <value>Загрузить сохранённые значения</value>
+  </data>
+  <data name="Request ID" xml:space="preserve">
+    <value>ID запроса</value>
+  </data>
+  <data name="Requests use this site's /api proxy. This is not the internal API server address." xml:space="preserve">
+    <value>Запросы используют прокси /api этого сайта. Это не внутренний адрес сервера API.</value>
+  </data>
+  <data name="Resume" xml:space="preserve">
+    <value>Продолжить</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Повторить</value>
+  </data>
+  <data name="Retry in" xml:space="preserve">
+    <value>Повторная попытка через</value>
+  </data>
+  <data name="Retry loading" xml:space="preserve">
+    <value>Повторить загрузку</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Роли</value>
+  </data>
+  <data name="Rows" xml:space="preserve">
+    <value>Строк</value>
+  </data>
+  <data name="Rows per page" xml:space="preserve">
+    <value>Строк на странице</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Save account" xml:space="preserve">
+    <value>Сохранить учётную запись</value>
+  </data>
+  <data name="Save appearance" xml:space="preserve">
+    <value>Сохранить оформление</value>
+  </data>
+  <data name="Saving could not be confirmed. Close this form and check the record list before trying again." xml:space="preserve">
+    <value>Сохранение не подтверждено. Закройте форму и проверьте список перед повторной попыткой.</value>
+  </data>
+  <data name="Saving profile" xml:space="preserve">
+    <value>Сохранение профиля</value>
+  </data>
+  <data name="Saving was not confirmed. Reload saved values before trying again." xml:space="preserve">
+    <value>Сохранение не подтверждено. Загрузите сохранённые значения перед повторной попыткой.</value>
+  </data>
+  <data name="Saving was not confirmed. Reopen Profile to check the saved values before trying again." xml:space="preserve">
+    <value>Сохранение не подтверждено. Откройте профиль снова и проверьте сохранённые значения.</value>
+  </data>
+  <data name="Scroll tabs down" xml:space="preserve">
+    <value>Прокрутить вкладки вниз</value>
+  </data>
+  <data name="Scroll tabs left" xml:space="preserve">
+    <value>Прокрутить вкладки влево</value>
+  </data>
+  <data name="Scroll tabs right" xml:space="preserve">
+    <value>Прокрутить вкладки вправо</value>
+  </data>
+  <data name="Scroll tabs up" xml:space="preserve">
+    <value>Прокрутить вкладки вверх</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="Search is unavailable. Please retry." xml:space="preserve">
+    <value>Поиск недоступен. Повторите попытку.</value>
+  </data>
+  <data name="Search must contain at most 200 characters." xml:space="preserve">
+    <value>Поисковый запрос должен содержать не более 200 символов.</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Безопасность</value>
+  </data>
+  <data name="Security event" xml:space="preserve">
+    <value>Событие безопасности</value>
+  </data>
+  <data name="Security events" xml:space="preserve">
+    <value>События безопасности</value>
+  </data>
+  <data name="Select a record from the list." xml:space="preserve">
+    <value>Выберите запись из списка.</value>
+  </data>
+  <data name="Select at least one active role for an active user." xml:space="preserve">
+    <value>Выберите хотя бы одну активную роль для активного пользователя.</value>
+  </data>
+  <data name="Select or clear all available options in this group (including search-hidden options)" xml:space="preserve">
+    <value>Выбрать или снять все доступные варианты группы (включая скрытые поиском)</value>
+  </data>
+  <data name="Select {0}" xml:space="preserve">
+    <value>Выбрать: {0}</value>
+  </data>
+  <data name="Session ID" xml:space="preserve">
+    <value>ID сессии</value>
+  </data>
+  <data name="Session verification is in progress. Retry when it finishes." xml:space="preserve">
+    <value>Выполняется проверка сессии. Повторите попытку после её завершения.</value>
+  </data>
+  <data name="Session verification is unavailable." xml:space="preserve">
+    <value>Проверка сессии недоступна.</value>
+  </data>
+  <data name="Severity" xml:space="preserve">
+    <value>Важность</value>
+  </data>
+  <data name="Showing up to 20 records. Type to narrow the search." xml:space="preserve">
+    <value>Показано до 20 записей. Введите текст, чтобы сузить поиск.</value>
+  </data>
+  <data name="Sign in" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="Sign in again before continuing." xml:space="preserve">
+    <value>Войдите снова, чтобы продолжить.</value>
+  </data>
+  <data name="Sign out and sign in again" xml:space="preserve">
+    <value>Выйти и войти снова</value>
+  </data>
+  <data name="Sign-in failed. Check your credentials or try again later." xml:space="preserve">
+    <value>Вход не выполнен. Проверьте учётные данные или повторите попытку позже.</value>
+  </data>
+  <data name="Sign-out could not be confirmed. Retry to finish signing out." xml:space="preserve">
+    <value>Выход не подтверждён. Повторите попытку, чтобы завершить выход.</value>
+  </data>
+  <data name="Signed in" xml:space="preserve">
+    <value>Вход выполнен</value>
+  </data>
+  <data name="Signing in…" xml:space="preserve">
+    <value>Выполняется вход…</value>
+  </data>
+  <data name="Signing out…" xml:space="preserve">
+    <value>Выполняется выход…</value>
+  </data>
+  <data name="Sorry, the content you are looking for does not exist." xml:space="preserve">
+    <value>Запрошенная страница не существует.</value>
+  </data>
+  <data name="Special character" xml:space="preserve">
+    <value>Специальный символ</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Начало</value>
+  </data>
+  <data name="Start date" xml:space="preserve">
+    <value>Дата начала</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="Street" xml:space="preserve">
+    <value>Улица</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>Системная</value>
+  </data>
+  <data name="System roles" xml:space="preserve">
+    <value>Системные роли</value>
+  </data>
+  <data name="System roles are read-only." xml:space="preserve">
+    <value>Системные роли доступны только для чтения.</value>
+  </data>
+  <data name="Tax number" xml:space="preserve">
+    <value>Налоговый номер</value>
+  </data>
+  <data name="The application encountered an error." xml:space="preserve">
+    <value>В приложении произошла ошибка.</value>
+  </data>
+  <data name="The city or selected country no longer exists. Reload the record or select another country." xml:space="preserve">
+    <value>Город или выбранная страна больше не существует. Загрузите запись заново или выберите другую страну.</value>
+  </data>
+  <data name="The company or selected city no longer exists. Reload the form or choose another city." xml:space="preserve">
+    <value>Компания или выбранный город больше не существует. Загрузите форму заново или выберите другой город.</value>
+  </data>
+  <data name="The current password is incorrect." xml:space="preserve">
+    <value>Текущий пароль неверен.</value>
+  </data>
+  <data name="The last active administrator must remain active and retain the Administrator role." xml:space="preserve">
+    <value>Последний активный администратор должен оставаться активным и сохранять роль Administrator.</value>
+  </data>
+  <data name="The list changed during search. Search again." xml:space="preserve">
+    <value>Список изменился во время поиска. Повторите поиск.</value>
+  </data>
+  <data name="The name is shared by all users. Environment and deployment settings are managed outside this page." xml:space="preserve">
+    <value>Название общее для всех пользователей. Настройки среды и развёртывания управляются вне этой страницы.</value>
+  </data>
+  <data name="The new password does not meet the password policy." xml:space="preserve">
+    <value>Новый пароль не соответствует требованиям.</value>
+  </data>
+  <data name="The next record was not found." xml:space="preserve">
+    <value>Следующая запись не найдена.</value>
+  </data>
+  <data name="The password change could not be confirmed. Sign out, then try signing in with the new password. If it was not changed, use the previous password." xml:space="preserve">
+    <value>Изменение пароля не подтверждено. Выйдите и попробуйте войти с новым паролем. Если он не изменился, используйте прежний.</value>
+  </data>
+  <data name="The password change was rejected. Check your entries." xml:space="preserve">
+    <value>Изменение пароля отклонено. Проверьте введённые данные.</value>
+  </data>
+  <data name="The password could not be changed. Please reload the user." xml:space="preserve">
+    <value>Не удалось изменить пароль. Загрузите пользователя заново.</value>
+  </data>
+  <data name="The password does not meet the server password policy. Choose a stronger password that does not contain the login or email." xml:space="preserve">
+    <value>Пароль не соответствует требованиям сервера. Выберите более надёжный пароль без логина и email.</value>
+  </data>
+  <data name="The person or a selected company/position no longer exists. Reload the form or clear the selection." xml:space="preserve">
+    <value>Персона или выбранная компания/должность больше не существует. Загрузите форму заново или очистите выбор.</value>
+  </data>
+  <data name="The record conflicts with existing data. Reload it and try again." xml:space="preserve">
+    <value>Запись конфликтует с существующими данными. Загрузите её заново.</value>
+  </data>
+  <data name="The records service could not be found." xml:space="preserve">
+    <value>Сервис записей не найден.</value>
+  </data>
+  <data name="The records service is temporarily unavailable. Please retry." xml:space="preserve">
+    <value>Сервис записей временно недоступен. Повторите попытку.</value>
+  </data>
+  <data name="The records service rejected the request. Please retry." xml:space="preserve">
+    <value>Сервис записей отклонил запрос. Повторите попытку.</value>
+  </data>
+  <data name="The records service returned an invalid response." xml:space="preserve">
+    <value>Сервис записей вернул некорректный ответ.</value>
+  </data>
+  <data name="The request could not be authorized. Retry after session verification." xml:space="preserve">
+    <value>Не удалось авторизовать запрос. Повторите попытку после проверки сессии.</value>
+  </data>
+  <data name="The request was not authorized. Verify your session before saving again." xml:space="preserve">
+    <value>Запрос не авторизован. Проверьте сессию перед повторным сохранением.</value>
+  </data>
+  <data name="The result of the last request is unknown." xml:space="preserve">
+    <value>Результат последнего запроса неизвестен.</value>
+  </data>
+  <data name="The selected city no longer exists. Choose another city or clear the selection." xml:space="preserve">
+    <value>Выбранный город больше не существует. Выберите другой или очистите выбор.</value>
+  </data>
+  <data name="The selected company no longer exists. Choose another company or clear the selection." xml:space="preserve">
+    <value>Выбранная компания больше не существует. Выберите другую или очистите выбор.</value>
+  </data>
+  <data name="The selected position no longer exists. Choose another position or clear the selection." xml:space="preserve">
+    <value>Выбранная должность больше не существует. Выберите другую или очистите выбор.</value>
+  </data>
+  <data name="The server rejected the next deletion." xml:space="preserve">
+    <value>Сервер отклонил следующее удаление.</value>
+  </data>
+  <data name="The service rejected the request. Check the record list before trying again." xml:space="preserve">
+    <value>Сервис отклонил запрос. Проверьте список перед повторной попыткой.</value>
+  </data>
+  <data name="The service returned an unexpected response. Please contact support if this persists." xml:space="preserve">
+    <value>Сервис вернул неожиданный ответ. Если ошибка повторяется, обратитесь в поддержку.</value>
+  </data>
+  <data name="The session changed during deletion." xml:space="preserve">
+    <value>Сессия изменилась во время удаления.</value>
+  </data>
+  <data name="The session changed. Reload the record list." xml:space="preserve">
+    <value>Сессия изменилась. Обновите список записей.</value>
+  </data>
+  <data name="The session has been paused by the server." xml:space="preserve">
+    <value>Сессия приостановлена сервером.</value>
+  </data>
+  <data name="The stored details are not valid JSON." xml:space="preserve">
+    <value>Сохранённые сведения содержат некорректный JSON.</value>
+  </data>
+  <data name="The stored snapshot is not valid JSON and cannot be compared." xml:space="preserve">
+    <value>Сохранённый снимок содержит некорректный JSON и не может быть сопоставлен.</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="This field is required." xml:space="preserve">
+    <value>Обязательное поле.</value>
+  </data>
+  <data name="This password was used recently. Choose a different password." xml:space="preserve">
+    <value>Этот пароль использовался недавно. Выберите другой.</value>
+  </data>
+  <data name="This record is no longer available." xml:space="preserve">
+    <value>Запись больше недоступна.</value>
+  </data>
+  <data name="This record no longer exists. Close the form and refresh the list." xml:space="preserve">
+    <value>Запись больше не существует. Закройте форму и обновите список.</value>
+  </data>
+  <data name="Time zone" xml:space="preserve">
+    <value>Часовой пояс</value>
+  </data>
+  <data name="Toggle {0}" xml:space="preserve">
+    <value>Развернуть/свернуть: {0}</value>
+  </data>
+  <data name="Token family ID" xml:space="preserve">
+    <value>ID семейства токенов</value>
+  </data>
+  <data name="Too many attempts. Please wait before trying again." xml:space="preserve">
+    <value>Слишком много попыток. Подождите перед повторной попыткой.</value>
+  </data>
+  <data name="Too many attempts. Try again later." xml:space="preserve">
+    <value>Слишком много попыток. Повторите позже.</value>
+  </data>
+  <data name="Too many requests. Please wait before retrying." xml:space="preserve">
+    <value>Слишком много запросов. Подождите перед повторной попыткой.</value>
+  </data>
+  <data name="Too many requests. Please wait before saving again." xml:space="preserve">
+    <value>Слишком много запросов. Подождите перед повторным сохранением.</value>
+  </data>
+  <data name="Too many requests. Please wait before trying again." xml:space="preserve">
+    <value>Слишком много запросов. Подождите перед повторной попыткой.</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="Unable to convert to {0} from type {1}" xml:space="preserve">
+    <value>Не удалось преобразовать {1} в {0}</value>
+  </data>
+  <data name="Updating records" xml:space="preserve">
+    <value>Обновление записей</value>
+  </data>
+  <data name="Uppercase letter" xml:space="preserve">
+    <value>Заглавная буква</value>
+  </data>
+  <data name="Use the Development environment for detailed errors during local debugging only." xml:space="preserve">
+    <value>Используйте среду Development для подробных ошибок только при локальной отладке.</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Пользователь</value>
+  </data>
+  <data name="User ID" xml:space="preserve">
+    <value>ID пользователя</value>
+  </data>
+  <data name="User agent" xml:space="preserve">
+    <value>User agent</value>
+  </data>
+  <data name="User menu" xml:space="preserve">
+    <value>Меню пользователя</value>
+  </data>
+  <data name="User menu: {0}" xml:space="preserve">
+    <value>Меню пользователя: {0}</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Пользователи</value>
+  </data>
+  <data name="VAT ID" xml:space="preserve">
+    <value>Номер НДС</value>
+  </data>
+  <data name="View details" xml:space="preserve">
+    <value>Просмотреть сведения</value>
+  </data>
+  <data name="Waiting for session verification…" xml:space="preserve">
+    <value>Ожидание проверки сессии…</value>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>Веб-сайт</value>
+  </data>
+  <data name="Work" xml:space="preserve">
+    <value>Работа</value>
+  </data>
+  <data name="YOUR WORKSPACE" xml:space="preserve">
+    <value>ВАШЕ РАБОЧЕЕ ПРОСТРАНСТВО</value>
+  </data>
+  <data name="You can view assigned permissions but cannot change them." xml:space="preserve">
+    <value>Можно просматривать назначенные разрешения, но нельзя их изменять.</value>
+  </data>
+  <data name="You cannot deactivate your own user account." xml:space="preserve">
+    <value>Нельзя деактивировать собственную учётную запись.</value>
+  </data>
+  <data name="You do not have permission to delete records." xml:space="preserve">
+    <value>У вас нет разрешения на удаление записей.</value>
+  </data>
+  <data name="You do not have permission to open this page." xml:space="preserve">
+    <value>У вас нет разрешения на открытие этой страницы.</value>
+  </data>
+  <data name="You do not have permission to read this record." xml:space="preserve">
+    <value>У вас нет разрешения на чтение этой записи.</value>
+  </data>
+  <data name="You do not have permission to save this record." xml:space="preserve">
+    <value>У вас нет разрешения на сохранение этой записи.</value>
+  </data>
+  <data name="You do not have permission to view connections." xml:space="preserve">
+    <value>У вас нет разрешения на просмотр подключений.</value>
+  </data>
+  <data name="You do not have permission to view records." xml:space="preserve">
+    <value>У вас нет разрешения на просмотр записей.</value>
+  </data>
+  <data name="You do not have permission to view this record." xml:space="preserve">
+    <value>У вас нет разрешения на просмотр этой записи.</value>
+  </data>
+  <data name="You have read-only access." xml:space="preserve">
+    <value>У вас доступ только для чтения.</value>
+  </data>
+  <data name="You no longer have permission to update preferences." xml:space="preserve">
+    <value>У вас больше нет разрешения на изменение настроек.</value>
+  </data>
+  <data name="Your account changed during this request. Check your session and try again." xml:space="preserve">
+    <value>Учётная запись изменилась во время запроса. Проверьте сессию и повторите попытку.</value>
+  </data>
+  <data name="term.change ID" xml:space="preserve">
+    <value>ID изменения</value>
+  </data>
+  <data name="term.city" xml:space="preserve">
+    <value>город</value>
+  </data>
+  <data name="term.company" xml:space="preserve">
+    <value>компания</value>
+  </data>
+  <data name="term.correlation ID" xml:space="preserve">
+    <value>Correlation ID</value>
+  </data>
+  <data name="term.country" xml:space="preserve">
+    <value>страна</value>
+  </data>
+  <data name="term.event ID" xml:space="preserve">
+    <value>ID события</value>
+  </data>
+  <data name="term.of {0} · {1} records" xml:space="preserve">
+    <value>из {0} · записей: {1}</value>
+  </data>
+  <data name="term.person" xml:space="preserve">
+    <value>персона</value>
+  </data>
+  <data name="term.position" xml:space="preserve">
+    <value>должность</value>
+  </data>
+  <data name="term.record" xml:space="preserve">
+    <value>запись</value>
+  </data>
+  <data name="term.record ID" xml:space="preserve">
+    <value>ID записи</value>
+  </data>
+  <data name="term.role" xml:space="preserve">
+    <value>роль</value>
+  </data>
+  <data name="term.seconds." xml:space="preserve">
+    <value>сек.</value>
+  </data>
+  <data name="term.user" xml:space="preserve">
+    <value>пользователь</value>
+  </data>
+  <data name="term.user ID" xml:space="preserve">
+    <value>ID пользователя</value>
+  </data>
+  <data name="{0} records deleted (set to inactive)." xml:space="preserve">
+    <value>Записей удалено (деактивировано): {0}.</value>
+  </data>
+  <data name="{0} selected" xml:space="preserve">
+    <value>Выбрано: {0}</value>
+  </data>
+</root>

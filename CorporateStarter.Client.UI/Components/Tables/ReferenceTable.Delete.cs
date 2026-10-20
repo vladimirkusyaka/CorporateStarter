@@ -23,7 +23,7 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
             parameters.Add(x => x.Delete, new Func<Guid, CancellationToken, Task>(Client.DeleteAsync));
             parameters.Add(x => x.Singular, Singular);
             parameters.Add(x => x.Plural, Title);
-            _createDialog = await Dialogs.ShowAsync<TableDeleteDialog>($"Delete {Title}", parameters,
+            _createDialog = await Dialogs.ShowAsync<TableDeleteDialog>(L.Format("Delete {0}", L[Title]), parameters,
                 new DialogOptions
                 {
                     MaxWidth = MaxWidth.Small,
@@ -37,8 +37,8 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
             var result = await _createDialog.Result;
             if (_disposed || result is null || result.Canceled) return;
             if (result.Data is int count)
-                Snackbar.Add(count == 1 ? "Record deleted (set to inactive)." :
-                    $"{count} records deleted (set to inactive).", Severity.Success);
+                Snackbar.Add(count == 1 ? L["Record deleted (set to inactive)."] :
+                    L.Format("{0} records deleted (set to inactive).", count), Severity.Success);
             await LoadAsync();
         }
         finally

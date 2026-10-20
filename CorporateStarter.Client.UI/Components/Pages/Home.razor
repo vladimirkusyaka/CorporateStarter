@@ -1,11 +1,11 @@
 ﻿@page "/"
 
-<PageTitle>Dashboard</PageTitle>
+<PageTitle>@L["Dashboard"]</PageTitle>
 
 <MudStack Spacing="3">
     <MudStack Row="true" AlignItems="AlignItems.Center">
         <MudStack Spacing="0">
-            <MudText Typo="Typo.h4">Dashboard</MudText>
+            <MudText Typo="Typo.h4">@L["Dashboard"]</MudText>
             <MudText Typo="Typo.body2" Color="Color.Secondary">
                 Operational overview
             </MudText>
@@ -23,29 +23,29 @@
     <MudGrid>
         <MudItem xs="12" sm="6" lg="3">
             <MudPaper Class="cs-metric" Elevation="0">
-                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Companies</MudText>
-                <MudText Typo="Typo.h5">Ready</MudText>
+                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@L["Companies"]</MudText>
+                <MudText Typo="Typo.h5">@L["Ready"]</MudText>
             </MudPaper>
         </MudItem>
 
         <MudItem xs="12" sm="6" lg="3">
             <MudPaper Class="cs-metric" Elevation="0">
-                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Persons</MudText>
-                <MudText Typo="Typo.h5">Ready</MudText>
+                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@L["Persons"]</MudText>
+                <MudText Typo="Typo.h5">@L["Ready"]</MudText>
             </MudPaper>
         </MudItem>
 
         <MudItem xs="12" sm="6" lg="3">
             <MudPaper Class="cs-metric" Elevation="0">
-                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Security</MudText>
-                <MudText Typo="Typo.h5">Protected</MudText>
+                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@L["Security"]</MudText>
+                <MudText Typo="Typo.h5">@L["Protected"]</MudText>
             </MudPaper>
         </MudItem>
 
         <MudItem xs="12" sm="6" lg="3">
             <MudPaper Class="cs-metric" Elevation="0">
-                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Audit</MudText>
-                <MudText Typo="Typo.h5">Enabled</MudText>
+                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@L["Audit"]</MudText>
+                <MudText Typo="Typo.h5">@L["Enabled"]</MudText>
             </MudPaper>
         </MudItem>
     </MudGrid>

@@ -1,0 +1,4 @@
+in folder: CorporateStarter
+
+
+python tools/GenerateBootstrapTranslations.py

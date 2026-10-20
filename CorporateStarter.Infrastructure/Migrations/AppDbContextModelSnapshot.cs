@@ -745,6 +745,7 @@ namespace CorporateStarter.Infrastructure.Migrations
                 b.Property<DateTime?>("UpdatedAtUtc")
                     .HasColumnType("timestamp with time zone");
 
+                b.Property<string>("PreferredLanguage").HasMaxLength(5).HasColumnType("character varying(5)");
                 b.HasKey("Id");
 
                 b.HasIndex("Email")

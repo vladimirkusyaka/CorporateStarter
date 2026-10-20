@@ -24,10 +24,10 @@ public sealed class ProfilePersistenceTests(CorporateStarterApiFactory factory) 
         var family = new RefreshTokenFamily { Id = Guid.NewGuid(), UserId = id, AuthSessionId = session.Id, CreatedAtUtc = now };
         var token = new RefreshToken { Id = Guid.NewGuid(), UserId = id, AuthSessionId = session.Id, RefreshTokenFamilyId = family.Id, TokenHash = Guid.NewGuid().ToString("N"), CreatedAtUtc = now, ExpiresAtUtc = now.AddDays(1) };
         db.AuthSessions.AddRange(session, otherSession); db.RefreshTokenFamilies.Add(family); db.RefreshTokens.Add(token); await db.SaveChangesAsync();
-        Assert.True(await service.UpdateAppearanceAsync(id, new() { Theme = "Dark", PageSize = 50, TimeZone = "System" }, default));
+        Assert.True(await service.UpdateAppearanceAsync(id, new() { Theme = "Dark", PageSize = 50, TimeZone = "System", Language = "ru-RU" }, default));
         Assert.True(await service.UpdateAccountAsync(id, new() { DisplayName = " Alice " }, default));
         db.ChangeTracker.Clear();
-        var profile = await service.GetAsync(id, default); Assert.Equal("Alice", profile!.Account.DisplayName); Assert.Equal(50, profile.Appearance.PageSize);
+        var profile = await service.GetAsync(id, default); Assert.Equal("Alice", profile!.Account.DisplayName); Assert.Equal(50, profile.Appearance.PageSize); Assert.Equal("ru-RU", profile.Appearance.Language);
         Assert.Equal("profile.current_password_invalid", await service.ChangePasswordAsync(id, new() { CurrentPassword = "wrong", NewPassword = next }, default));
         Assert.Equal("profile.password_policy", await service.ChangePasswordAsync(id, new() { CurrentPassword = old, NewPassword = "weak" }, default));
         Assert.Equal("profile.password_reused", await service.ChangePasswordAsync(id, new() { CurrentPassword = old, NewPassword = old }, default));

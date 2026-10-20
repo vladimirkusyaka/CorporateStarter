@@ -2,11 +2,11 @@
 
 @if (!JsonDisplay.TryFormat(Value, out var formatted))
 {
-    <MudAlert Severity="Severity.Warning">The stored details are not valid JSON.</MudAlert>
+    <MudAlert Severity="Severity.Warning">@L["The stored details are not valid JSON."]</MudAlert>
 }
 else if (formatted.Length == 0)
 {
-    <MudText>No additional details.</MudText>
+    <MudText>@L["No additional details."]</MudText>
 }
 else
 {

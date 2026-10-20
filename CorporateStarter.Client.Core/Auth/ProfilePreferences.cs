@@ -2,8 +2,9 @@
 using CorporateStarter.Shared.Dtos.Auth;
 namespace CorporateStarter.Client.Core.Auth;
 
-public sealed class ProfilePreferences
+public sealed class ProfilePreferences(CorporateStarter.Shared.Localization.UiText? localization = null)
 {
+    private readonly CorporateStarter.Shared.Localization.UiText _localization = localization ?? new();
     public string Theme { get; private set; } = "System";
     public int PageSize { get; private set; } = 20;
     public string TimeZone { get; private set; } = "UTC";
@@ -13,6 +14,7 @@ public sealed class ProfilePreferences
     public void Apply(ProfileSettingsDto value)
     {
         if (!value.IsValid()) throw new InvalidDataException("Invalid profile settings.");
+        if (value.Language is not null) _localization.Select(value.Language);
         Theme = value.Theme; PageSize = value.PageSize; TimeZone = value.TimeZone; Changed?.Invoke();
     }
     public void SetDeviceZone(string id)
@@ -23,5 +25,5 @@ public sealed class ProfilePreferences
         Changed?.Invoke();
     }
     public string Format(DateTime utc) => TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(utc, DateTimeKind.Utc),
-        TimeZone == "System" ? _deviceZone : TimeZoneInfo.Utc).ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+        TimeZone == "System" ? _deviceZone : TimeZoneInfo.Utc).ToString("G", _localization.Culture);
 }

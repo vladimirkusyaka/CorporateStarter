@@ -6,23 +6,23 @@
                    Loading="_loadingDetails" Loaded="_loaded" Saving="_saving" Blocked="Blocked" SessionReady="_sessionReady"
                    Uncertain="_uncertain" ConfirmDiscard="_confirmDiscard" Error="@_error"
                    Close="CloseAsync" Save="SaveAsync" Retry="LoadDetailsAsync" KeepEditing="KeepEditing" Discard="Discard">
-    <label class="editor-field-label" for="country-create-code">Code</label>
+    <label class="editor-field-label" for="country-create-code">@L["Code"]</label>
     <MudTextField @bind-Value="_model.Code" InputId="country-create-code" MaxLength="2" aria-required="true" Variant="Variant.Outlined"
                   Margin="Margin.Dense" Immediate="true" Disabled="@Blocked"
                   Validation="@(new Func<string, string?>(ValidateCode))" />
-    <label class="editor-field-label" for="country-create-name">Name</label>
+    <label class="editor-field-label" for="country-create-name">@L["Name"]</label>
     <MudTextField @bind-Value="_model.Name" InputId="country-create-name" aria-required="true" Variant="Variant.Outlined"
                   Margin="Margin.Dense" Immediate="true" Disabled="@Blocked"
                   Validation="@(new Func<string, string?>(Required))" />
-    <label class="editor-field-label" for="country-create-native-name">Native name</label>
+    <label class="editor-field-label" for="country-create-native-name">@L["Native name"]</label>
     <MudTextField @bind-Value="_model.NativeName" InputId="country-create-native-name" Variant="Variant.Outlined"
                   Margin="Margin.Dense" Immediate="true" Disabled="@Blocked" />
-    <label class="editor-field-label" for="country-create-phone-code">Phone code</label>
+    <label class="editor-field-label" for="country-create-phone-code">@L["Phone code"]</label>
     <MudTextField @bind-Value="_model.PhoneCode" InputId="country-create-phone-code" Variant="Variant.Outlined"
                   Margin="Margin.Dense" Immediate="true" Disabled="@Blocked" />
     @if (IsEditing && _capabilities.ViewInactive)
     {
-        <MudSwitch @bind-Value="ActiveValue" Color="Color.Primary" Disabled="@(Blocked || !CanChangeActive)" Label="Active" />
+        <MudSwitch @bind-Value="ActiveValue" Color="Color.Primary" Disabled="@(Blocked || !CanChangeActive)" Label="@L["Active"]" />
     }
 
 </EditorDialogFrame>

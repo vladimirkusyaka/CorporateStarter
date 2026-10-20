@@ -32,7 +32,7 @@ public partial class Profile : IDisposable
         finally { _busy = false; if (!_disposed) StateHasChanged(); }
     }
     private Task SaveAccountAsync() => SaveAsync(() => Client.SaveAccountAsync(_displayName, _lifetime.Token), "Account saved.");
-    private Task SaveAppearanceAsync() => SaveAsync(() => Client.SaveAppearanceAsync(new() { Theme = _theme, PageSize = _pageSize, TimeZone = _timeZone }, _lifetime.Token), "Appearance saved.");
+    private Task SaveAppearanceAsync() => SaveAsync(() => Client.SaveAppearanceAsync(new() { Theme = _theme, PageSize = _pageSize, TimeZone = _timeZone, Language = L.Language }, _lifetime.Token), "Appearance saved.");
     private async Task SaveAsync(Func<Task> save, string message)
     {
         if (_busy) return;

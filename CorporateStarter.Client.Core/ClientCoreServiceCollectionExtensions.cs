@@ -29,6 +29,7 @@ public static class ClientCoreServiceCollectionExtensions
         services.TryAddScoped<CorporateStarter.Client.Core.Audit.ChangesClient>();
         services.TryAddScoped<CorporateStarter.Client.Core.Audit.SecurityEventsClient>();
         services.TryAddScoped<CorporateStarter.Client.Core.Auth.CurrentUserClient>();
+        services.TryAddScoped<CorporateStarter.Shared.Localization.UiText>();
         services.TryAddScoped<ProfilePreferences>();
         services.TryAddScoped<ProfileClient>();
         services.TryAddScoped<ClientPermissions>();

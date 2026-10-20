@@ -3,29 +3,29 @@
 @using CorporateStarter.Shared.Dtos.Audit
 @using CorporateStarter.Client.UI.Components.Details
 
-<RecordDetailsDialog TItem="AuditLogListItemDto" Title="Change details" Load="@(ct => Client.GetDetailsAsync(ChangeId, ct))">
+<RecordDetailsDialog TItem="AuditLogListItemDto" Title="@L["Change details"]" Load="@(ct => Client.GetDetailsAsync(ChangeId, ct))">
     <ChildContent Context="item">
         <dl class="change-metadata">
-            <dt>Date (@Preferences.ZoneLabel)</dt><dd>@Preferences.Format(item.CreatedAtUtc)</dd>
-            <dt>Entity</dt><dd>@item.EntityName</dd>
-            <dt>Record</dt><dd>@(item.EntityDisplayName ?? item.EntityId)</dd>
-            <dt>Record ID</dt><dd><CopyIdentifier Value="@item.EntityId" Label="record ID" /></dd>
-            <dt>Change ID</dt><dd><CopyIdentifier Value="@(item.Id.ToString())" Label="change ID" /></dd>
-            <dt>Correlation ID</dt><dd><CopyIdentifier Value="@item.CorrelationId" Label="correlation ID" /></dd>
-            <dt>Action</dt><dd>@item.Action</dd>
-            <dt>User</dt><dd>@(item.UserEmail ?? "—")</dd>
+            <dt>@L.Format("Date ({0})", Preferences.ZoneLabel)</dt><dd>@Preferences.Format(item.CreatedAtUtc)</dd>
+            <dt>@L["Entity"]</dt><dd>@item.EntityName</dd>
+            <dt>@L["Record"]</dt><dd>@(item.EntityDisplayName ?? item.EntityId)</dd>
+            <dt>@L["Record ID"]</dt><dd><CopyIdentifier Value="@item.EntityId" Label="@L["record ID"]" /></dd>
+            <dt>@L["Change ID"]</dt><dd><CopyIdentifier Value="@(item.Id.ToString())" Label="@L["change ID"]" /></dd>
+            <dt>@L["Correlation ID"]</dt><dd><CopyIdentifier Value="@item.CorrelationId" Label="@L["correlation ID"]" /></dd>
+            <dt>@L["Action"]</dt><dd>@item.Action</dd>
+            <dt>@L["User"]</dt><dd>@(item.UserEmail ?? "—")</dd>
         </dl>
         @{ var comparison = ChangeComparison.Parse(item.OldValuesJson, item.NewValuesJson); }
         @if (comparison.InvalidJson)
         {
-            <MudAlert Severity="Severity.Warning">The stored snapshot is not valid JSON and cannot be compared.</MudAlert>
+            <MudAlert Severity="Severity.Warning">@L["The stored snapshot is not valid JSON and cannot be compared."]</MudAlert>
         }
         else
         {
-            <MudSwitch @bind-Value="_onlyChanged" Color="Color.Primary" Label="Changed fields only" />
+            <MudSwitch @bind-Value="_onlyChanged" Color="Color.Primary" Label="@L["Changed fields only"]" />
             <div class="change-values">
                 <table>
-                    <thead><tr><th>Field</th><th>Before</th><th>After</th></tr></thead>
+                    <thead><tr><th>@L["Field"]</th><th>@L["Before"]</th><th>@L["After"]</th></tr></thead>
                     <tbody>
                         @foreach (var row in comparison.Rows.Where(x => !_onlyChanged || x.Changed))
                         {
@@ -36,7 +36,7 @@
             </div>
             @if (!comparison.Rows.Any(x => !_onlyChanged || x.Changed))
             {
-                <MudText>No field differences recorded.</MudText>
+                <MudText>@L["No field differences recorded."]</MudText>
             }
         }
     </ChildContent>

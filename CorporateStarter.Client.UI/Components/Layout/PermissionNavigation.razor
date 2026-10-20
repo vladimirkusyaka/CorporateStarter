@@ -1,28 +1,28 @@
 ﻿@using CorporateStarter.Client.Core.Auth
 
 <MudNavMenu Dense="true" Class="cs-nav">
-    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard" Class="cs-nav-link">Dashboard</MudNavLink>
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard" Class="cs-nav-link">@L["Dashboard"]</MudNavLink>
     @foreach (var group in NavigationCatalog.VisibleGroups(Permissions.Has))
     {
         @if (Expanded)
         {
-            <MudNavGroup Title="@group.Title" Icon="@Icon(group.Icon)" Class="cs-nav-group">
+            <MudNavGroup Title="@L[group.Title]" Icon="@Icon(group.Icon)" Class="cs-nav-group">
                 @foreach (var item in group.Items)
                 {
-                    <MudNavLink Href="@item.Path" Icon="@Icon(item.Icon)">@item.Title</MudNavLink>
+                    <MudNavLink Href="@item.Path" Icon="@Icon(item.Icon)">@L[item.Title]</MudNavLink>
                 }
             </MudNavGroup>
         }
         else
         {
-            <MudMenu Icon="@Icon(group.Icon)" AriaLabel="@group.Title" ActivationEvent="MouseEvent.MouseOver"
+            <MudMenu Icon="@Icon(group.Icon)" AriaLabel="@L[group.Title]" ActivationEvent="MouseEvent.MouseOver"
                      AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopLeft" Dense="true"
                      Class="cs-nav-flyout" PopoverClass="cs-nav-popup">
                 <ChildContent>
-                    <div class="cs-nav-popup-title">@group.Title</div>
+                    <div class="cs-nav-popup-title">@L[group.Title]</div>
                     @foreach (var item in group.Items)
                     {
-                        <MudMenuItem Href="@item.Path" Icon="@Icon(item.Icon)">@item.Title</MudMenuItem>
+                        <MudMenuItem Href="@item.Path" Icon="@Icon(item.Icon)">@L[item.Title]</MudMenuItem>
                     }
                 </ChildContent>
             </MudMenu>

@@ -7,15 +7,15 @@
                    Loading="_loadingDetails" Loaded="_loaded" Saving="_saving" Blocked="Blocked" SessionReady="_sessionReady"
                    Uncertain="_uncertain" ConfirmDiscard="_confirmDiscard" Error="@_error"
                    Close="CloseAsync" Save="SaveAsync" Retry="LoadDetailsAsync" KeepEditing="KeepEditing" Discard="Discard">
-    <ReferenceLookup Label="Country" Value="_country" ValueChanged="CountryChanged"
+    <ReferenceLookup Label="@L["Country"]" Value="_country" ValueChanged="CountryChanged"
                      Search="Client.SearchCountriesAsync" Disabled="@Blocked" />
-    <MudTextField @bind-Value="_model.Name" Label="Name" MaxLength="150" Variant="Variant.Outlined"
+    <MudTextField @bind-Value="_model.Name" Label="@L["Name"]" MaxLength="150" Variant="Variant.Outlined"
                   Margin="Margin.Dense" Immediate="true" Disabled="@Blocked"
                   Validation="@(new Func<string, string?>(Required))" />
-    <MudTextField @bind-Value="_model.Region" Label="Region" MaxLength="150" Variant="Variant.Outlined"
+    <MudTextField @bind-Value="_model.Region" Label="@L["Region"]" MaxLength="150" Variant="Variant.Outlined"
                   Margin="Margin.Dense" Immediate="true" Disabled="@Blocked" />
     @if (IsEditing && _capabilities.ViewInactive)
     {
-        <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@(Blocked || !CanChangeActive)" Label="Active" />
+        <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@(Blocked || !CanChangeActive)" Label="@L["Active"]" />
     }
 </EditorDialogFrame>

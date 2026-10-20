@@ -4,35 +4,35 @@
 @using CorporateStarter.Client.UI.Components.Details
 
 
-<RecordDetailsDialog TItem="SecurityEventListItemDto" Title="Security event" Load="@(ct => Client.GetDetailsAsync(EventId, ct))">
+<RecordDetailsDialog TItem="SecurityEventListItemDto" Title="@L["Security event"]" Load="@(ct => Client.GetDetailsAsync(EventId, ct))">
     <ChildContent Context="item">
         <dl class="event-metadata">
-            <dt>Date (@Preferences.ZoneLabel)</dt>
+            <dt>@L.Format("Date ({0})", Preferences.ZoneLabel)</dt>
             <dd>@Preferences.Format(item.CreatedAtUtc)</dd>
-            <dt>Event</dt>
+            <dt>@L["Event"]</dt>
             <dd>@item.EventType</dd>
-            <dt>Severity</dt>
+            <dt>@L["Severity"]</dt>
             <dd>@item.Severity</dd>
-            <dt>Outcome</dt>
+            <dt>@L["Outcome"]</dt>
             <dd>@item.Outcome</dd>
-            <dt>User</dt>
-            <dd>@(item.SubjectUserDisplayName ?? item.SubjectUserEmail ?? item.SubjectUserId?.ToString() ?? "Not recorded")</dd>
-            <dt>Email</dt><dd>@(item.SubjectUserEmail ?? "Not recorded")</dd>
-            <dt>Event ID</dt><dd><CopyIdentifier Value="@(item.Id.ToString())" Label="event ID" /></dd>
-            <dt>User ID</dt>
-            <dd><CopyIdentifier Value="@(item.SubjectUserId?.ToString())" Label="user ID" /></dd>
-            <dt>Session ID</dt>
-            <dd>@(item.AuthSessionId?.ToString() ?? "Not recorded")</dd>
-            <dt>Token family ID</dt>
-            <dd>@(item.RefreshTokenFamilyId?.ToString() ?? "Not recorded")</dd>
-            <dt>Correlation ID</dt>
-            <dd><CopyIdentifier Value="@item.CorrelationId" Label="correlation ID" /></dd>
-            <dt>IP address</dt>
-            <dd>@(item.IpAddress ?? "Not recorded")</dd>
-            <dt>User agent</dt>
-            <dd>@(item.UserAgent ?? "Not recorded")</dd>
+            <dt>@L["User"]</dt>
+            <dd>@(item.SubjectUserDisplayName ?? item.SubjectUserEmail ?? item.SubjectUserId?.ToString() ?? L["Not recorded"])</dd>
+            <dt>@L["Email"]</dt><dd>@(item.SubjectUserEmail ?? L["Not recorded"])</dd>
+            <dt>@L["Event ID"]</dt><dd><CopyIdentifier Value="@(item.Id.ToString())" Label="@L["event ID"]" /></dd>
+            <dt>@L["User ID"]</dt>
+            <dd><CopyIdentifier Value="@(item.SubjectUserId?.ToString())" Label="@L["user ID"]" /></dd>
+            <dt>@L["Session ID"]</dt>
+            <dd>@(item.AuthSessionId?.ToString() ?? L["Not recorded"])</dd>
+            <dt>@L["Token family ID"]</dt>
+            <dd>@(item.RefreshTokenFamilyId?.ToString() ?? L["Not recorded"])</dd>
+            <dt>@L["Correlation ID"]</dt>
+            <dd><CopyIdentifier Value="@item.CorrelationId" Label="@L["correlation ID"]" /></dd>
+            <dt>@L["IP address"]</dt>
+            <dd>@(item.IpAddress ?? L["Not recorded"])</dd>
+            <dt>@L["User agent"]</dt>
+            <dd>@(item.UserAgent ?? L["Not recorded"])</dd>
         </dl>
-        <MudText Typo="Typo.subtitle1">Additional details</MudText>
+        <MudText Typo="Typo.subtitle1">@L["Additional details"]</MudText>
         <JsonDetails Value="@item.DetailsJson" />
     </ChildContent>
 </RecordDetailsDialog>

@@ -9,25 +9,25 @@
                    Close="CloseAsync" Save="SaveTabbedAsync" Retry="LoadDetailsAsync" KeepEditing="KeepEditing" Discard="Discard">
     @if (_system)
     {
-        <MudAlert Severity="Severity.Info">System roles are read-only.</MudAlert>
+        <MudAlert Severity="Severity.Info">@L["System roles are read-only."]</MudAlert>
     }
     <MudTabs ActivePanelIndex="_tab" ActivePanelIndexChanged="ChangeTab" KeepPanelsAlive="true" Elevation="0" TabPanelsClass="pt-4">
-        <MudTabPanel Text="Details" Disabled="@(Blocked || _confirmDiscard || _validating)">
-            <MudTextField @bind-Value="_model.Name" Label="Name" MaxLength="100" Variant="Variant.Outlined"
+        <MudTabPanel Text="@L["Details"]" Disabled="@(Blocked || _confirmDiscard || _validating)">
+            <MudTextField @bind-Value="_model.Name" Label="@L["Name"]" MaxLength="100" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="@(Blocked || _system)" Validation="@(new Func<string, string?>(Required))" />
-            <MudTextField @bind-Value="_model.Description" Label="Description" MaxLength="500" Lines="3" Variant="Variant.Outlined"
+            <MudTextField @bind-Value="_model.Description" Label="@L["Description"]" MaxLength="500" Lines="3" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="@(Blocked || _system)" />
             @if (_capabilities.ViewInactive)
             {
-                <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@(Blocked || _system || !CanChangeActive)" Label="Active" />
+                <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@(Blocked || _system || !CanChangeActive)" Label="@L["Active"]" />
             }
         </MudTabPanel>
-        <MudTabPanel Text="Permissions" Disabled="@(Blocked || _confirmDiscard || _validating)">
-            <ReferenceTreeSelect Label="Permissions" Options="_options" Selected="_selected" SelectedChanged="PermissionsChanged"
+        <MudTabPanel Text="@L["Permissions"]" Disabled="@(Blocked || _confirmDiscard || _validating)">
+            <ReferenceTreeSelect Label="@L["Permissions"]" Options="_options" Selected="_selected" SelectedChanged="PermissionsChanged"
                                  Disabled="@(Blocked || _system || !_managePermissions)" />
             @if (!_managePermissions)
             {
-                <MudText Typo="Typo.body2">You can view assigned permissions but cannot change them.</MudText>
+                <MudText Typo="Typo.body2">@L["You can view assigned permissions but cannot change them."]</MudText>
             }
         </MudTabPanel>
     </MudTabs>

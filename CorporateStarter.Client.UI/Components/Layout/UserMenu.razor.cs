@@ -20,7 +20,7 @@ namespace CorporateStarter.Client.UI.Components.Layout
         private long? _attemptedGeneration;
         private CancellationTokenSource? _request;
         private bool _disposed;
-        private string Name => _profile is null ? "Signed in" : CurrentUserClient.Name(_profile);
+        private string Name => _profile is null ? L["Signed in"] : CurrentUserClient.Name(_profile);
         private string Initial => _profile is null ? "?" : CurrentUserClient.Initial(Name);
         protected override void OnInitialized()
         {

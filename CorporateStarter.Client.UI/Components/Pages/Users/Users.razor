@@ -2,8 +2,8 @@
 @using CorporateStarter.Client.UI.Components.Tables
 @using CorporateStarter.Shared.Dtos.Security.Users
 
-<PageTitle>Users</PageTitle>
+<PageTitle>@L["Users"]</PageTitle>
 <ReferenceTable TItem="UserTableItemDto" TColumn="Column" Client="Client" Columns="Columns"
-                ItemId="@(x => x.Id)" ItemName="@(x => x.Login)" Title="Users" Singular="user"
+                ItemId="@(x => x.Id)" ItemName="@(x => x.Login)" Title="@L["Users"]" Singular="user"
                 CanDeleteItem="@(x => x.IsActive && x.Id != Auth.Current.UserId)" Actions="_actions"
                 OpenEditor="OpenEditorAsync" SavedId="@(value => value is Guid id ? id : null)" />

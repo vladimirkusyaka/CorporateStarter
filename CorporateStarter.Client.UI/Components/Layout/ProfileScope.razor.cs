@@ -17,7 +17,16 @@ namespace CorporateStarter.Client.UI.Components.Layout
         private async Task LoadAsync()
         {
             _busy = true; _error = false;
-            try { await Client.GetAsync(_lifetime.Token); _loaded = true; }
+            try
+            {
+                var profile = await Client.GetAsync(_lifetime.Token);
+                if (profile.Appearance.Language is null)
+                {
+                    profile.Appearance.Language = L.Language;
+                    await Client.SaveAppearanceAsync(profile.Appearance, _lifetime.Token);
+                }
+                _loaded = true;
+            }
             catch (OperationCanceledException) when (_lifetime.IsCancellationRequested) { }
             catch (Exception) { _error = true; }
             finally { _busy = false; if (!_lifetime.IsCancellationRequested) StateHasChanged(); }

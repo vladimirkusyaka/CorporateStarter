@@ -7,15 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Remove="Components\Lookups\ReferenceMultiSelect.razor.cs" />
-
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="Components\Lookups\ReferenceMultiSelect.razor.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<SupportedPlatform Include="browser" />
 		<Using Include="Microsoft.Extensions.Logging" />
 

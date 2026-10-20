@@ -529,7 +529,8 @@ export async function sendApiRequest(request) {
     try {
         const headers = {
             "Accept": "application/json",
-            "Authorization": `Bearer ${tokenAtStart}`
+            "Authorization": `Bearer ${tokenAtStart}`,
+            "Accept-Language": globalThis.document?.documentElement?.lang || "en-US"
         };
         if (request.jsonBody != null)
             headers["Content-Type"] = "application/json";

@@ -1,7 +1,30 @@
-﻿.multi-select { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
-.multi-select > input { padding: 8px; border: 1px solid #b8bec7; border-radius: 4px; font: inherit; }
-.multi-select-options { max-height: 320px; overflow: auto; border: 1px solid #dce0e6; border-radius: 4px; padding: 8px; }
-.multi-select fieldset { border: 0; padding: 6px 0; margin: 0; min-width: 0; }
-.multi-select legend { font-weight: 600; }
-.multi-select-option { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; overflow-wrap: anywhere; }
-.multi-select-option input { margin-top: 4px; flex-shrink: 0; }
+﻿using Microsoft.AspNetCore.Components;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Xml.Linq;
+
+namespace CorporateStarter.Client.UI.Components.Lookups
+{
+    public partial class ReferenceMultiSelect
+    {
+        [Parameter] public string Label { get; set; } = "Options";
+        [Parameter] public IReadOnlyList<SelectionOption> Options { get; set; } = [];
+        [Parameter] public IReadOnlySet<Guid> Selected { get; set; } = new HashSet<Guid>();
+        [Parameter] public EventCallback<IReadOnlySet<Guid>> SelectedChanged { get; set; }
+        [Parameter] public bool Disabled { get; set; }
+        private string _search = string.Empty;
+        private readonly string _searchId = "selection-" + Guid.NewGuid().ToString("N");
+        private IEnumerable<SelectionOption> Visible => Options.Where(x =>
+            x.Label.Contains(_search.Trim(), StringComparison.OrdinalIgnoreCase) ||
+            x.Group.Contains(_search.Trim(), StringComparison.OrdinalIgnoreCase))
+            .OrderBy(x => x.Group).ThenBy(x => x.Label);
+        private Task ChangeAsync(SelectionOption option, ChangeEventArgs args)
+        {
+            if (Disabled || !option.Enabled || !Options.Any(x => x.Id == option.Id && x.Enabled)) return Task.CompletedTask;
+            var next = Selected.ToHashSet();
+            if (args.Value is true) next.Add(option.Id); else next.Remove(option.Id);
+            return SelectedChanged.InvokeAsync(next);
+        }
+    }
+}

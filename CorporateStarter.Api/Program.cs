@@ -426,7 +426,11 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownProxies.Add(IPAddress.Loopback.MapToIPv6());
 });
 
+builder.Services.Configure<Microsoft.AspNetCore.Builder.RequestLocalizationOptions>(options =>
+    options.SetDefaultCulture("en-US").AddSupportedCultures("en-US", "de-DE", "ru-RU")
+        .AddSupportedUICultures("en-US", "de-DE", "ru-RU"));
 var app = builder.Build();
+app.UseRequestLocalization();
 
 app.UseForwardedHeaders();
 

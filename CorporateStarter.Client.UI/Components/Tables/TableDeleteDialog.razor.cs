@@ -26,8 +26,8 @@ public partial class TableDeleteDialog : IDisposable
     private bool CanDelete => !_busy && !_attempted && !_disposed && !_closed &&
         _items.Length > 0 && SameSession && Auth.Current.Status == ClientAuthStatus.Authenticated;
     private string Confirmation => _items.Length == 1
-        ? $"Do you really want to delete {Singular}: {_items[0].Name}?"
-        : $"Do you really want to delete {_items.Length} {Plural}?";
+        ? L.Format("Do you really want to delete {0}: {1}?", L[Singular], _items[0].Name)
+        : L.Format("Do you really want to delete {0} {1}?", _items.Length, L[Plural]);
 
     protected override void OnInitialized()
     {
@@ -84,8 +84,8 @@ public partial class TableDeleteDialog : IDisposable
                 >= 400 and < 500 => "The server rejected the next deletion.",
                 _ => "The result of the last request is unknown."
             } : "The result of the last request is unknown.";
-            _error = $"Deletion stopped. {_completed} of {_items.Length} deletions confirmed. {reason} " +
-                "Close this dialog to refresh the list before selecting records again.";
+            _error = L.Format("Deletion stopped. {0} of {1} deletions confirmed. {2}", _completed, _items.Length, L[reason]) + " " +
+                L["Close this dialog to refresh the list before selecting records again."];
         }
         finally { _busy = false; }
     }

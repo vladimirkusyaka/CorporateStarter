@@ -18,7 +18,12 @@
 <body>
     <Routes @rendermode="Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer" />
     <ReconnectModal />
-    <script src="@Assets["_framework/blazor.web.js"]"></script>
+    <script src="@Assets["_framework/blazor.web.js"]" autostart="false"></script>
+    <script type="module">
+            import { initialize } from './_content/CorporateStarter.Client.UI/localization.js?v=20261017';
+            await initialize();
+            await Blazor.start();
+    </script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 </body>
 

@@ -3,7 +3,7 @@
 @if (_loaded) { @ChildContent }
 else if (_error)
 {
-    <MudAlert Severity="Severity.Warning">Could not load profile settings.</MudAlert>
-    <MudButton OnClick="LoadAsync" Disabled="_busy">Retry</MudButton>
+    <MudAlert Severity="Severity.Warning">@L["Could not load profile settings."]</MudAlert>
+    <MudButton OnClick="LoadAsync" Disabled="_busy">@L["Retry"]</MudButton>
 }
-else { <MudProgressCircular Indeterminate="true" aria-label="Loading profile" /> }
+else { <MudProgressCircular Indeterminate="true" aria-label="@L["Loading profile"]" /> }

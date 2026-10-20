@@ -5,6 +5,7 @@ namespace CorporateStarter.Core.Entities.Security;
 
 public class User : BaseEntity
 {
+    public string? PreferredLanguage { get; set; }
     public string PreferredTheme { get; set; } = "System";
     public int PreferredPageSize { get; set; } = 20;
     public string PreferredTimeZone { get; set; } = "UTC";

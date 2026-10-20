@@ -1,6 +1,7 @@
 ﻿@using System.Reflection
 @using CorporateStarter.Client.Browser.Components
 
+<LanguageScope>
 <BrowserEnvironmentGate>
     <Router AppAssembly="@HostAssembly"
             AdditionalAssemblies="ClientUiAssembly.RouteAssemblies"
@@ -12,7 +13,4 @@
         </Found>
     </Router>
 </BrowserEnvironmentGate>
-
-@code {
-    [Parameter, EditorRequired] public Assembly HostAssembly { get; set; } = default!;
-}
+</LanguageScope>

@@ -21,7 +21,7 @@ public partial class CountryEditorDialog : RecordEditorBase<UpdateCountryRequest
     {
         var results = new List<ValidationResult>();
         return Validator.TryValidateProperty(value, new ValidationContext(_model) { MemberName = nameof(UpdateCountryRequest.Code) }, results)
-            ? null : results[0].ErrorMessage;
+            ? null : L["Code must contain two letters."];
     }
     protected override async Task<UpdateCountryRequest> ReadModelAsync(Guid id, CancellationToken ct)
     {

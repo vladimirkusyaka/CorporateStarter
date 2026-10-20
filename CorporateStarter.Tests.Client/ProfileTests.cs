@@ -19,9 +19,9 @@ public sealed class ProfileTests
     {
         var preferences = new ProfilePreferences();
         preferences.SetDeviceZone("America/New_York"); preferences.Apply(new() { TimeZone = "System" });
-        Assert.Equal("2026-01-02 07:00:00", preferences.Format(new(2026, 1, 2, 12, 0, 0, DateTimeKind.Unspecified)));
-        Assert.Equal("2026-07-02 08:00:00", preferences.Format(new(2026, 7, 2, 12, 0, 0, DateTimeKind.Utc)));
-        preferences.Apply(new()); Assert.Equal("2026-01-02 12:00:00", preferences.Format(new(2026, 1, 2, 12, 0, 0)));
+        Assert.Equal("1/2/2026 7:00:00 AM", preferences.Format(new(2026, 1, 2, 12, 0, 0, DateTimeKind.Unspecified)));
+        Assert.Equal("7/2/2026 8:00:00 AM", preferences.Format(new(2026, 7, 2, 12, 0, 0, DateTimeKind.Utc)));
+        preferences.Apply(new()); Assert.Equal("1/2/2026 12:00:00 PM", preferences.Format(new(2026, 1, 2, 12, 0, 0)));
     }
     [Fact]
     public async Task Profile_settings_reset_on_logout_and_ignore_late_response()

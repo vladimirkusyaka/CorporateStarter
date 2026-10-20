@@ -28,7 +28,7 @@ public sealed class ChangeTableTests(CorporateStarterApiFactory factory) : IClas
         Assert.Null((await repository.FindAsync(new() { Query = query, LocateId = hidden.Id }, default)).Id);
         Assert.Null(await repository.GetDetailsAsync(hidden.Id, default));
         Assert.Equal("{}", (await repository.GetDetailsAsync(newer.Id, default))!.OldValuesJson);
-        query.Filters.Add(new("createdAtUtc", "contains", JsonSerializer.SerializeToElement("2026-01-01")));
+        query.Filters.Add(new("createdAtUtc", "contains", JsonSerializer.SerializeToElement("1/1/2026")));
         Assert.Equal(older.Id, Assert.Single((await repository.QueryAsync(query, default)).Items).Id);
         query.Sorts.Add(new("createdAtUtc", "asc"));
         Assert.Equal(older.Id, Assert.Single((await repository.QueryAsync(query, default)).Items).Id);

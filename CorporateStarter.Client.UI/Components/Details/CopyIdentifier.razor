@@ -1,7 +1,7 @@
-﻿<span>@(string.IsNullOrWhiteSpace(Value) ? "Not recorded" : Value)</span>
+﻿<span>@(string.IsNullOrWhiteSpace(Value) ? L["Not recorded"] : Value)</span>
 @if (!string.IsNullOrWhiteSpace(Value))
 {
     <MudIconButton Icon="@Icons.Material.Outlined.ContentCopy" Size="Size.Small"
-                   OnClick="CopyAsync" aria-label="@($"Copy {Label}")" title="@($"Copy {Label}")" />
+                   OnClick="CopyAsync" aria-label="@(L.Format("Copy {0}", L[Label]))" title="@(L.Format("Copy {0}", L[Label]))" />
 }
-<span role="status" aria-live="polite">@_status</span>
+<span role="status" aria-live="polite">@L.Text(_status)</span>

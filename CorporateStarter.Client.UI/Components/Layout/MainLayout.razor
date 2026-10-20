@@ -1,6 +1,6 @@
 ﻿@using CorporateStarter.Client.Abstractions.Auth
 
-@inherits LayoutComponentBase
+@inherits LocalizedLayout
 
 <MudThemeProvider @ref="_themeProvider" Theme="@AppTheme" IsDarkMode="@DarkAppearance" />
 <MudPopoverProvider />
@@ -14,12 +14,13 @@
 <div class="cs-layout-root" style="color-scheme: @(DarkAppearance ? "dark" : "light")">
     @if (ShowShell)
     {
+        <ProfileScope @key="_snapshot.SessionGeneration">
         <BrandingLoader @key="_snapshot.SessionGeneration" />
         <MudLayout Class="cs-shell">
             <MudAppBar Elevation="0" Dense="true" Class="cs-topbar">
                 @if (AppSwitcherVisible)
                 {
-                    <MudTooltip Text="Applications">
+                    <MudTooltip Text="@L["Applications"]">
                         <MudIconButton Icon="@Icons.Material.Filled.Apps"
                                        Class="cs-app-switcher"
                                        Size="Size.Small" />
@@ -68,7 +69,7 @@
                              hidden="@(!ShowAuthorizedContent)"
                              inert="@(!IsAuthenticated && !IsQuietSessionCheck)">
                             <SessionContent CanRender="@IsAuthenticated">
-                                <ProfileScope><PermissionContent>@_authorizedBody</PermissionContent></ProfileScope>
+                                <PermissionContent>@_authorizedBody</PermissionContent>
                             </SessionContent>
                         </div>
                     }
@@ -76,6 +77,7 @@
             </MudMainContent>
 
         </MudLayout>
+        </ProfileScope>
     }
     @if (ShowLogin)
     {
@@ -83,40 +85,40 @@
             <aside class="cs-login-brand" aria-label="CorporateStarter">
                 <div class="cs-login-logo"><MudIcon Icon="@Icons.Material.Filled.Apps" /> CorporateStarter</div>
                 <div class="cs-login-message">
-                    <p class="cs-login-eyebrow">YOUR WORKSPACE</p>
-                    <h2>Everything you need.<br />One place to work.</h2>
-                    <p>A shared workspace for your team, your data and your daily work.</p>
+                    <p class="cs-login-eyebrow">@L["YOUR WORKSPACE"]</p>
+                    <h2>@L["Everything you need."]<br />@L["One place to work."]</h2>
+                    <p>@L["A shared workspace for your team, your data and your daily work."]</p>
                 </div>
                 <span class="cs-login-version">@BuildVersion</span>
             </aside>
             <section class="cs-login-form-wrap" aria-labelledby="login-title">
                 <div class="cs-login-fields">
-                    <h1 id="login-title">Sign in</h1>
-                    <p class="cs-login-subtitle">Enter your credentials to access your workspace.</p>
+                    <h1 id="login-title">@L["Sign in"]</h1>
+                    <p class="cs-login-subtitle">@L["Enter your credentials to access your workspace."]</p>
                     <MudTextField @ref="_usernameField" @bind-Value="Login"
-                                  Label="Username" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Label="@L["Username"]" Variant="Variant.Outlined" Margin="Margin.Dense"
                                   FullWidth="true" Immediate="true" Disabled="@IsSigningIn"
                                   Class="cs-login-field" OnKeyDown="@OnLoginKeyDown"
                                   autocomplete="username" />
-                    <MudTextField @bind-Value="Password" Label="Password"
+                    <MudTextField @bind-Value="Password" Label="@L["Password"]"
                                   Variant="Variant.Outlined" Margin="Margin.Dense" FullWidth="true"
                                   Immediate="true" Disabled="@IsSigningIn" InputType="InputType.Password"
                                   Class="cs-login-field" OnKeyDown="@OnLoginKeyDown"
                                   autocomplete="current-password" />
                     @if (!string.IsNullOrWhiteSpace(SignInError))
                     {
-                        <MudAlert Severity="Severity.Error" Dense="true" Class="cs-login-error" role="alert">@SignInError</MudAlert>
+                        <MudAlert Severity="Severity.Error" Dense="true" Class="cs-login-error" role="alert">@L.Text(SignInError)</MudAlert>
                     }
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true"
                                Disabled="@IsSigningIn" OnClick="@SignInAsync" Class="cs-login-button">
                         @if (IsSigningIn)
                         {
                             <MudProgressCircular Size="Size.Small" Indeterminate="true" />
-                            <span>Signing in…</span>
+                            <span>@L["Signing in…"]</span>
                         }
                         else
                         {
-                            @:Sign in
+                            @L["Sign in"]
                         }
                     </MudButton>
                 </div>
@@ -132,20 +134,20 @@
                     {
                         <p>
                             @(Session.IsLogoutPending
-                                ? "Sign-out could not be confirmed. Retry to finish signing out."
-                                : "Session verification is unavailable.")
+                                ? L["Sign-out could not be confirmed. Retry to finish signing out."]
+                                : L["Session verification is unavailable."])
                         </p>
 
                         <MudButton OnClick="RetrySessionAsync"
                                    Disabled="@(!IsConnectionReady || _restoreInProgress || _signingOut)">
-                            Retry
+                            @L["Retry"]
                         </MudButton>
                     }
                     else if (_snapshot.Status ==
                              ClientAuthStatus.UnsupportedEnvironment)
                     {
                         <p>
-                            A secure context and Web Locks support are required.
+                            @L["A secure context and Web Locks support are required."]
                         </p>
                     }
                     else
@@ -153,8 +155,8 @@
                         <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Small" aria-hidden="true" />
                         <p>
                             @(Session.IsLogoutPending
-                                ? "Signing out…"
-                                : "Checking session…")
+                                ? L["Signing out…"]
+                                : L["Checking session…"])
                         </p>
                     }
                 </div>

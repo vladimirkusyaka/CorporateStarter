@@ -27,7 +27,7 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
     }
     private TableColumn<TItem, TColumn> Definition(TColumn column) => Columns.Single(x => EqualityComparer<TColumn>.Default.Equals(x.Key, column));
     private string Field(TColumn column) => Definition(column).Field;
-    private string ColumnLabel(TColumn column) => Definition(column).Label;
+    private string ColumnLabel(TColumn column) => L[Definition(column).Label];
     private TableRequest BuildQuery() => _queryState.BuildRequest(Field, SerializeFilter);
     private TableFilter SerializeFilter(TColumn column, TableColumnFilter filter) =>
         Definition(column).IsStatus
@@ -36,7 +36,7 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
             : new TableFilter(Field(column), "contains", JsonSerializer.SerializeToElement(filter.Text));
     private string SortAria(TColumn column) => !EqualityComparer<TColumn?>.Default.Equals(_queryState.SortColumn, column) ? "none" : _queryState.SortDescending ? "descending" : "ascending";
     private string SortArrow(TColumn column) => !EqualityComparer<TColumn?>.Default.Equals(_queryState.SortColumn, column) ? "" : _queryState.SortDescending ? "↓" : "↑";
-    private string FilterTitle(TColumn column) => $"Filter {ColumnLabel(column)}" + (_filters.ContainsKey(column) ? " (active)" : "");
+    private string FilterTitle(TColumn column) => L.Format("Filter {0}", ColumnLabel(column)) + (_filters.ContainsKey(column) ? L[" (active)"] : "");
     private void ResetSearchPosition() { _lastFoundId = null; _searchMessage = null; }
     private void ResetViewPosition() { CurrentPage = 0; ClearSelection(); ResetSearchPosition(); }
 
@@ -135,7 +135,7 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
             if (_items.Any(x => ItemId(x) == id))
             {
                 SelectSavedRow(id); _lastFoundId = id;
-                _searchMessage = $"Found: {ItemName(_items.First(x => ItemId(x) == id))}";
+                _searchMessage = L.Format("Found: {0}", ItemName(_items.First(x => ItemId(x) == id)));
             }
             else { _searchMessage = "The list changed during search. Search again."; _lastFoundId = null; }
         }
@@ -176,7 +176,7 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
             parameters.Add(x => x.IsChoice, Definition(column).IsStatus);
             parameters.Add(x => x.Initial, _filters.GetValueOrDefault(column) ?? new TableColumnFilter());
             parameters.Add(x => x.Options, options);
-            _createDialog = await Dialogs.ShowAsync<TableFilterDialog>($"Filter {ColumnLabel(column)}", parameters,
+            _createDialog = await Dialogs.ShowAsync<TableFilterDialog>(L.Format("Filter {0}", ColumnLabel(column)), parameters,
                 new DialogOptions
                 {
                     MaxWidth = MaxWidth.ExtraSmall,
@@ -194,7 +194,7 @@ public partial class ReferenceTable<TItem, TColumn> where TColumn : struct, Enum
             await ReloadAfterQueryChangeAsync(filterChanged: true);
         }
         catch (OperationCanceledException) when (_lifetime.IsCancellationRequested) { }
-        catch (Exception ex) { Logger.LogWarning(ex, "Record filter failed."); if (!_disposed) Snackbar.Add("Could not load the filter. Please retry.", Severity.Warning); }
+        catch (Exception ex) { Logger.LogWarning(ex, "Record filter failed."); if (!_disposed) Snackbar.Add(L["Could not load the filter. Please retry."], Severity.Warning); }
         finally { _createDialog = null; _creating = false; }
     }
 }

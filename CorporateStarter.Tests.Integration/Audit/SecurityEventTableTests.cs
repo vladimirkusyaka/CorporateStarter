@@ -30,7 +30,7 @@ public sealed class SecurityEventTableTests(CorporateStarterApiFactory factory) 
         Assert.Null(await repository.GetDetailsAsync(Guid.NewGuid(), default));
         query.Filters.Add(new("severity", "eq", JsonSerializer.SerializeToElement("Warning")));
         Assert.Equal(newer.Id, Assert.Single((await repository.QueryAsync(query, default)).Items).Id);
-        query.Filters.RemoveAt(1); query.Filters.Add(new("createdAtUtc", "contains", JsonSerializer.SerializeToElement("2026-01-01")));
+        query.Filters.RemoveAt(1); query.Filters.Add(new("createdAtUtc", "contains", JsonSerializer.SerializeToElement("1/1/2026")));
         Assert.Equal(older.Id, Assert.Single((await repository.QueryAsync(query, default)).Items).Id);
         query.Filters.RemoveAt(1); query.Sorts.Add(new("createdAtUtc", "asc"));
         Assert.Equal(older.Id, Assert.Single((await repository.QueryAsync(query, default)).Items).Id);

@@ -16,7 +16,7 @@ public sealed class SecurityEventTableRepository : SqlTableRepository<SecurityEv
     protected override string DefaultOrder => "\"CreatedAtUtc\" desc";
     protected override IReadOnlyDictionary<string, SqlTableColumn> Columns { get; } = new Dictionary<string, SqlTableColumn>(StringComparer.OrdinalIgnoreCase)
     {
-        ["createdAtUtc"] = new("to_char(\"CreatedAtUtc\" AT TIME ZONE 'UTC', 'YYYY-MM-DD HH24:MI:SS')"),
+        ["createdAtUtc"] = new(SqlDateText.Utc("\"CreatedAtUtc\"")),
         ["eventType"] = new("\"EventType\""),
         ["severity"] = new("\"Severity\""),
         ["outcome"] = new("\"Outcome\""),

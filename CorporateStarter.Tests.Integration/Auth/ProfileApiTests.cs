@@ -33,9 +33,10 @@ public sealed class ProfileApiTests
         Assert.Equal(HttpStatusCode.OK, (await client.PutAsJsonAsync("/api/profile/account", new { displayName = "Alice", userId = Guid.NewGuid(), isActive = false, roleIds = new[] { Guid.NewGuid() } })).StatusCode);
         Assert.Equal(id, service.LastId); Assert.Equal("Alice", service.Name);
         Assert.Equal(HttpStatusCode.BadRequest, (await client.PutAsJsonAsync("/api/profile/appearance", new ProfileSettingsDto { PageSize = 21 })).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await client.PutAsJsonAsync("/api/profile/appearance", new ProfileSettingsDto { Language = "fr-FR" })).StatusCode);
         Assert.Equal(0, service.AppearanceWrites);
-        Assert.Equal(HttpStatusCode.OK, (await client.PutAsJsonAsync("/api/profile/appearance", new ProfileSettingsDto { Theme = "Dark", PageSize = 50 })).StatusCode);
-        Assert.Equal(1, service.AppearanceWrites);
+        Assert.Equal(HttpStatusCode.OK, (await client.PutAsJsonAsync("/api/profile/appearance", new ProfileSettingsDto { Theme = "Dark", PageSize = 50, Language = "de-DE" })).StatusCode);
+        Assert.Equal(1, service.AppearanceWrites); Assert.Equal("de-DE", service.Language);
         Assert.Equal(HttpStatusCode.BadRequest, (await client.PostAsJsonAsync("/api/profile/password", new ChangeMyPasswordRequest())).StatusCode);
         service.Error = "profile.current_password_invalid";
         var rejected = await client.PostAsJsonAsync("/api/profile/password", new ChangeMyPasswordRequest { CurrentPassword = "old", NewPassword = "new" });
@@ -45,10 +46,10 @@ public sealed class ProfileApiTests
     }
     private sealed class Service : IMyProfileService
     {
-        public Guid LastId; public string? Name, Error; public int AppearanceWrites;
+        public Guid LastId; public string? Name, Error, Language; public int AppearanceWrites;
         public Task<MyProfileDto?> GetAsync(Guid id, CancellationToken ct) { LastId = id; return Task.FromResult<MyProfileDto?>(new() { Account = new() { Id = id, Login = "alice" } }); }
         public Task<bool> UpdateAccountAsync(Guid id, UpdateMyAccountRequest r, CancellationToken ct) { LastId = id; Name = r.DisplayName; return Task.FromResult(true); }
-        public Task<bool> UpdateAppearanceAsync(Guid id, ProfileSettingsDto r, CancellationToken ct) { LastId = id; AppearanceWrites++; return Task.FromResult(true); }
+        public Task<bool> UpdateAppearanceAsync(Guid id, ProfileSettingsDto r, CancellationToken ct) { LastId = id; Language = r.Language; AppearanceWrites++; return Task.FromResult(true); }
         public Task<string?> ChangePasswordAsync(Guid id, ChangeMyPasswordRequest r, CancellationToken ct) { LastId = id; return Task.FromResult(Error); }
     }
 }

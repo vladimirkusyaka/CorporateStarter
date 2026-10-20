@@ -2,6 +2,6 @@
 @using CorporateStarter.Client.UI.Components.Tables
 @using CorporateStarter.Shared.Dtos.Audit
 
-<PageTitle>Security events</PageTitle>
+<PageTitle>@L["Security events"]</PageTitle>
 <ReferenceTable TItem="SecurityEventRowDto" TColumn="Column" Client="Client" Columns="Columns" ReadOnly="true"
-                ItemId="@(x => x.Id)" ItemName="@(x => x.EventType)" Title="Security events" Singular="event" OpenDetails="OpenAsync" />
+                ItemId="@(x => x.Id)" ItemName="@(x => x.EventType)" Title="@L["Security events"]" Singular="event" OpenDetails="OpenAsync" />

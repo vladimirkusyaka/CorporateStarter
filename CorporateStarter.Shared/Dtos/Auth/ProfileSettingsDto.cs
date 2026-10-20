@@ -6,5 +6,6 @@ public sealed class ProfileSettingsDto
     [Required, RegularExpression("^(System|Light|Dark)$")] public string Theme { get; set; } = "System";
     [Range(10, 50)] public int PageSize { get; set; } = 20;
     [Required, RegularExpression("^(UTC|System)$")] public string TimeZone { get; set; } = "UTC";
-    public bool IsValid() => Theme is "System" or "Light" or "Dark" && PageSize is 10 or 20 or 50 && TimeZone is "UTC" or "System";
+    [RegularExpression("^(en-US|de-DE|ru-RU)$")] public string? Language { get; set; }
+    public bool IsValid() => (Language is null || CorporateStarter.Shared.Localization.UiText.IsSupported(Language)) && Theme is "System" or "Light" or "Dark" && PageSize is 10 or 20 or 50 && TimeZone is "UTC" or "System";
 }

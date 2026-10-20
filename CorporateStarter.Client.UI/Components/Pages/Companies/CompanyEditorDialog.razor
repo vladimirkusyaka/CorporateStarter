@@ -8,40 +8,40 @@
                    Uncertain="_uncertain" ConfirmDiscard="_confirmDiscard" Error="@_error"
                    Close="CloseAsync" Save="SaveTabbedAsync" Retry="LoadDetailsAsync" KeepEditing="KeepEditing" Discard="Discard">
     <MudTabs ActivePanelIndex="_tab" ActivePanelIndexChanged="ChangeTab" KeepPanelsAlive="true" Elevation="0" TabPanelsClass="pt-4">
-        <MudTabPanel Text="Details" Disabled="@(Blocked || _confirmDiscard || _validating)">
-            <MudTextField @bind-Value="_model.Name" Label="Name" MaxLength="256" Variant="Variant.Outlined"
+        <MudTabPanel Text="@L["Details"]" Disabled="@(Blocked || _confirmDiscard || _validating)">
+            <MudTextField @bind-Value="_model.Name" Label="@L["Name"]" MaxLength="256" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" Validation="@(new Func<string, string?>(Required))" />
-            <MudTextField @bind-Value="_model.Code" Label="Code" MaxLength="100" Variant="Variant.Outlined"
+            <MudTextField @bind-Value="_model.Code" Label="@L["Code"]" MaxLength="100" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
-            <MudTextField @bind-Value="_model.LegalName" Label="Legal name" MaxLength="256" Variant="Variant.Outlined"
+            <MudTextField @bind-Value="_model.LegalName" Label="@L["Legal name"]" MaxLength="256" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
-            <MudTextField @bind-Value="_model.TaxNumber" Label="Tax number" MaxLength="100" Variant="Variant.Outlined"
+            <MudTextField @bind-Value="_model.TaxNumber" Label="@L["Tax number"]" MaxLength="100" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
-            <MudTextField @bind-Value="_model.VatId" Label="VAT ID" MaxLength="100" Variant="Variant.Outlined"
+            <MudTextField @bind-Value="_model.VatId" Label="@L["VAT ID"]" MaxLength="100" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
-            <MudTextField @bind-Value="_model.Description" Label="Description" MaxLength="2000" Variant="Variant.Outlined"
+            <MudTextField @bind-Value="_model.Description" Label="@L["Description"]" MaxLength="2000" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" Lines="3" />
             @if (IsEditing && _capabilities.ViewInactive)
             {
-                <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@(Blocked || !CanChangeActive)" Label="Active" />
+                <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@(Blocked || !CanChangeActive)" Label="@L["Active"]" />
             }
         </MudTabPanel>
-        <MudTabPanel Text="Contacts" Disabled="@(Blocked || _confirmDiscard || _validating)">
-            <MudTextField @bind-Value="_model.Email" Label="Email" MaxLength="256" Variant="Variant.Outlined"
+        <MudTabPanel Text="@L["Contacts"]" Disabled="@(Blocked || _confirmDiscard || _validating)">
+            <MudTextField @bind-Value="_model.Email" Label="@L["Email"]" MaxLength="256" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
-            <MudTextField @bind-Value="_model.Phone" Label="Phone" MaxLength="50" Variant="Variant.Outlined"
+            <MudTextField @bind-Value="_model.Phone" Label="@L["Phone"]" MaxLength="50" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
-            <MudTextField @bind-Value="_model.Website" Label="Website" MaxLength="256" Variant="Variant.Outlined"
+            <MudTextField @bind-Value="_model.Website" Label="@L["Website"]" MaxLength="256" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
         </MudTabPanel>
-        <MudTabPanel Text="Address" Disabled="@(Blocked || _confirmDiscard || _validating)">
-            <MudTextField @bind-Value="_model.Street" Label="Street" MaxLength="256" Variant="Variant.Outlined"
+        <MudTabPanel Text="@L["Address"]" Disabled="@(Blocked || _confirmDiscard || _validating)">
+            <MudTextField @bind-Value="_model.Street" Label="@L["Street"]" MaxLength="256" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
-            <MudTextField @bind-Value="_model.HouseNumber" Label="House number" MaxLength="50" Variant="Variant.Outlined"
+            <MudTextField @bind-Value="_model.HouseNumber" Label="@L["House number"]" MaxLength="50" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
-            <MudTextField @bind-Value="_model.PostalCode" Label="Postal code" MaxLength="20" Variant="Variant.Outlined"
+            <MudTextField @bind-Value="_model.PostalCode" Label="@L["Postal code"]" MaxLength="20" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
-            <ReferenceLookup Label="City" Value="_city" ValueChanged="CityChanged" Search="Client.SearchCitiesAsync" Required="false" Disabled="Blocked" />
+            <ReferenceLookup Label="@L["City"]" Value="_city" ValueChanged="CityChanged" Search="Client.SearchCitiesAsync" Required="false" Disabled="Blocked" />
         </MudTabPanel>
     </MudTabs>
 </EditorDialogFrame>

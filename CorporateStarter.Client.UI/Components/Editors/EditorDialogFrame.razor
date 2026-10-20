@@ -1,58 +1,58 @@
 ﻿<MudDialog Class="cs-record-editor-panel">
     <TitleContent>
         <div class="editor-heading">
-            <MudText Typo="Typo.h6">@Title</MudText>
-            <MudIconButton Icon="@Icons.Material.Filled.Close" OnClick="Close" Disabled="@Saving" Size="Size.Small" aria-label="Close editor" />
+            <MudText Typo="Typo.h6">@L.Text(Title)</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Close" OnClick="Close" Disabled="@Saving" Size="Size.Small" aria-label="@L["Close editor"]" />
         </div>
     </TitleContent>
     <DialogContent>
         <div class="editor-fields">
             @if (Loading)
             {
-                <MudProgressLinear Indeterminate="true" Color="Color.Primary" aria-label="Loading record" />
+                <MudProgressLinear Indeterminate="true" Color="Color.Primary" aria-label="@L["Loading record"]" />
             }
             @if (Steps.Count > 1)
             {
-                <ol class="editor-steps" aria-label="Editor steps">
+                <ol class="editor-steps" aria-label="@L["Editor steps"]">
                     @for (var step = 0; step < Steps.Count; step++)
                     {
                         <li aria-current="@(step == CurrentStep ? "step" : null)"
-                            class="@(step == CurrentStep ? "is-current" : null)">@(step + 1). @Steps[step]</li>
+                            class="@(step == CurrentStep ? "is-current" : null)">@(step + 1). @L[Steps[step]]</li>
                     }
                 </ol>
             }
             <MudForm @ref="_form">@ChildContent</MudForm>
             @if (Error is not null)
             {
-                <MudAlert Severity="Severity.Error" role="alert">@Error</MudAlert>
+                <MudAlert Severity="Severity.Error" role="alert">@L.Text(Error)</MudAlert>
             }
             @if (!Loaded && !Loading && SessionReady)
             {
-                <MudButton OnClick="Retry" Color="Color.Primary">Retry loading</MudButton>
+                <MudButton OnClick="Retry" Color="Color.Primary">@L["Retry loading"]</MudButton>
             }
             @if (!SessionReady)
             {
-                <MudAlert Severity="Severity.Info" role="status">Waiting for session verification…</MudAlert>
+                <MudAlert Severity="Severity.Info" role="status">@L["Waiting for session verification…"]</MudAlert>
             }
             @if (ConfirmDiscard)
             {
                 <div class="editor-discard" role="alert">
-                    <p>Discard unsaved changes?</p>
-                    <MudButton OnClick="KeepEditing">Keep editing</MudButton>
-                    <MudButton Color="Color.Error" OnClick="Discard">Discard</MudButton>
+                    <p>@L["Discard unsaved changes?"]</p>
+                    <MudButton OnClick="KeepEditing">@L["Keep editing"]</MudButton>
+                    <MudButton Color="Color.Error" OnClick="Discard">@L["Discard"]</MudButton>
                 </div>
             }
         </div>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Close" Disabled="@Saving">@(Uncertain ? "Close and check list" : "Cancel")</MudButton>
+        <MudButton OnClick="Close" Disabled="@Saving">@(Uncertain ? L["Close and check list"] : L["Cancel"])</MudButton>
         @if (Steps.Count > 1 && CurrentStep > 0)
         {
-            <MudButton OnClick="Back" Disabled="@(Blocked || ConfirmDiscard)">Back</MudButton>
+            <MudButton OnClick="Back" Disabled="@(Blocked || ConfirmDiscard)">@L["Back"]</MudButton>
         }
         @if (Steps.Count > 1 && CurrentStep < Steps.Count - 1)
         {
-            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Next" Disabled="@(Blocked || ConfirmDiscard)">Next</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Next" Disabled="@(Blocked || ConfirmDiscard)">@L["Next"]</MudButton>
         }
         else
         {

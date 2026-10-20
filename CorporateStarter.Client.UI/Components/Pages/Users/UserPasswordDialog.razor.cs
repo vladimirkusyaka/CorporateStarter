@@ -25,6 +25,6 @@ public partial class UserPasswordDialog : RecordEditorBase<ChangeUserPasswordReq
         _login = (await Client.GetByIdAsync(id, ct)).Login;
         return new();
     }
-    private string? ConfirmationError(string value) => value == _model.NewPassword ? null : "Passwords do not match.";
+    private string? ConfirmationError(string value) => value == _model.NewPassword ? null : L["Passwords do not match."];
     protected override Task<Guid> WriteModelAsync(CancellationToken ct) => Client.ChangePasswordAsync(UserId, _model, ct);
 }

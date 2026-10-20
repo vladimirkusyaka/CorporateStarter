@@ -3,33 +3,33 @@
 
 <section class="reference-page" aria-labelledby="@(_elementId + "/title")">
     <header class="reference-heading">
-        <h1 id="@(_elementId + "/title")">@Title</h1>
+        <h1 id="@(_elementId + "/title")">@L.Text(Title)</h1>
     </header>
     <div class="reference-toolbar">
         <div class="reference-actions">
             @if (!ReadOnly)
             {
-                <MudTooltip Text="@($"Add {Singular}")">
+                <MudTooltip Text="@(L["Add record"])">
                     <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="Variant.Outlined"
                                    Color="Color.Primary" Disabled="@(_loading || _creating || _querying || !_capabilities.CanCreate)"
-                                   OnClick="OpenCreateAsync" Class="reference-refresh" aria-label="@($"Add {Singular}")" />
+                                   OnClick="OpenCreateAsync" Class="reference-refresh" aria-label="@(L["Add record"])" />
                 </MudTooltip>
-                <MudTooltip Text="@($"Edit {Singular}")">
+                <MudTooltip Text="@(L["Edit record"])">
                     <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined"
                                    Color="Color.Primary" Disabled="@(!CanEdit)" OnClick="OpenEditAsync"
-                                   Class="reference-refresh" aria-label="@($"Edit {Singular}")" />
+                                   Class="reference-refresh" aria-label="@(L["Edit record"])" />
                 </MudTooltip>
-                <MudTooltip Text="@($"Delete {Title}")">
+                <MudTooltip Text="@(L.Format("Delete {0}", L[Title]))">
                     <MudIconButton Icon="@DeleteIcon" Variant="Variant.Outlined"
                                    Color="Color.Primary" Disabled="@(!CanDelete)" OnClick="OpenDeleteAsync"
-                                   Class="reference-refresh" aria-label="@($"Delete {Title}")" />
+                                   Class="reference-refresh" aria-label="@(L.Format("Delete {0}", L[Title]))" />
                 </MudTooltip>
             }
             @if (OpenDetails is not null)
             {
-                <MudTooltip Text="View details">
+                <MudTooltip Text="@L["View details"]">
                     <MudIconButton Icon="@Icons.Material.Outlined.Visibility" Variant="Variant.Outlined" Color="Color.Primary"
-                                   Disabled="@(!CanView)" OnClick="OpenDetailsAsync" Class="reference-refresh" aria-label="View details" />
+                                   Disabled="@(!CanView)" OnClick="OpenDetailsAsync" Class="reference-refresh" aria-label="@L["View details"]" />
                 </MudTooltip>
             }
             @foreach (var action in Actions)
@@ -40,26 +40,26 @@
                                    Class="reference-refresh" aria-label="@action.Label" />
                 </MudTooltip>
             }
-            <MudTooltip Text="@($"Refresh {Title}")">
+            <MudTooltip Text="@(L.Format("Refresh {0}", L[Title]))">
                 <MudIconButton Icon="@Icons.Material.Filled.Refresh" Variant="Variant.Outlined"
                                Color="Color.Primary" Disabled="@(_loading || _creating || _querying)" OnClick="LoadAsync"
-                               Class="reference-refresh" aria-label="@($"Refresh {Title}")" />
+                               Class="reference-refresh" aria-label="@(L.Format("Refresh {0}", L[Title]))" />
             </MudTooltip>
         </div>
         <form class="reference-search" @onsubmit="FindNext" @onsubmit:preventDefault="true">
-            <label for="@(_elementId + "/search")">Search</label>
+            <label for="@(_elementId + "/search")">@L["Search"]</label>
             <input id="@(_elementId + "/search")" type="search" maxlength="200" @bind="_search" @bind:event="oninput"
-                   placeholder="Find in current list" disabled="@(_loading || _creating || _querying)" />
+                   placeholder="@L["Find in current list"]" disabled="@(_loading || _creating || _querying)" />
             <MudIconButton Icon="@Icons.Material.Filled.Search" Color="Color.Primary"
                            ButtonType="ButtonType.Submit" Disabled="@(_loading || _creating || _querying || string.IsNullOrWhiteSpace(_search))"
-                           title="Find next (Enter)" aria-label="Find next record" />
+                           title="@L["Find next (Enter)"]" aria-label="@L["Find next record"]" />
         </form>
     </div>
 
     @if (!_hasLoaded && (_loading || !_loadStarted))
     {
         <div class="reference-feedback reference-loading" role="status" aria-live="polite">
-            <span>Loading @Title…</span>
+            <span>@L.Format("Loading {0}…", L[Title])</span>
             @for (var row = 0; row < 8; row++)
             {
                 <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="32px" />
@@ -70,8 +70,8 @@
     {
         <div class="reference-feedback" role="alert">
             <MudIcon Icon="@Icons.Material.Outlined.Info" Color="Color.Primary" Size="Size.Large" />
-            <p>@_error</p>
-            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadAsync">Retry</MudButton>
+            <p>@L.Text(_error)</p>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadAsync">@L["Retry"]</MudButton>
         </div>
     }
     else
@@ -79,7 +79,7 @@
         <div class="reference-table" aria-busy="@((_loading || _querying) ? "true" : "false")">
             @if (_loading || _querying)
             {
-                <div class="reference-update-indicator" role="status" aria-label="Updating records">
+                <div class="reference-update-indicator" role="status" aria-label="@L["Updating records"]">
                     <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
                 </div>
             }
@@ -112,7 +112,7 @@
                         <MudTd DataLabel="@definition.Label" @ondblclick="@(e => OnRowDoubleClickAsync(context, e))">
                             @if (EqualityComparer<TColumn>.Default.Equals(column, VisibleColumns.First()))
                             {
-                                <button type="button" class="reference-row-select" disabled="@(_loading || _querying || _creating)" aria-label="@($"Select {ItemName(context)}")"
+                                <button type="button" class="reference-row-select" disabled="@(_loading || _querying || _creating)" aria-label="@(L.Format("Select {0}", ItemName(context)))"
                                         aria-pressed="@(_selectedIds.Contains(ItemId(context)) ? "true" : "false")"
                                         @onclick="@(e => SelectRow(context, e))" @onclick:stopPropagation="true">
                                     @definition.Text(context)
@@ -120,16 +120,16 @@
                             }
                             else
                             {
-                                <span>@(definition.Text(context) ?? "—")</span>
+                                <span>@(definition.IsStatus ? L.Text(definition.Text(context)) : definition.Text(context) ?? "—")</span>
                             }
                         </MudTd>
                     }
                 </RowTemplate>
-                <NoRecordsContent><span role="status">@(_filters.Count == 0 ? "No records found." : "No records match the filters.")</span></NoRecordsContent>
+                <NoRecordsContent><span role="status">@(_filters.Count == 0 ? L["No records found."] : L["No records match the filters."])</span></NoRecordsContent>
                 <PagerContent>
                     <div class="reference-server-pager">
                         <label>
-                            Rows
+                            @L["Rows"]
                             <select value="@RowsPerPage" @onchange="ChangePageSizeAsync" disabled="@(_loading || _querying || _creating)">
                                 @foreach (var size in PageSizes)
                                 {
@@ -138,14 +138,14 @@
                             </select>
                         </label>
                         <label class="reference-page-number">
-                            Page <input type="text" inputmode="numeric" maxlength="10" aria-label="Page number"
-                                        title="Enter a page number and press Enter" @bind="PageNumberText" @bind:event="oninput"
+                            @L["Page"] <input type="text" inputmode="numeric" maxlength="10" aria-label="@L["Page number"]"
+                                        title="@L["Enter a page number and press Enter"]" @bind="PageNumberText" @bind:event="oninput"
                                         @onkeydown="PageNumberKeyDownAsync" @onblur="CommitPageNumberAsync"
                                         disabled="@(_loading || _querying || _creating)" />
-                            of @TotalPages · @_totalCount records
+                            @L.Format("of {0} · {1} records", TotalPages, _totalCount)
                         </label>
-                        <button type="button" @onclick="PreviousPageAsync" disabled="@(_loading || _querying || _creating || CurrentPage == 0)">Previous</button>
-                        <button type="button" @onclick="NextPageAsync" disabled="@(_loading || _querying || _creating || CurrentPage + 1 >= TotalPages)">Next</button>
+                        <button type="button" @onclick="PreviousPageAsync" disabled="@(_loading || _querying || _creating || CurrentPage == 0)">@L["Previous"]</button>
+                        <button type="button" @onclick="NextPageAsync" disabled="@(_loading || _querying || _creating || CurrentPage + 1 >= TotalPages)">@L["Next"]</button>
                     </div>
                 </PagerContent>
             </MudTable>

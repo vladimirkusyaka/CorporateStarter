@@ -5,7 +5,7 @@
 {
     @if (NavigationCatalog.RequiredPermission(Navigation.ToBaseRelativePath(Navigation.Uri)) is { } code && !Permissions.Has(code))
     {
-        <MudAlert Severity="Severity.Warning" role="alert">You do not have permission to open this page.</MudAlert>
+        <MudAlert Severity="Severity.Warning" role="alert">@L["You do not have permission to open this page."]</MudAlert>
     }
     else
     {

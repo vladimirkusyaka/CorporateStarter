@@ -17,6 +17,7 @@ public static class ClientServiceCollectionExtensions
         Action<SessionUiOptions>? configure = null)
     {
         services.AddMudServices();
+        services.AddScoped<MudBlazor.ILocalizationInterceptor, CorporateStarter.Client.UI.Localization.UiMudLocalization>();
         services.TryAddScoped<BrowserCapabilityProbe>();
         services.TryAddScoped<BrowserLoginTransport>();
         services.TryAddScoped<IClientLoginTransport>(sp => sp.GetRequiredService<BrowserLoginTransport>());

@@ -18,7 +18,7 @@ public partial class Preferences : IDisposable
     private int _tab;
     private static string ClientMode => OperatingSystem.IsBrowser() ? "Blazor WebAssembly Standalone" : "Blazor Server-side";
     private string BrowserApiEndpoint => new Uri(new Uri(Navigation.BaseUri), "/api/").AbsoluteUri;
-    private static string BuildDate(DateTimeOffset? value) => value?.UtcDateTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture) ?? "Not recorded";
+    private string BuildDate(DateTimeOffset? value) => value?.UtcDateTime.ToString("G", L.Culture) ?? L["Not recorded"];
     protected override Task OnAfterRenderAsync(bool firstRender) => firstRender ? LoadAsync() : Task.CompletedTask;
 
     private async Task LoadAsync()

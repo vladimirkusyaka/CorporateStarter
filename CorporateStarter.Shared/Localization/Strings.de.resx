@@ -1,0 +1,1305 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <data name=" (active)" xml:space="preserve">
+    <value> (aktiv)</value>
+  </data>
+  <data name=" (inactive)" xml:space="preserve">
+    <value> (inaktiv)</value>
+  </data>
+  <data name=" (unavailable)" xml:space="preserve">
+    <value> (nicht verfügbar)</value>
+  </data>
+  <data name="(Empty)" xml:space="preserve">
+    <value>(Leer)</value>
+  </data>
+  <data name="A city with this name and region already exists in the selected country." xml:space="preserve">
+    <value>Eine Stadt mit diesem Namen und dieser Region existiert bereits im gewählten Land.</value>
+  </data>
+  <data name="A company with this code already exists." xml:space="preserve">
+    <value>Ein Unternehmen mit diesem Code existiert bereits.</value>
+  </data>
+  <data name="A company with this name already exists." xml:space="preserve">
+    <value>Ein Unternehmen mit diesem Namen existiert bereits.</value>
+  </data>
+  <data name="A company with this name or code already exists." xml:space="preserve">
+    <value>Ein Unternehmen mit diesem Namen oder Code existiert bereits.</value>
+  </data>
+  <data name="A country with this code or name already exists." xml:space="preserve">
+    <value>Ein Land mit diesem Code oder Namen existiert bereits.</value>
+  </data>
+  <data name="A position with this name already exists." xml:space="preserve">
+    <value>Eine Position mit diesem Namen existiert bereits.</value>
+  </data>
+  <data name="A role with this name already exists." xml:space="preserve">
+    <value>Eine Rolle mit diesem Namen existiert bereits.</value>
+  </data>
+  <data name="A secure context and Web Locks support are required." xml:space="preserve">
+    <value>Eine sichere Verbindung und Web-Locks-Unterstützung sind erforderlich.</value>
+  </data>
+  <data name="A shared workspace for your team, your data and your daily work." xml:space="preserve">
+    <value>Ein gemeinsamer Arbeitsbereich für Ihr Team, Ihre Daten und Ihre tägliche Arbeit.</value>
+  </data>
+  <data name="A user with this email already exists." xml:space="preserve">
+    <value>Ein Benutzer mit dieser E-Mail existiert bereits.</value>
+  </data>
+  <data name="A user with this login already exists." xml:space="preserve">
+    <value>Ein Benutzer mit diesem Anmeldenamen existiert bereits.</value>
+  </data>
+  <data name="A user with this login or email already exists." xml:space="preserve">
+    <value>Ein Benutzer mit diesem Anmeldenamen oder dieser E-Mail existiert bereits.</value>
+  </data>
+  <data name="A valid sign-in is required to load records." xml:space="preserve">
+    <value>Zum Laden der Datensätze ist eine Anmeldung erforderlich.</value>
+  </data>
+  <data name="API build (UTC)" xml:space="preserve">
+    <value>API-Build (UTC)</value>
+  </data>
+  <data name="API endpoint (browser)" xml:space="preserve">
+    <value>API-Endpunkt (Browser)</value>
+  </data>
+  <data name="API version" xml:space="preserve">
+    <value>API-Version</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>Konto</value>
+  </data>
+  <data name="Account saved." xml:space="preserve">
+    <value>Konto gespeichert.</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Aktion</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="Add city" xml:space="preserve">
+    <value>Stadt hinzufügen</value>
+  </data>
+  <data name="Add company" xml:space="preserve">
+    <value>Unternehmen hinzufügen</value>
+  </data>
+  <data name="Add country" xml:space="preserve">
+    <value>Land hinzufügen</value>
+  </data>
+  <data name="Add person" xml:space="preserve">
+    <value>Person hinzufügen</value>
+  </data>
+  <data name="Add position" xml:space="preserve">
+    <value>Position hinzufügen</value>
+  </data>
+  <data name="Add record" xml:space="preserve">
+    <value>Datensatz hinzufügen</value>
+  </data>
+  <data name="Add role" xml:space="preserve">
+    <value>Rolle hinzufügen</value>
+  </data>
+  <data name="Add tab" xml:space="preserve">
+    <value>Registerkarte hinzufügen</value>
+  </data>
+  <data name="Add user" xml:space="preserve">
+    <value>Benutzer hinzufügen</value>
+  </data>
+  <data name="Additional details" xml:space="preserve">
+    <value>Weitere Details</value>
+  </data>
+  <data name="Additional verification is required. This sign-in screen does not support it yet." xml:space="preserve">
+    <value>Eine zusätzliche Prüfung ist erforderlich. Diese Anmeldeseite unterstützt sie noch nicht.</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Adresse</value>
+  </data>
+  <data name="Administrator permission is required to view connections." xml:space="preserve">
+    <value>Zum Anzeigen der Verbindungen sind Administratorrechte erforderlich.</value>
+  </data>
+  <data name="After" xml:space="preserve">
+    <value>Nachher</value>
+  </data>
+  <data name="An error occurred while processing your request." xml:space="preserve">
+    <value>Bei der Verarbeitung Ihrer Anfrage ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="Another administrator changed the name. Reload saved values before editing again." xml:space="preserve">
+    <value>Ein anderer Administrator hat den Namen geändert. Laden Sie die gespeicherten Werte neu.</value>
+  </data>
+  <data name="Appearance" xml:space="preserve">
+    <value>Darstellung</value>
+  </data>
+  <data name="Appearance saved." xml:space="preserve">
+    <value>Darstellung gespeichert.</value>
+  </data>
+  <data name="Application" xml:space="preserve">
+    <value>Anwendung</value>
+  </data>
+  <data name="Application name" xml:space="preserve">
+    <value>Anwendungsname</value>
+  </data>
+  <data name="Application name saved." xml:space="preserve">
+    <value>Anwendungsname gespeichert.</value>
+  </data>
+  <data name="Applications" xml:space="preserve">
+    <value>Anwendungen</value>
+  </data>
+  <data name="Applies to date display in audit lists and details. Date filters and search use UTC. The default page size applies when a table opens." xml:space="preserve">
+    <value>Gilt für Datumsanzeigen in Protokollen. Datumsfilter und Suche verwenden UTC. Die Standardseitengröße gilt beim Öffnen einer Tabelle.</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Anwenden</value>
+  </data>
+  <data name="Audit" xml:space="preserve">
+    <value>Protokoll</value>
+  </data>
+  <data name="Avoid your login, email and recently used passwords." xml:space="preserve">
+    <value>Vermeiden Sie Anmeldename, E-Mail und kürzlich verwendete Passwörter.</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="Before" xml:space="preserve">
+    <value>Vorher</value>
+  </data>
+  <data name="Browser check" xml:space="preserve">
+    <value>Browserprüfung</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Cancel edit" xml:space="preserve">
+    <value>Bearbeitung abbrechen</value>
+  </data>
+  <data name="Change ID" xml:space="preserve">
+    <value>Änderungs-ID</value>
+  </data>
+  <data name="Change details" xml:space="preserve">
+    <value>Änderungsdetails</value>
+  </data>
+  <data name="Change password" xml:space="preserve">
+    <value>Passwort ändern</value>
+  </data>
+  <data name="Changed fields only" xml:space="preserve">
+    <value>Nur geänderte Felder</value>
+  </data>
+  <data name="Changes" xml:space="preserve">
+    <value>Änderungen</value>
+  </data>
+  <data name="Changing your password signs you out on all devices, including this one." xml:space="preserve">
+    <value>Bei einer Passwortänderung werden Sie auf allen Geräten abgemeldet, auch auf diesem.</value>
+  </data>
+  <data name="Check the record fields and try again." xml:space="preserve">
+    <value>Prüfen Sie die Felder und versuchen Sie es erneut.</value>
+  </data>
+  <data name="Checking browser capabilities…" xml:space="preserve">
+    <value>Browserfunktionen werden geprüft…</value>
+  </data>
+  <data name="Checking session…" xml:space="preserve">
+    <value>Sitzung wird geprüft…</value>
+  </data>
+  <data name="Choose a password you have not used recently." xml:space="preserve">
+    <value>Wählen Sie ein Passwort, das Sie kürzlich nicht verwendet haben.</value>
+  </data>
+  <data name="Cities" xml:space="preserve">
+    <value>Städte</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Stadt</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Leeren</value>
+  </data>
+  <data name="Client UI build (UTC)" xml:space="preserve">
+    <value>Client-Build (UTC)</value>
+  </data>
+  <data name="Client UI version" xml:space="preserve">
+    <value>Client-Version</value>
+  </data>
+  <data name="Client mode" xml:space="preserve">
+    <value>Client-Modus</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Close and check list" xml:space="preserve">
+    <value>Schließen und Liste prüfen</value>
+  </data>
+  <data name="Close editor" xml:space="preserve">
+    <value>Editor schließen</value>
+  </data>
+  <data name="Close tab" xml:space="preserve">
+    <value>Registerkarte schließen</value>
+  </data>
+  <data name="Close this dialog to refresh the list before selecting records again." xml:space="preserve">
+    <value>Schließen Sie diesen Dialog, um die Liste vor einer neuen Auswahl zu aktualisieren.</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="Code must contain two letters." xml:space="preserve">
+    <value>Der Code muss zwei Buchstaben enthalten.</value>
+  </data>
+  <data name="Collapse" xml:space="preserve">
+    <value>Zuklappen</value>
+  </data>
+  <data name="Collapse group" xml:space="preserve">
+    <value>Gruppe zuklappen</value>
+  </data>
+  <data name="Commit edit" xml:space="preserve">
+    <value>Änderungen übernehmen</value>
+  </data>
+  <data name="Companies" xml:space="preserve">
+    <value>Unternehmen</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>Unternehmen</value>
+  </data>
+  <data name="Company: {0}" xml:space="preserve">
+    <value>Unternehmen: {0}</value>
+  </data>
+  <data name="Confirm new password" xml:space="preserve">
+    <value>Neues Passwort bestätigen</value>
+  </data>
+  <data name="Confirm password" xml:space="preserve">
+    <value>Passwort bestätigen</value>
+  </data>
+  <data name="Connections" xml:space="preserve">
+    <value>Verbindungen</value>
+  </data>
+  <data name="Connections are read-only. Credentials and full connection strings are not exposed." xml:space="preserve">
+    <value>Verbindungen sind schreibgeschützt. Zugangsdaten und vollständige Verbindungszeichenfolgen werden nicht angezeigt.</value>
+  </data>
+  <data name="Contacts" xml:space="preserve">
+    <value>Kontakte</value>
+  </data>
+  <data name="Contains" xml:space="preserve">
+    <value>Enthält</value>
+  </data>
+  <data name="Conversion error: {0}" xml:space="preserve">
+    <value>Konvertierungsfehler: {0}</value>
+  </data>
+  <data name="Conversion from {0} to {1} failed: {2}" xml:space="preserve">
+    <value>Konvertierung von {0} in {1} fehlgeschlagen: {2}</value>
+  </data>
+  <data name="Conversion to type {0} not implemented" xml:space="preserve">
+    <value>Konvertierung in {0} nicht implementiert</value>
+  </data>
+  <data name="Copied" xml:space="preserve">
+    <value>Kopiert</value>
+  </data>
+  <data name="Copy {0}" xml:space="preserve">
+    <value>{0} kopieren</value>
+  </data>
+  <data name="Correlation ID" xml:space="preserve">
+    <value>Korrelations-ID</value>
+  </data>
+  <data name="Could not check the browser. Check your connection and retry." xml:space="preserve">
+    <value>Der Browser konnte nicht geprüft werden. Prüfen Sie die Verbindung und versuchen Sie es erneut.</value>
+  </data>
+  <data name="Could not copy. Select and copy the identifier manually." xml:space="preserve">
+    <value>Kopieren fehlgeschlagen. Markieren und kopieren Sie die ID manuell.</value>
+  </data>
+  <data name="Could not load connection information. Please retry." xml:space="preserve">
+    <value>Verbindungsinformationen konnten nicht geladen werden. Versuchen Sie es erneut.</value>
+  </data>
+  <data name="Could not load options. Reopen the list or change the search to retry." xml:space="preserve">
+    <value>Optionen konnten nicht geladen werden. Öffnen Sie die Liste erneut oder ändern Sie die Suche.</value>
+  </data>
+  <data name="Could not load preferences. Please retry." xml:space="preserve">
+    <value>Einstellungen konnten nicht geladen werden. Versuchen Sie es erneut.</value>
+  </data>
+  <data name="Could not load profile settings." xml:space="preserve">
+    <value>Profileinstellungen konnten nicht geladen werden.</value>
+  </data>
+  <data name="Could not load records. Please retry." xml:space="preserve">
+    <value>Datensätze konnten nicht geladen werden. Versuchen Sie es erneut.</value>
+  </data>
+  <data name="Could not load the filter. Please retry." xml:space="preserve">
+    <value>Der Filter konnte nicht geladen werden. Versuchen Sie es erneut.</value>
+  </data>
+  <data name="Could not load the record. Please retry after session verification." xml:space="preserve">
+    <value>Der Datensatz konnte nicht geladen werden. Versuchen Sie es nach der Sitzungsprüfung erneut.</value>
+  </data>
+  <data name="Could not load the record. Please retry." xml:space="preserve">
+    <value>Der Datensatz konnte nicht geladen werden. Versuchen Sie es erneut.</value>
+  </data>
+  <data name="Could not load the record. Retry after session verification." xml:space="preserve">
+    <value>Der Datensatz konnte nicht geladen werden. Versuchen Sie es nach der Sitzungsprüfung erneut.</value>
+  </data>
+  <data name="Could not load your profile. Please retry." xml:space="preserve">
+    <value>Ihr Profil konnte nicht geladen werden. Versuchen Sie es erneut.</value>
+  </data>
+  <data name="Could not receive a response from the service. Please retry." xml:space="preserve">
+    <value>Keine Antwort vom Dienst erhalten. Versuchen Sie es erneut.</value>
+  </data>
+  <data name="Countries" xml:space="preserve">
+    <value>Länder</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="Country code" xml:space="preserve">
+    <value>Ländercode</value>
+  </data>
+  <data name="Current page {0}" xml:space="preserve">
+    <value>Aktuelle Seite {0}</value>
+  </data>
+  <data name="Current password" xml:space="preserve">
+    <value>Aktuelles Passwort</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Benutzerdefiniert</value>
+  </data>
+  <data name="Custom roles" xml:space="preserve">
+    <value>Benutzerdefinierte Rollen</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Dunkel</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Übersicht</value>
+  </data>
+  <data name="Database name" xml:space="preserve">
+    <value>Datenbankname</value>
+  </data>
+  <data name="Database port" xml:space="preserve">
+    <value>Datenbankport</value>
+  </data>
+  <data name="Database provider" xml:space="preserve">
+    <value>Datenbankanbieter</value>
+  </data>
+  <data name="Database server" xml:space="preserve">
+    <value>Datenbankserver</value>
+  </data>
+  <data name="Date (filter: UTC)" xml:space="preserve">
+    <value>Datum (Filter: UTC)</value>
+  </data>
+  <data name="Date ({0})" xml:space="preserve">
+    <value>Datum ({0})</value>
+  </data>
+  <data name="Date of birth" xml:space="preserve">
+    <value>Geburtsdatum</value>
+  </data>
+  <data name="Decrement" xml:space="preserve">
+    <value>Verringern</value>
+  </data>
+  <data name="Default rows per page" xml:space="preserve">
+    <value>Standardzeilen pro Seite</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Delete {0}" xml:space="preserve">
+    <value>Löschen: {0}</value>
+  </data>
+  <data name="Deleting… {0} / {1}" xml:space="preserve">
+    <value>Löschen… {0} / {1}</value>
+  </data>
+  <data name="Deletion stopped. {0} of {1} deletions confirmed. {2}" xml:space="preserve">
+    <value>Löschen angehalten. {0} von {1} Löschvorgängen bestätigt. {2}</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Development Mode" xml:space="preserve">
+    <value>Entwicklungsmodus</value>
+  </data>
+  <data name="Device time zone" xml:space="preserve">
+    <value>Zeitzone des Geräts</value>
+  </data>
+  <data name="Digit" xml:space="preserve">
+    <value>Ziffer</value>
+  </data>
+  <data name="Directory" xml:space="preserve">
+    <value>Verzeichnis</value>
+  </data>
+  <data name="Discard" xml:space="preserve">
+    <value>Verwerfen</value>
+  </data>
+  <data name="Discard unsaved changes?" xml:space="preserve">
+    <value>Ungespeicherte Änderungen verwerfen?</value>
+  </data>
+  <data name="Dismiss error" xml:space="preserve">
+    <value>Fehlermeldung schließen</value>
+  </data>
+  <data name="Display name" xml:space="preserve">
+    <value>Anzeigename</value>
+  </data>
+  <data name="Do not enable Development on deployed applications: exception details can expose sensitive information." xml:space="preserve">
+    <value>Aktivieren Sie Development nicht für bereitgestellte Anwendungen: Fehlerdetails können vertrauliche Informationen offenlegen.</value>
+  </data>
+  <data name="Do you really want to delete {0} {1}?" xml:space="preserve">
+    <value>Möchten Sie wirklich {0} {1} löschen?</value>
+  </data>
+  <data name="Do you really want to delete {0}: {1}?" xml:space="preserve">
+    <value>Möchten Sie wirklich {0}: {1} löschen?</value>
+  </data>
+  <data name="Edit city" xml:space="preserve">
+    <value>Stadt bearbeiten</value>
+  </data>
+  <data name="Edit company" xml:space="preserve">
+    <value>Unternehmen bearbeiten</value>
+  </data>
+  <data name="Edit country" xml:space="preserve">
+    <value>Land bearbeiten</value>
+  </data>
+  <data name="Edit person" xml:space="preserve">
+    <value>Person bearbeiten</value>
+  </data>
+  <data name="Edit position" xml:space="preserve">
+    <value>Position bearbeiten</value>
+  </data>
+  <data name="Edit record" xml:space="preserve">
+    <value>Datensatz bearbeiten</value>
+  </data>
+  <data name="Edit role" xml:space="preserve">
+    <value>Rolle bearbeiten</value>
+  </data>
+  <data name="Edit row" xml:space="preserve">
+    <value>Zeile bearbeiten</value>
+  </data>
+  <data name="Edit user" xml:space="preserve">
+    <value>Benutzer bearbeiten</value>
+  </data>
+  <data name="Editor steps" xml:space="preserve">
+    <value>Bearbeitungsschritte</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>E-Mail</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Aktiviert</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>Ende</value>
+  </data>
+  <data name="End date" xml:space="preserve">
+    <value>Enddatum</value>
+  </data>
+  <data name="Enter a company name." xml:space="preserve">
+    <value>Geben Sie einen Unternehmensnamen ein.</value>
+  </data>
+  <data name="Enter a first name." xml:space="preserve">
+    <value>Geben Sie einen Vornamen ein.</value>
+  </data>
+  <data name="Enter a login of 3–100 characters." xml:space="preserve">
+    <value>Geben Sie einen Anmeldenamen mit 3–100 Zeichen ein.</value>
+  </data>
+  <data name="Enter a page number and press Enter" xml:space="preserve">
+    <value>Geben Sie eine Seitennummer ein und drücken Sie Enter</value>
+  </data>
+  <data name="Enter a password." xml:space="preserve">
+    <value>Geben Sie ein Passwort ein.</value>
+  </data>
+  <data name="Enter a valid email address." xml:space="preserve">
+    <value>Geben Sie eine gültige E-Mail-Adresse ein.</value>
+  </data>
+  <data name="Enter an application name (1-100 characters, without control characters)." xml:space="preserve">
+    <value>Geben Sie einen Anwendungsnamen ein (1–100 Zeichen, ohne Steuerzeichen).</value>
+  </data>
+  <data name="Enter username and password." xml:space="preserve">
+    <value>Geben Sie Benutzername und Passwort ein.</value>
+  </data>
+  <data name="Enter your credentials to access your workspace." xml:space="preserve">
+    <value>Geben Sie Ihre Zugangsdaten ein.</value>
+  </data>
+  <data name="Enter your current and new passwords." xml:space="preserve">
+    <value>Geben Sie Ihr aktuelles und neues Passwort ein.</value>
+  </data>
+  <data name="Entity" xml:space="preserve">
+    <value>Entität</value>
+  </data>
+  <data name="Environment (API)" xml:space="preserve">
+    <value>Umgebung (API)</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="Event" xml:space="preserve">
+    <value>Ereignis</value>
+  </data>
+  <data name="Event ID" xml:space="preserve">
+    <value>Ereignis-ID</value>
+  </data>
+  <data name="Everything you need." xml:space="preserve">
+    <value>Alles, was Sie brauchen.</value>
+  </data>
+  <data name="Expand" xml:space="preserve">
+    <value>Aufklappen</value>
+  </data>
+  <data name="Expand group" xml:space="preserve">
+    <value>Gruppe aufklappen</value>
+  </data>
+  <data name="Failed to rejoin. Please retry or reload the page." xml:space="preserve">
+    <value>Die Verbindung konnte nicht wiederhergestellt werden. Versuchen Sie es erneut oder laden Sie die Seite neu.</value>
+  </data>
+  <data name="Failed to resume the session. Please retry or reload the page." xml:space="preserve">
+    <value>Die Sitzung konnte nicht fortgesetzt werden. Versuchen Sie es erneut oder laden Sie die Seite neu.</value>
+  </data>
+  <data name="Field" xml:space="preserve">
+    <value>Feld</value>
+  </data>
+  <data name="Filter options" xml:space="preserve">
+    <value>Filteroptionen</value>
+  </data>
+  <data name="Filter {0}" xml:space="preserve">
+    <value>Filter: {0}</value>
+  </data>
+  <data name="Find in current list" xml:space="preserve">
+    <value>In aktueller Liste suchen</value>
+  </data>
+  <data name="Find next (Enter)" xml:space="preserve">
+    <value>Weitersuchen (Enter)</value>
+  </data>
+  <data name="Find next record" xml:space="preserve">
+    <value>Nächsten Datensatz suchen</value>
+  </data>
+  <data name="Find option or group" xml:space="preserve">
+    <value>Option oder Gruppe suchen</value>
+  </data>
+  <data name="First name" xml:space="preserve">
+    <value>Vorname</value>
+  </data>
+  <data name="First page" xml:space="preserve">
+    <value>Erste Seite</value>
+  </data>
+  <data name="Found: {0}" xml:space="preserve">
+    <value>Gefunden: {0}</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Gruppe</value>
+  </data>
+  <data name="House number" xml:space="preserve">
+    <value>Hausnummer</value>
+  </data>
+  <data name="IP address" xml:space="preserve">
+    <value>IP-Adresse</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inaktiv</value>
+  </data>
+  <data name="Increment" xml:space="preserve">
+    <value>Erhöhen</value>
+  </data>
+  <data name="Keep editing" xml:space="preserve">
+    <value>Weiter bearbeiten</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Language changes immediately. Save appearance to keep it in your profile." xml:space="preserve">
+    <value>Die Sprache ändert sich sofort. Speichern Sie die Darstellung, um sie im Profil zu behalten.</value>
+  </data>
+  <data name="Last name" xml:space="preserve">
+    <value>Nachname</value>
+  </data>
+  <data name="Last page" xml:space="preserve">
+    <value>Letzte Seite</value>
+  </data>
+  <data name="Legal name" xml:space="preserve">
+    <value>Offizieller Name</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Hell</value>
+  </data>
+  <data name="Linked person" xml:space="preserve">
+    <value>Verknüpfte Person</value>
+  </data>
+  <data name="Loading application…" xml:space="preserve">
+    <value>Anwendung wird geladen…</value>
+  </data>
+  <data name="Loading connections" xml:space="preserve">
+    <value>Verbindungen werden geladen</value>
+  </data>
+  <data name="Loading preferences" xml:space="preserve">
+    <value>Einstellungen werden geladen</value>
+  </data>
+  <data name="Loading profile" xml:space="preserve">
+    <value>Profil wird geladen</value>
+  </data>
+  <data name="Loading record" xml:space="preserve">
+    <value>Datensatz wird geladen</value>
+  </data>
+  <data name="Loading {0}…" xml:space="preserve">
+    <value>{0} wird geladen…</value>
+  </data>
+  <data name="Loading…" xml:space="preserve">
+    <value>Wird geladen…</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Anmeldename</value>
+  </data>
+  <data name="Login, email, linked person and roles are managed by an administrator." xml:space="preserve">
+    <value>Anmeldename, E-Mail, verknüpfte Person und Rollen werden vom Administrator verwaltet.</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Abmelden</value>
+  </data>
+  <data name="Lowercase letter" xml:space="preserve">
+    <value>Kleinbuchstabe</value>
+  </data>
+  <data name="Master Data" xml:space="preserve">
+    <value>Stammdaten</value>
+  </data>
+  <data name="Middle name" xml:space="preserve">
+    <value>Weiterer Vorname</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Native name" xml:space="preserve">
+    <value>Einheimischer Name</value>
+  </data>
+  <data name="New password" xml:space="preserve">
+    <value>Neues Passwort</value>
+  </data>
+  <data name="New passwords do not match." xml:space="preserve">
+    <value>Die neuen Passwörter stimmen nicht überein.</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Weiter</value>
+  </data>
+  <data name="Next month {0}" xml:space="preserve">
+    <value>Nächster Monat {0}</value>
+  </data>
+  <data name="Next page" xml:space="preserve">
+    <value>Nächste Seite</value>
+  </data>
+  <data name="Next year {0}" xml:space="preserve">
+    <value>Nächstes Jahr {0}</value>
+  </data>
+  <data name="No additional details." xml:space="preserve">
+    <value>Keine weiteren Details.</value>
+  </data>
+  <data name="No field differences recorded." xml:space="preserve">
+    <value>Keine Feldänderungen erfasst.</value>
+  </data>
+  <data name="No match in the filtered list. Try clearing the filters." xml:space="preserve">
+    <value>Kein Treffer in der gefilterten Liste. Entfernen Sie die Filter.</value>
+  </data>
+  <data name="No matching options." xml:space="preserve">
+    <value>Keine passenden Optionen.</value>
+  </data>
+  <data name="No matching record found." xml:space="preserve">
+    <value>Kein passender Datensatz gefunden.</value>
+  </data>
+  <data name="No matching records. Try another search." xml:space="preserve">
+    <value>Keine passenden Datensätze. Ändern Sie die Suche.</value>
+  </data>
+  <data name="No records found." xml:space="preserve">
+    <value>Keine Datensätze gefunden.</value>
+  </data>
+  <data name="No records match the filters." xml:space="preserve">
+    <value>Keine Datensätze entsprechen den Filtern.</value>
+  </data>
+  <data name="No roles assigned." xml:space="preserve">
+    <value>Keine Rollen zugewiesen.</value>
+  </data>
+  <data name="Not Found" xml:space="preserve">
+    <value>Nicht gefunden</value>
+  </data>
+  <data name="Not a valid GUID" xml:space="preserve">
+    <value>Ungültige GUID</value>
+  </data>
+  <data name="Not a valid boolean" xml:space="preserve">
+    <value>Ungültiger Wahrheitswert</value>
+  </data>
+  <data name="Not a valid date time" xml:space="preserve">
+    <value>Ungültiges Datum oder Uhrzeit</value>
+  </data>
+  <data name="Not a valid number" xml:space="preserve">
+    <value>Ungültige Zahl</value>
+  </data>
+  <data name="Not a valid time span" xml:space="preserve">
+    <value>Ungültige Zeitspanne</value>
+  </data>
+  <data name="Not a valid {0}" xml:space="preserve">
+    <value>Ungültiger Wert für {0}</value>
+  </data>
+  <data name="Not a value of {0}" xml:space="preserve">
+    <value>Kein gültiger Wert für {0}</value>
+  </data>
+  <data name="Not linked" xml:space="preserve">
+    <value>Nicht verknüpft</value>
+  </data>
+  <data name="Not recorded" xml:space="preserve">
+    <value>Nicht erfasst</value>
+  </data>
+  <data name="One or more selected roles are unavailable. Reload the user and select active roles." xml:space="preserve">
+    <value>Mindestens eine ausgewählte Rolle ist nicht verfügbar. Laden Sie den Benutzer neu und wählen Sie aktive Rollen.</value>
+  </data>
+  <data name="One place to work." xml:space="preserve">
+    <value>Ein Ort zum Arbeiten.</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Öffnen</value>
+  </data>
+  <data name="Open the application over HTTPS in a supported browser." xml:space="preserve">
+    <value>Öffnen Sie die Anwendung über HTTPS in einem unterstützten Browser.</value>
+  </data>
+  <data name="Other roles" xml:space="preserve">
+    <value>Weitere Rollen</value>
+  </data>
+  <data name="Outcome" xml:space="preserve">
+    <value>Ergebnis</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Seite</value>
+  </data>
+  <data name="Page number" xml:space="preserve">
+    <value>Seitennummer</value>
+  </data>
+  <data name="Page {0}" xml:space="preserve">
+    <value>Seite {0}</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="Password changed. Sign in with your new password." xml:space="preserve">
+    <value>Passwort geändert. Melden Sie sich mit dem neuen Passwort an.</value>
+  </data>
+  <data name="Password requirements: {0}–{1} characters." xml:space="preserve">
+    <value>Passwortanforderungen: {0}–{1} Zeichen.</value>
+  </data>
+  <data name="Passwords do not match." xml:space="preserve">
+    <value>Die Passwörter stimmen nicht überein.</value>
+  </data>
+  <data name="Permissions" xml:space="preserve">
+    <value>Berechtigungen</value>
+  </data>
+  <data name="Person" xml:space="preserve">
+    <value>Person</value>
+  </data>
+  <data name="Person: {0}" xml:space="preserve">
+    <value>Person: {0}</value>
+  </data>
+  <data name="Persons" xml:space="preserve">
+    <value>Personen</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="Phone code" xml:space="preserve">
+    <value>Telefonvorwahl</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="Position: {0}" xml:space="preserve">
+    <value>Position: {0}</value>
+  </data>
+  <data name="Positions" xml:space="preserve">
+    <value>Positionen</value>
+  </data>
+  <data name="Postal code" xml:space="preserve">
+    <value>Postleitzahl</value>
+  </data>
+  <data name="Preferences" xml:space="preserve">
+    <value>Anwendungseinstellungen</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="Previous month {0}" xml:space="preserve">
+    <value>Vorheriger Monat {0}</value>
+  </data>
+  <data name="Previous page" xml:space="preserve">
+    <value>Vorherige Seite</value>
+  </data>
+  <data name="Previous year {0}" xml:space="preserve">
+    <value>Vorheriges Jahr {0}</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="Protected" xml:space="preserve">
+    <value>Geschützt</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Bereit</value>
+  </data>
+  <data name="Record" xml:space="preserve">
+    <value>Datensatz</value>
+  </data>
+  <data name="Record ID" xml:space="preserve">
+    <value>Datensatz-ID</value>
+  </data>
+  <data name="Record created." xml:space="preserve">
+    <value>Datensatz erstellt.</value>
+  </data>
+  <data name="Record deleted (set to inactive)." xml:space="preserve">
+    <value>Datensatz gelöscht (deaktiviert).</value>
+  </data>
+  <data name="Record updated." xml:space="preserve">
+    <value>Datensatz aktualisiert.</value>
+  </data>
+  <data name="Records" xml:space="preserve">
+    <value>Datensätze</value>
+  </data>
+  <data name="Refresh connections" xml:space="preserve">
+    <value>Verbindungen aktualisieren</value>
+  </data>
+  <data name="Refresh {0}" xml:space="preserve">
+    <value>Aktualisieren: {0}</value>
+  </data>
+  <data name="Region" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="Rejoining the server…" xml:space="preserve">
+    <value>Verbindung zum Server wird wiederhergestellt…</value>
+  </data>
+  <data name="Reload" xml:space="preserve">
+    <value>Neu laden</value>
+  </data>
+  <data name="Reload saved values" xml:space="preserve">
+    <value>Gespeicherte Werte neu laden</value>
+  </data>
+  <data name="Request ID" xml:space="preserve">
+    <value>Anfrage-ID</value>
+  </data>
+  <data name="Requests use this site's /api proxy. This is not the internal API server address." xml:space="preserve">
+    <value>Anfragen verwenden den /api-Proxy dieser Website. Dies ist nicht die interne API-Serveradresse.</value>
+  </data>
+  <data name="Resume" xml:space="preserve">
+    <value>Fortsetzen</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Erneut versuchen</value>
+  </data>
+  <data name="Retry in" xml:space="preserve">
+    <value>Erneuter Versuch in</value>
+  </data>
+  <data name="Retry loading" xml:space="preserve">
+    <value>Laden wiederholen</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Rollen</value>
+  </data>
+  <data name="Rows" xml:space="preserve">
+    <value>Zeilen</value>
+  </data>
+  <data name="Rows per page" xml:space="preserve">
+    <value>Zeilen pro Seite</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="Save account" xml:space="preserve">
+    <value>Konto speichern</value>
+  </data>
+  <data name="Save appearance" xml:space="preserve">
+    <value>Darstellung speichern</value>
+  </data>
+  <data name="Saving could not be confirmed. Close this form and check the record list before trying again." xml:space="preserve">
+    <value>Das Speichern wurde nicht bestätigt. Schließen Sie das Formular und prüfen Sie die Liste vor einem weiteren Versuch.</value>
+  </data>
+  <data name="Saving profile" xml:space="preserve">
+    <value>Profil wird gespeichert</value>
+  </data>
+  <data name="Saving was not confirmed. Reload saved values before trying again." xml:space="preserve">
+    <value>Das Speichern wurde nicht bestätigt. Laden Sie die gespeicherten Werte vor einem weiteren Versuch.</value>
+  </data>
+  <data name="Saving was not confirmed. Reopen Profile to check the saved values before trying again." xml:space="preserve">
+    <value>Das Speichern wurde nicht bestätigt. Öffnen Sie das Profil erneut und prüfen Sie die gespeicherten Werte.</value>
+  </data>
+  <data name="Scroll tabs down" xml:space="preserve">
+    <value>Registerkarten nach unten scrollen</value>
+  </data>
+  <data name="Scroll tabs left" xml:space="preserve">
+    <value>Registerkarten nach links scrollen</value>
+  </data>
+  <data name="Scroll tabs right" xml:space="preserve">
+    <value>Registerkarten nach rechts scrollen</value>
+  </data>
+  <data name="Scroll tabs up" xml:space="preserve">
+    <value>Registerkarten nach oben scrollen</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Suchen</value>
+  </data>
+  <data name="Search is unavailable. Please retry." xml:space="preserve">
+    <value>Die Suche ist nicht verfügbar. Versuchen Sie es erneut.</value>
+  </data>
+  <data name="Search must contain at most 200 characters." xml:space="preserve">
+    <value>Die Suche darf höchstens 200 Zeichen enthalten.</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Sicherheit</value>
+  </data>
+  <data name="Security event" xml:space="preserve">
+    <value>Sicherheitsereignis</value>
+  </data>
+  <data name="Security events" xml:space="preserve">
+    <value>Sicherheitsereignisse</value>
+  </data>
+  <data name="Select a record from the list." xml:space="preserve">
+    <value>Wählen Sie einen Datensatz aus der Liste.</value>
+  </data>
+  <data name="Select at least one active role for an active user." xml:space="preserve">
+    <value>Wählen Sie mindestens eine aktive Rolle für einen aktiven Benutzer.</value>
+  </data>
+  <data name="Select or clear all available options in this group (including search-hidden options)" xml:space="preserve">
+    <value>Alle verfügbaren Optionen dieser Gruppe auswählen oder abwählen (auch durch Suche ausgeblendete)</value>
+  </data>
+  <data name="Select {0}" xml:space="preserve">
+    <value>Auswählen: {0}</value>
+  </data>
+  <data name="Session ID" xml:space="preserve">
+    <value>Sitzungs-ID</value>
+  </data>
+  <data name="Session verification is in progress. Retry when it finishes." xml:space="preserve">
+    <value>Die Sitzung wird geprüft. Versuchen Sie es danach erneut.</value>
+  </data>
+  <data name="Session verification is unavailable." xml:space="preserve">
+    <value>Die Sitzungsprüfung ist nicht verfügbar.</value>
+  </data>
+  <data name="Severity" xml:space="preserve">
+    <value>Schweregrad</value>
+  </data>
+  <data name="Showing up to 20 records. Type to narrow the search." xml:space="preserve">
+    <value>Bis zu 20 Datensätze. Geben Sie Text ein, um die Suche einzugrenzen.</value>
+  </data>
+  <data name="Sign in" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
+  <data name="Sign in again before continuing." xml:space="preserve">
+    <value>Melden Sie sich erneut an, um fortzufahren.</value>
+  </data>
+  <data name="Sign out and sign in again" xml:space="preserve">
+    <value>Abmelden und erneut anmelden</value>
+  </data>
+  <data name="Sign-in failed. Check your credentials or try again later." xml:space="preserve">
+    <value>Anmeldung fehlgeschlagen. Prüfen Sie Ihre Zugangsdaten oder versuchen Sie es später erneut.</value>
+  </data>
+  <data name="Sign-out could not be confirmed. Retry to finish signing out." xml:space="preserve">
+    <value>Die Abmeldung wurde nicht bestätigt. Wiederholen Sie den Vorgang.</value>
+  </data>
+  <data name="Signed in" xml:space="preserve">
+    <value>Angemeldet</value>
+  </data>
+  <data name="Signing in…" xml:space="preserve">
+    <value>Anmeldung läuft…</value>
+  </data>
+  <data name="Signing out…" xml:space="preserve">
+    <value>Abmeldung läuft…</value>
+  </data>
+  <data name="Sorry, the content you are looking for does not exist." xml:space="preserve">
+    <value>Der gesuchte Inhalt ist nicht vorhanden.</value>
+  </data>
+  <data name="Special character" xml:space="preserve">
+    <value>Sonderzeichen</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Start date" xml:space="preserve">
+    <value>Startdatum</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Street" xml:space="preserve">
+    <value>Straße</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="System roles" xml:space="preserve">
+    <value>Systemrollen</value>
+  </data>
+  <data name="System roles are read-only." xml:space="preserve">
+    <value>Systemrollen können nicht bearbeitet werden.</value>
+  </data>
+  <data name="Tax number" xml:space="preserve">
+    <value>Steuernummer</value>
+  </data>
+  <data name="The application encountered an error." xml:space="preserve">
+    <value>In der Anwendung ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="The city or selected country no longer exists. Reload the record or select another country." xml:space="preserve">
+    <value>Die Stadt oder das ausgewählte Land existiert nicht mehr. Laden Sie den Datensatz neu oder wählen Sie ein anderes Land.</value>
+  </data>
+  <data name="The company or selected city no longer exists. Reload the form or choose another city." xml:space="preserve">
+    <value>Das Unternehmen oder die ausgewählte Stadt existiert nicht mehr. Laden Sie das Formular neu oder wählen Sie eine andere Stadt.</value>
+  </data>
+  <data name="The current password is incorrect." xml:space="preserve">
+    <value>Das aktuelle Passwort ist falsch.</value>
+  </data>
+  <data name="The last active administrator must remain active and retain the Administrator role." xml:space="preserve">
+    <value>Der letzte aktive Administrator muss aktiv bleiben und die Administratorrolle behalten.</value>
+  </data>
+  <data name="The list changed during search. Search again." xml:space="preserve">
+    <value>Die Liste wurde während der Suche geändert. Suchen Sie erneut.</value>
+  </data>
+  <data name="The name is shared by all users. Environment and deployment settings are managed outside this page." xml:space="preserve">
+    <value>Der Name gilt für alle Benutzer. Umgebungs- und Bereitstellungseinstellungen werden außerhalb dieser Seite verwaltet.</value>
+  </data>
+  <data name="The new password does not meet the password policy." xml:space="preserve">
+    <value>Das neue Passwort erfüllt die Passwortrichtlinie nicht.</value>
+  </data>
+  <data name="The next record was not found." xml:space="preserve">
+    <value>Der nächste Datensatz wurde nicht gefunden.</value>
+  </data>
+  <data name="The password change could not be confirmed. Sign out, then try signing in with the new password. If it was not changed, use the previous password." xml:space="preserve">
+    <value>Die Passwortänderung wurde nicht bestätigt. Melden Sie sich ab und versuchen Sie das neue Passwort. Falls es nicht geändert wurde, verwenden Sie das bisherige.</value>
+  </data>
+  <data name="The password change was rejected. Check your entries." xml:space="preserve">
+    <value>Die Passwortänderung wurde abgelehnt. Prüfen Sie Ihre Eingaben.</value>
+  </data>
+  <data name="The password could not be changed. Please reload the user." xml:space="preserve">
+    <value>Das Passwort konnte nicht geändert werden. Laden Sie den Benutzer neu.</value>
+  </data>
+  <data name="The password does not meet the server password policy. Choose a stronger password that does not contain the login or email." xml:space="preserve">
+    <value>Das Passwort erfüllt die Serverrichtlinie nicht. Wählen Sie ein stärkeres Passwort ohne Anmeldename oder E-Mail.</value>
+  </data>
+  <data name="The person or a selected company/position no longer exists. Reload the form or clear the selection." xml:space="preserve">
+    <value>Die Person oder ein ausgewähltes Unternehmen/eine Position existiert nicht mehr. Laden Sie das Formular neu oder leeren Sie die Auswahl.</value>
+  </data>
+  <data name="The record conflicts with existing data. Reload it and try again." xml:space="preserve">
+    <value>Der Datensatz steht im Konflikt mit vorhandenen Daten. Laden Sie ihn neu.</value>
+  </data>
+  <data name="The records service could not be found." xml:space="preserve">
+    <value>Der Datendienst wurde nicht gefunden.</value>
+  </data>
+  <data name="The records service is temporarily unavailable. Please retry." xml:space="preserve">
+    <value>Der Datendienst ist vorübergehend nicht verfügbar. Versuchen Sie es erneut.</value>
+  </data>
+  <data name="The records service rejected the request. Please retry." xml:space="preserve">
+    <value>Der Datendienst hat die Anfrage abgelehnt. Versuchen Sie es erneut.</value>
+  </data>
+  <data name="The records service returned an invalid response." xml:space="preserve">
+    <value>Der Datendienst hat eine ungültige Antwort geliefert.</value>
+  </data>
+  <data name="The request could not be authorized. Retry after session verification." xml:space="preserve">
+    <value>Die Anfrage konnte nicht autorisiert werden. Versuchen Sie es nach der Sitzungsprüfung erneut.</value>
+  </data>
+  <data name="The request was not authorized. Verify your session before saving again." xml:space="preserve">
+    <value>Die Anfrage wurde nicht autorisiert. Prüfen Sie die Sitzung vor dem erneuten Speichern.</value>
+  </data>
+  <data name="The result of the last request is unknown." xml:space="preserve">
+    <value>Das Ergebnis der letzten Anfrage ist unbekannt.</value>
+  </data>
+  <data name="The selected city no longer exists. Choose another city or clear the selection." xml:space="preserve">
+    <value>Die ausgewählte Stadt existiert nicht mehr. Wählen Sie eine andere oder leeren Sie die Auswahl.</value>
+  </data>
+  <data name="The selected company no longer exists. Choose another company or clear the selection." xml:space="preserve">
+    <value>Das ausgewählte Unternehmen existiert nicht mehr. Wählen Sie ein anderes oder leeren Sie die Auswahl.</value>
+  </data>
+  <data name="The selected position no longer exists. Choose another position or clear the selection." xml:space="preserve">
+    <value>Die ausgewählte Position existiert nicht mehr. Wählen Sie eine andere oder leeren Sie die Auswahl.</value>
+  </data>
+  <data name="The server rejected the next deletion." xml:space="preserve">
+    <value>Der Server hat den nächsten Löschvorgang abgelehnt.</value>
+  </data>
+  <data name="The service rejected the request. Check the record list before trying again." xml:space="preserve">
+    <value>Der Dienst hat die Anfrage abgelehnt. Prüfen Sie die Liste vor einem weiteren Versuch.</value>
+  </data>
+  <data name="The service returned an unexpected response. Please contact support if this persists." xml:space="preserve">
+    <value>Der Dienst hat eine unerwartete Antwort geliefert. Wenden Sie sich bei erneutem Auftreten an den Support.</value>
+  </data>
+  <data name="The session changed during deletion." xml:space="preserve">
+    <value>Die Sitzung hat sich während des Löschens geändert.</value>
+  </data>
+  <data name="The session changed. Reload the record list." xml:space="preserve">
+    <value>Die Sitzung hat sich geändert. Laden Sie die Liste neu.</value>
+  </data>
+  <data name="The session has been paused by the server." xml:space="preserve">
+    <value>Die Sitzung wurde vom Server angehalten.</value>
+  </data>
+  <data name="The stored details are not valid JSON." xml:space="preserve">
+    <value>Die gespeicherten Details sind kein gültiges JSON.</value>
+  </data>
+  <data name="The stored snapshot is not valid JSON and cannot be compared." xml:space="preserve">
+    <value>Der gespeicherte Zustand ist kein gültiges JSON und kann nicht verglichen werden.</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Design</value>
+  </data>
+  <data name="This field is required." xml:space="preserve">
+    <value>Dieses Feld ist erforderlich.</value>
+  </data>
+  <data name="This password was used recently. Choose a different password." xml:space="preserve">
+    <value>Dieses Passwort wurde kürzlich verwendet. Wählen Sie ein anderes.</value>
+  </data>
+  <data name="This record is no longer available." xml:space="preserve">
+    <value>Dieser Datensatz ist nicht mehr verfügbar.</value>
+  </data>
+  <data name="This record no longer exists. Close the form and refresh the list." xml:space="preserve">
+    <value>Dieser Datensatz existiert nicht mehr. Schließen Sie das Formular und aktualisieren Sie die Liste.</value>
+  </data>
+  <data name="Time zone" xml:space="preserve">
+    <value>Zeitzone</value>
+  </data>
+  <data name="Toggle {0}" xml:space="preserve">
+    <value>{0} auf-/zuklappen</value>
+  </data>
+  <data name="Token family ID" xml:space="preserve">
+    <value>Tokenfamilien-ID</value>
+  </data>
+  <data name="Too many attempts. Please wait before trying again." xml:space="preserve">
+    <value>Zu viele Versuche. Bitte warten Sie vor einem weiteren Versuch.</value>
+  </data>
+  <data name="Too many attempts. Try again later." xml:space="preserve">
+    <value>Zu viele Versuche. Versuchen Sie es später erneut.</value>
+  </data>
+  <data name="Too many requests. Please wait before retrying." xml:space="preserve">
+    <value>Zu viele Anfragen. Bitte warten Sie vor einem weiteren Versuch.</value>
+  </data>
+  <data name="Too many requests. Please wait before saving again." xml:space="preserve">
+    <value>Zu viele Anfragen. Bitte warten Sie, bevor Sie erneut speichern.</value>
+  </data>
+  <data name="Too many requests. Please wait before trying again." xml:space="preserve">
+    <value>Zu viele Anfragen. Bitte warten Sie vor einem weiteren Versuch.</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Unable to convert to {0} from type {1}" xml:space="preserve">
+    <value>Konvertierung von {1} in {0} nicht möglich</value>
+  </data>
+  <data name="Updating records" xml:space="preserve">
+    <value>Datensätze werden aktualisiert</value>
+  </data>
+  <data name="Uppercase letter" xml:space="preserve">
+    <value>Großbuchstabe</value>
+  </data>
+  <data name="Use the Development environment for detailed errors during local debugging only." xml:space="preserve">
+    <value>Verwenden Sie die Development-Umgebung für detaillierte Fehler nur beim lokalen Debuggen.</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Benutzer</value>
+  </data>
+  <data name="User ID" xml:space="preserve">
+    <value>Benutzer-ID</value>
+  </data>
+  <data name="User agent" xml:space="preserve">
+    <value>User-Agent</value>
+  </data>
+  <data name="User menu" xml:space="preserve">
+    <value>Benutzermenü</value>
+  </data>
+  <data name="User menu: {0}" xml:space="preserve">
+    <value>Benutzermenü: {0}</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Benutzer</value>
+  </data>
+  <data name="VAT ID" xml:space="preserve">
+    <value>USt-IdNr.</value>
+  </data>
+  <data name="View details" xml:space="preserve">
+    <value>Details anzeigen</value>
+  </data>
+  <data name="Waiting for session verification…" xml:space="preserve">
+    <value>Sitzungsprüfung läuft…</value>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>Webseite</value>
+  </data>
+  <data name="Work" xml:space="preserve">
+    <value>Arbeit</value>
+  </data>
+  <data name="YOUR WORKSPACE" xml:space="preserve">
+    <value>IHR ARBEITSBEREICH</value>
+  </data>
+  <data name="You can view assigned permissions but cannot change them." xml:space="preserve">
+    <value>Sie können zugewiesene Berechtigungen ansehen, aber nicht ändern.</value>
+  </data>
+  <data name="You cannot deactivate your own user account." xml:space="preserve">
+    <value>Sie können Ihr eigenes Benutzerkonto nicht deaktivieren.</value>
+  </data>
+  <data name="You do not have permission to delete records." xml:space="preserve">
+    <value>Sie sind nicht berechtigt, Datensätze zu löschen.</value>
+  </data>
+  <data name="You do not have permission to open this page." xml:space="preserve">
+    <value>Sie sind nicht berechtigt, diese Seite zu öffnen.</value>
+  </data>
+  <data name="You do not have permission to read this record." xml:space="preserve">
+    <value>Sie sind nicht berechtigt, diesen Datensatz zu lesen.</value>
+  </data>
+  <data name="You do not have permission to save this record." xml:space="preserve">
+    <value>Sie sind nicht berechtigt, diesen Datensatz zu speichern.</value>
+  </data>
+  <data name="You do not have permission to view connections." xml:space="preserve">
+    <value>Sie sind nicht berechtigt, Verbindungen anzusehen.</value>
+  </data>
+  <data name="You do not have permission to view records." xml:space="preserve">
+    <value>Sie sind nicht berechtigt, Datensätze anzusehen.</value>
+  </data>
+  <data name="You do not have permission to view this record." xml:space="preserve">
+    <value>Sie sind nicht berechtigt, diesen Datensatz anzusehen.</value>
+  </data>
+  <data name="You have read-only access." xml:space="preserve">
+    <value>Sie haben nur Lesezugriff.</value>
+  </data>
+  <data name="You no longer have permission to update preferences." xml:space="preserve">
+    <value>Sie sind nicht mehr berechtigt, Einstellungen zu ändern.</value>
+  </data>
+  <data name="Your account changed during this request. Check your session and try again." xml:space="preserve">
+    <value>Ihr Konto wurde während der Anfrage geändert. Prüfen Sie die Sitzung und versuchen Sie es erneut.</value>
+  </data>
+  <data name="term.change ID" xml:space="preserve">
+    <value>Änderungs-ID</value>
+  </data>
+  <data name="term.city" xml:space="preserve">
+    <value>Stadt</value>
+  </data>
+  <data name="term.company" xml:space="preserve">
+    <value>Unternehmen</value>
+  </data>
+  <data name="term.correlation ID" xml:space="preserve">
+    <value>Korrelations-ID</value>
+  </data>
+  <data name="term.country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="term.event ID" xml:space="preserve">
+    <value>Ereignis-ID</value>
+  </data>
+  <data name="term.of {0} · {1} records" xml:space="preserve">
+    <value>von {0} · {1} Datensätze</value>
+  </data>
+  <data name="term.person" xml:space="preserve">
+    <value>Person</value>
+  </data>
+  <data name="term.position" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="term.record" xml:space="preserve">
+    <value>Datensatz</value>
+  </data>
+  <data name="term.record ID" xml:space="preserve">
+    <value>Datensatz-ID</value>
+  </data>
+  <data name="term.role" xml:space="preserve">
+    <value>Rolle</value>
+  </data>
+  <data name="term.seconds." xml:space="preserve">
+    <value>Sekunden.</value>
+  </data>
+  <data name="term.user" xml:space="preserve">
+    <value>Benutzer</value>
+  </data>
+  <data name="term.user ID" xml:space="preserve">
+    <value>Benutzer-ID</value>
+  </data>
+  <data name="{0} records deleted (set to inactive)." xml:space="preserve">
+    <value>Datensätze gelöscht (deaktiviert): {0}.</value>
+  </data>
+  <data name="{0} selected" xml:space="preserve">
+    <value>Ausgewählt: {0}</value>
+  </data>
+</root>

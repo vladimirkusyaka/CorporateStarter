@@ -139,12 +139,48 @@ public sealed class TableComponentTests
         Assert.Equal(50, client.LastQuery!.PageSize); Assert.Empty(renderer.Errors);
     }
 
+    [Fact]
+    public async Task Paging_preserves_filters_and_sends_one_query_per_navigation()
+    {
+        var client = new FakeTableClient { TotalRows = 100 };
+        await using var services = CreateServices();
+        await using var renderer = new TestRenderer(services);
+        var table = await Mount(renderer, client);
+        Assert.Equal(1, client.QueryCalls);
+        await renderer.Dispatcher.InvokeAsync(async () =>
+        {
+            var state = (TableQueryState<Column, TableColumnFilter>)table.GetType()
+                .GetField("_queryState", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(table)!;
+            state.SetFilter(Column.Name, new TableColumnFilter { Text = "Alpha" });
+            await (Task)Invoke(table, "NextPageAsync")!;
+            Assert.Equal(2, client.LastQuery!.PageNumber);
+            Assert.Equal(1, Read<int>(table, "CurrentPage"));
+            Assert.Single(client.LastQuery.Filters);
+            Assert.Equal(2, client.QueryCalls);
+            await (Task)Invoke(table, "PreviousPageAsync")!;
+            Assert.Equal(1, client.LastQuery.PageNumber);
+            Assert.Single(client.LastQuery.Filters);
+            Assert.Equal(3, client.QueryCalls);
+            table.GetType().GetProperty("PageNumberText", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(table, "4");
+            await (Task)Invoke(table, "CommitPageNumberAsync")!;
+            Assert.Equal(4, client.LastQuery.PageNumber);
+            Assert.Single(client.LastQuery.Filters);
+            Assert.Equal(4, client.QueryCalls);
+            await (Task)Invoke(table, "ClearFilters")!;
+            Assert.Equal(1, client.LastQuery.PageNumber);
+            Assert.Empty(client.LastQuery.Filters);
+            Assert.Equal(5, client.QueryCalls);
+        });
+        Assert.Empty(renderer.Errors);
+    }
+
     internal static ServiceProvider CreateServices(Action<IServiceCollection>? configure = null)
     {
         var services = new ServiceCollection();
         services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
         services.AddSingleton(typeof(ILogger<>), typeof(NullLogger<>));
         services.AddMudServices();
+        services.AddSingleton<CorporateStarter.Shared.Localization.UiText>();
         services.AddSingleton<CorporateStarter.Client.Core.Auth.ProfilePreferences>();
         services.AddSingleton<IJSRuntime, NoBrowser>();
         services.AddSingleton<NavigationManager, TestNavigation>();
@@ -230,14 +266,17 @@ public sealed class TableComponentTests
         public IReadOnlyList<PositionListItemDto>? Visible { get; set; }
         public bool LocateMissing { get; set; }
         public bool ViewInactive { get; set; } = true;
+        public int? TotalRows { get; init; }
+        public int QueryCalls { get; private set; }
         public TableRequest? LastQuery { get; private set; }
         public TableFindRequest? LastFind { get; private set; }
         public Task<TableCapabilities> GetCapabilitiesAsync(CancellationToken ct = default) => Task.FromResult(new TableCapabilities(true, true, true, ViewInactive, true));
         public Task<PagedResult<PositionListItemDto>> QueryAsync(TableRequest request, CancellationToken ct = default)
         {
+            QueryCalls++;
             LastQuery = request;
             var items = Visible ?? Items;
-            return Task.FromResult(new PagedResult<PositionListItemDto> { Items = items.ToList(), Page = 1, PageSize = request.PageSize, TotalCount = items.Count });
+            return Task.FromResult(new PagedResult<PositionListItemDto> { Items = items.ToList(), Page = request.PageNumber, PageSize = request.PageSize, TotalCount = TotalRows ?? items.Count });
         }
         public Task<TableFindResult> FindAsync(TableFindRequest request, CancellationToken ct = default)
         {

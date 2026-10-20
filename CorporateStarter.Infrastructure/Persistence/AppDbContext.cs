@@ -74,6 +74,7 @@ public class AppDbContext : DbContext
             });
         });
         ConfigureUsers(modelBuilder);
+        modelBuilder.Entity<User>().Property(x => x.PreferredLanguage).HasMaxLength(5);
         ConfigureRoles(modelBuilder);
         ConfigureUserRoles(modelBuilder);
         ConfigurePermissions(modelBuilder);

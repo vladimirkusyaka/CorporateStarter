@@ -2,7 +2,7 @@
 @using CorporateStarter.Client.UI.Components.Tables
 @using CorporateStarter.Shared.Dtos.MasterData.Countries
 
-<PageTitle>Countries</PageTitle>
+<PageTitle>@L["Countries"]</PageTitle>
 <ReferenceTable TItem="CountryListItemDto" TColumn="Column" Client="Client" Columns="Columns"
-    ItemId="@(x => x.Id)" ItemName="@(x => x.Name)" Title="Countries" Singular="country"
+    ItemId="@(x => x.Id)" ItemName="@(x => x.Name)" Title="@L["Countries"]" Singular="country"
     OpenEditor="OpenEditorAsync" SavedId="@(value => (value as CountryDetailsDto)?.Id)" />

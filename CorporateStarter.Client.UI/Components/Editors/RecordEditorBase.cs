@@ -6,7 +6,7 @@ using MudBlazor;
 
 namespace CorporateStarter.Client.UI.Components.Editors;
 
-public abstract class RecordEditorBase<TModel, TDetails> : ComponentBase, IDisposable where TModel : new()
+public abstract class RecordEditorBase<TModel, TDetails> : CorporateStarter.Client.UI.Localization.LocalizedComponent, IDisposable where TModel : new()
 {
     [CascadingParameter] protected IMudDialogInstance Dialog { get; set; } = default!;
     [Inject] protected IClientAuthState Auth { get; set; } = default!;
@@ -32,7 +32,7 @@ public abstract class RecordEditorBase<TModel, TDetails> : ComponentBase, IDispo
     protected bool _sessionReady, _saving, _disposed, _closed, _uncertain, _confirmDiscard;
     protected string? _error;
     protected bool Blocked => _saving || !_sessionReady || _uncertain || _closed || !_loaded || _loadingDetails;
-    protected static string? Required(string? value) => string.IsNullOrWhiteSpace(value) ? "This field is required." : null;
+    protected string? Required(string? value) => string.IsNullOrWhiteSpace(value) ? L["This field is required."] : null;
 
     protected override async Task OnInitializedAsync()
     {

@@ -2,7 +2,7 @@
 @using CorporateStarter.Client.UI.Components.Tables
 @using CorporateStarter.Shared.Dtos.Directory.Companies
 
-<PageTitle>Companies</PageTitle>
+<PageTitle>@L["Companies"]</PageTitle>
 <ReferenceTable TItem="CompanyListItemDto" TColumn="Column" Client="Client" Columns="Columns"
-                ItemId="@(x => x.Id)" ItemName="@(x => x.Name)" Title="Companies" Singular="company"
+                ItemId="@(x => x.Id)" ItemName="@(x => x.Name)" Title="@L["Companies"]" Singular="company"
                 OpenEditor="OpenEditorAsync" SavedId="@(value => (value as CompanyDetailsDto)?.Id)" />

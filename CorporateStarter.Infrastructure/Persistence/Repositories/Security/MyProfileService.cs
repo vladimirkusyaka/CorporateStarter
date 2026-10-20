@@ -17,11 +17,13 @@ public sealed class MyProfileService(AppDbContext db, IAuthService auth, IPasswo
         if (user is null) return null;
         var account = await auth.GetCurrentUserAsync(userId, ct);
         if (account is null) return null;
-        var requirements = new List<string> { $"{options.MinimumLength}-{options.MaximumLength} characters" };
-        if (options.RequireUppercase) requirements.Add("uppercase letter");
-        if (options.RequireLowercase) requirements.Add("lowercase letter");
-        if (options.RequireDigit) requirements.Add("digit");
-        if (options.RequireNonAlphanumeric) requirements.Add("special character");
+        var culture = System.Globalization.CultureInfo.CurrentUICulture;
+        string T(string key) => CorporateStarter.Shared.Localization.UiText.Get(key, culture);
+        var requirements = new List<string> { string.Format(culture, T("Password requirements: {0}–{1} characters."), options.MinimumLength, options.MaximumLength) };
+        if (options.RequireUppercase) requirements.Add(T("Uppercase letter"));
+        if (options.RequireLowercase) requirements.Add(T("Lowercase letter"));
+        if (options.RequireDigit) requirements.Add(T("Digit"));
+        if (options.RequireNonAlphanumeric) requirements.Add(T("Special character"));
         return new()
         {
             Account = account,
@@ -29,8 +31,17 @@ public sealed class MyProfileService(AppDbContext db, IAuthService auth, IPasswo
             PersonName = user.Person is null ? null : string.Join(" ", new[] { user.Person.FirstName, user.Person.MiddleName, user.Person.LastName }.Where(x => !string.IsNullOrWhiteSpace(x))),
             CompanyName = user.Person?.Company?.Name,
             PositionName = user.Person?.Position?.Name,
-            Appearance = new() { Theme = user.PreferredTheme, PageSize = user.PreferredPageSize, TimeZone = user.PreferredTimeZone },
-            PasswordRules = string.Join(", ", requirements) + ". Avoid your login, email and recently used passwords."
+            Appearance = new() { Theme = user.PreferredTheme, PageSize = user.PreferredPageSize, TimeZone = user.PreferredTimeZone, Language = user.PreferredLanguage },
+            PasswordPolicy = new()
+            {
+                MinimumLength = options.MinimumLength,
+                MaximumLength = options.MaximumLength,
+                RequireUppercase = options.RequireUppercase,
+                RequireLowercase = options.RequireLowercase,
+                RequireDigit = options.RequireDigit,
+                RequireNonAlphanumeric = options.RequireNonAlphanumeric
+            },
+            PasswordRules = string.Join(", ", requirements) + " " + T("Avoid your login, email and recently used passwords.")
         };
     }
     public async Task<bool> UpdateAccountAsync(Guid id, UpdateMyAccountRequest request, CancellationToken ct)
@@ -43,7 +54,7 @@ public sealed class MyProfileService(AppDbContext db, IAuthService auth, IPasswo
     {
         if (!request.IsValid()) throw new ArgumentException("Invalid appearance settings.");
         var user = await db.Users.SingleOrDefaultAsync(x => x.Id == id && x.IsActive, ct); if (user is null) return false;
-        user.PreferredTheme = request.Theme; user.PreferredPageSize = request.PageSize; user.PreferredTimeZone = request.TimeZone;
+        user.PreferredLanguage = request.Language; user.PreferredTheme = request.Theme; user.PreferredPageSize = request.PageSize; user.PreferredTimeZone = request.TimeZone;
         user.UpdatedAtUtc = DateTime.UtcNow; await db.SaveChangesAsync(ct); return true;
     }
     // A serializable transaction makes hash/history/session changes atomic. Conflicts are returned for explicit retry.

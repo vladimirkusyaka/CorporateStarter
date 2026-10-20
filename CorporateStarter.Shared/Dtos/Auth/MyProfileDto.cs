@@ -9,5 +9,6 @@ public sealed class MyProfileDto
     public string? CompanyName { get; set; }
     public string? PositionName { get; set; }
     public ProfileSettingsDto Appearance { get; set; } = new();
+    public PasswordPolicyInfo PasswordPolicy { get; set; } = new();
     public string PasswordRules { get; set; } = "";
 }

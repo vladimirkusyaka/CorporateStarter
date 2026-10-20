@@ -1,20 +1,20 @@
 ﻿@namespace CorporateStarter.Client.UI.Components.Lookups
 
 <div class="tree-select">
-    <label for="@_searchId">@Label</label>
-    <input id="@_searchId" type="search" placeholder="Find option or group" @bind="_search" @bind:event="oninput" />
-    <span role="status">@Selected.Count selected</span>
+    <label for="@_searchId">@L[Label]</label>
+    <input id="@_searchId" type="search" placeholder="@L["Find option or group"]" @bind="_search" @bind:event="oninput" />
+    <span role="status">@L.Format("{0} selected", Selected.Count)</span>
     <div class="tree-select-options">
-        <MudTreeView T="string" ReadOnly="true" Dense="true" ExpandOnClick="true" aria-label="@Label">
+        <MudTreeView T="string" ReadOnly="true" Dense="true" ExpandOnClick="true" aria-label="@L[Label]">
             @foreach (var group in Visible.GroupBy(x => x.Group))
             {
-                <MudTreeViewItem T="string" @key="group.Key" Value="@("group:" + group.Key)" Text="@group.Key"
+                <MudTreeViewItem T="string" @key="group.Key" Value="@("group:" + group.Key)" Text="@L[group.Key]"
                                  Expanded="@(!string.IsNullOrWhiteSpace(_search) || !_collapsed.Contains(group.Key))"
                                  ExpandedChanged="@(expanded => SetExpanded(group.Key, expanded))">
                     <BodyContent>
                         <button type="button" role="checkbox" class="tree-group-check"
                                 aria-checked="@GroupAria(group.Key)" disabled="@(Disabled || !GroupOptions(group.Key).Any(x => x.Enabled))"
-                                title="Select or clear all available options in this group (including search-hidden options)"
+                                title="@L["Select or clear all available options in this group (including search-hidden options)"]"
                                 @onclick="@(() => ToggleGroupAsync(group.Key))" @onclick:stopPropagation="true" @onkeydown:stopPropagation="true">
                             <span aria-hidden="true" class="@("tree-group-box " + GroupAria(group.Key))">
                                 @if (GroupState(group.Key) != false)
@@ -23,7 +23,7 @@
                                 }
                             </span>
                             <MudIcon Icon="@Icons.Material.Filled.Folder" Size="Size.Small" aria-hidden="true" />
-                            <span>@group.Key</span>
+                            <span>@L[group.Key]</span>
                         </button>
                     </BodyContent>
                     <ChildContent>
@@ -45,7 +45,7 @@
         </MudTreeView>
         @if (!Visible.Any())
         {
-            <p role="status">No matching options.</p>
+            <p role="status">@L["No matching options."]</p>
         }
     </div>
 </div>

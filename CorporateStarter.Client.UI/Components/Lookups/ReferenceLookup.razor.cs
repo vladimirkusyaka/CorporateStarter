@@ -12,7 +12,7 @@ public partial class ReferenceLookup
     [Parameter, EditorRequired] public Func<string, CancellationToken, Task<LookupOption[]>> Search { get; set; } = default!;
     private string? _searchError;
     private long _searchRevision;
-    private string? Validate(LookupOption? value) => (Required && value is null) || value?.Id == Guid.Empty ? "Select a record from the list." : null;
+    private string? Validate(LookupOption? value) => (Required && value is null) || value?.Id == Guid.Empty ? L["Select a record from the list."] : null;
     private async Task<IEnumerable<LookupOption>> SearchAsync(string text, CancellationToken ct)
     {
         var revision = ++_searchRevision;

@@ -1,5 +1,5 @@
 ﻿<MudDialog>
-    <TitleContent><MudText Typo="Typo.h6">Filter @Label</MudText></TitleContent>
+    <TitleContent><MudText Typo="Typo.h6">@L.Format("Filter {0}", L[Label])</MudText></TitleContent>
     <DialogContent>
         @if (IsChoice)
         {
@@ -8,19 +8,19 @@
                 {
                     <MudCheckBox T="bool" Value="@_selected.Contains(option)"
                                  ValueChanged="@(value => SetSelected(option, value))"
-                                 Label="@(option.Length == 0 ? "(Empty)" : option)" Color="Color.Primary" />
+                                 Label="@(L[option.Length == 0 ? "(Empty)" : option])" Color="Color.Primary" />
                 }
             </div>
         }
         else
         {
-            <MudTextField T="string" @bind-Value="_text" Label="Contains" Immediate="true" MaxLength="200"
+            <MudTextField T="string" @bind-Value="_text" Label="@L["Contains"]" Immediate="true" MaxLength="200"
                           Variant="Variant.Outlined" AutoFocus="true" OnKeyDown="OnKeyDown" />
         }
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Clear">Clear</MudButton>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton OnClick="Apply" Variant="Variant.Filled" Color="Color.Primary">Apply</MudButton>
+        <MudButton OnClick="Clear">@L["Clear"]</MudButton>
+        <MudButton OnClick="Cancel">@L["Cancel"]</MudButton>
+        <MudButton OnClick="Apply" Variant="Variant.Filled" Color="Color.Primary">@L["Apply"]</MudButton>
     </DialogActions>
 </MudDialog>

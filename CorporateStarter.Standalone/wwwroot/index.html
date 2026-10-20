@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,13 +12,23 @@
 </head>
 <body>
     <div id="app">
-        <div class="startup" role="status" aria-live="polite">Loading CorporateStarter…</div>
+        <div class="startup" role="status" aria-live="polite" data-cs-text="Loading application…">…</div>
     </div>
     <div id="blazor-error-ui" role="alert">
-        The application encountered an error. <a href="/">Reload</a>
-        <button type="button" class="dismiss" aria-label="Dismiss error">×</button>
+        <span data-cs-text="The application encountered an error."></span> <a href="/" data-cs-text="Reload"></a>
+        <button type="button" class="dismiss" aria-label="Dismiss error" data-cs-label="Dismiss error">×</button>
     </div>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script type="module">
+                import { initialize } from './_content/CorporateStarter.Client.UI/localization.js?v=20261017';
+                await initialize();
+                await Blazor.start({
+                    configureRuntime: runtime => runtime.withConfig({
+                        // Keep every translation available when switching languages without reloading.
+                        loadAllSatelliteResources: true
+                    })
+                });
+    </script>
 </body>
 </html>

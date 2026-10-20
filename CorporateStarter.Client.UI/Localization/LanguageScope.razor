@@ -1,0 +1,8 @@
+﻿@if (_ready)
+{
+    <CascadingValue Name="UiLanguage" Value="@L.Language">@ChildContent</CascadingValue>
+}
+else
+{
+    <div role="progressbar" style="padding:2rem;text-align:center">…</div>
+}

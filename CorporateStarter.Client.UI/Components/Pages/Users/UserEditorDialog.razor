@@ -8,31 +8,31 @@
                    Uncertain="_uncertain" ConfirmDiscard="_confirmDiscard" Error="@_error"
                    Close="CloseAsync" Save="SaveTabbedAsync" Retry="LoadDetailsAsync" KeepEditing="KeepEditing" Discard="Discard">
     <MudTabs ActivePanelIndex="_tab" ActivePanelIndexChanged="ChangeTab" KeepPanelsAlive="true" Elevation="0" TabPanelsClass="pt-4">
-        <MudTabPanel Text="Details" Disabled="@(Blocked || _confirmDiscard || _validating)">
-            <MudTextField @bind-Value="_model.Login" Label="Login" MaxLength="100" Variant="Variant.Outlined" Margin="Margin.Dense"
+        <MudTabPanel Text="@L["Details"]" Disabled="@(Blocked || _confirmDiscard || _validating)">
+            <MudTextField @bind-Value="_model.Login" Label="@L["Login"]" MaxLength="100" Variant="Variant.Outlined" Margin="Margin.Dense"
                           Immediate="true" Disabled="Blocked" Validation="@(new Func<string, string?>(LoginError))" />
-            <MudTextField @bind-Value="_model.DisplayName" Label="Display name" MaxLength="256" Variant="Variant.Outlined"
+            <MudTextField @bind-Value="_model.DisplayName" Label="@L["Display name"]" MaxLength="256" Variant="Variant.Outlined"
                           Margin="Margin.Dense" Immediate="true" Disabled="Blocked" />
-            <MudTextField @bind-Value="_model.Email" Label="Email" MaxLength="256" Variant="Variant.Outlined" Margin="Margin.Dense"
+            <MudTextField @bind-Value="_model.Email" Label="@L["Email"]" MaxLength="256" Variant="Variant.Outlined" Margin="Margin.Dense"
                           Immediate="true" Disabled="Blocked" Validation="@(new Func<string, string?>(EmailError))" />
             @if (!IsEditing)
             {
-                <MudTextField @bind-Value="_model.Password" Label="Password" InputType="InputType.Password" autocomplete="new-password"
+                <MudTextField @bind-Value="_model.Password" Label="@L["Password"]" InputType="InputType.Password" autocomplete="new-password"
                               Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" Disabled="Blocked" Validation="@(new Func<string, string?>(Required))" />
-                <MudTextField @bind-Value="_confirmation" Label="Confirm password" InputType="InputType.Password" autocomplete="new-password"
+                <MudTextField @bind-Value="_confirmation" Label="@L["Confirm password"]" InputType="InputType.Password" autocomplete="new-password"
                               Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" Disabled="Blocked" Validation="@(new Func<string, string?>(ConfirmationError))" />
             }
             @if (_capabilities.ViewInactive)
             {
-                <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@(Blocked || IsSelf || !CanChangeActive)" Label="Active" />
+                <MudSwitch @bind-Value="_model.IsActive" Color="Color.Primary" Disabled="@(Blocked || IsSelf || !CanChangeActive)" Label="@L["Active"]" />
             }
             @if (_model.PersonId is not null)
             {
-                <MudText Typo="Typo.body2">Person: @(_personName ?? "Linked person")</MudText>
+                <MudText Typo="Typo.body2">@L.Format("Person: {0}", _personName ?? L["Linked person"])</MudText>
             }
         </MudTabPanel>
-        <MudTabPanel Text="Roles" Disabled="@(Blocked || _confirmDiscard || _validating)">
-            <ReferenceTreeSelect Label="Roles" Options="_options" Selected="_selected" SelectedChanged="RolesChanged" Disabled="Blocked" />
+        <MudTabPanel Text="@L["Roles"]" Disabled="@(Blocked || _confirmDiscard || _validating)">
+            <ReferenceTreeSelect Label="@L["Roles"]" Options="_options" Selected="_selected" SelectedChanged="RolesChanged" Disabled="Blocked" />
         </MudTabPanel>
     </MudTabs>
 </EditorDialogFrame>

@@ -39,7 +39,7 @@ public partial class UserEditorDialog : RecordEditorBase<CreateUserRequest, Guid
     private async Task LoadOptionsAsync(CancellationToken ct)
     {
         var roles = await Client.RoleOptionsAsync(ct);
-        _options = roles.Select(x => new SelectionOption(x.Id, x.Name + (x.IsActive ? "" : " (inactive)"),
+        _options = roles.Select(x => new SelectionOption(x.Id, x.Name + (x.IsActive ? "" : L[" (inactive)"]),
             x.IsSystemRole ? "System roles" : "Custom roles", x.IsActive)).ToArray();
     }
     protected override async Task<CreateUserRequest> ReadModelAsync(Guid id, CancellationToken ct)
@@ -48,7 +48,7 @@ public partial class UserEditorDialog : RecordEditorBase<CreateUserRequest, Guid
         var item = await Client.GetByIdAsync(id, ct);
         _selected = item.Roles.Select(x => x.RoleId).ToHashSet();
         _options = _options.Concat(item.Roles.Where(x => !_options.Any(o => o.Id == x.RoleId))
-            .Select(x => new SelectionOption(x.RoleId, x.Name + " (unavailable)", "Other roles", false))).ToArray();
+            .Select(x => new SelectionOption(x.RoleId, x.Name + L[" (unavailable)"], "Other roles", false))).ToArray();
         _personName = item.PersonName;
         return new()
         {
@@ -61,9 +61,9 @@ public partial class UserEditorDialog : RecordEditorBase<CreateUserRequest, Guid
     }
     private void RolesChanged(IReadOnlySet<Guid> ids) => _selected = ids;
     private void ChangeTab(int index) { if (!Blocked && !_confirmDiscard && !_validating) _tab = index; }
-    private static string? LoginError(string value) => value?.Trim().Length is >= 3 and <= 100 ? null : "Enter a login of 3–100 characters.";
-    private static string? EmailError(string value) => !string.IsNullOrWhiteSpace(value) && new EmailAddressAttribute().IsValid(value.Trim()) ? null : "Enter a valid email address.";
-    private string? ConfirmationError(string value) => value == _model.Password ? null : "Passwords do not match.";
+    private string? LoginError(string value) => value?.Trim().Length is >= 3 and <= 100 ? null : L["Enter a login of 3–100 characters."];
+    private string? EmailError(string value) => !string.IsNullOrWhiteSpace(value) && new EmailAddressAttribute().IsValid(value.Trim()) ? null : L["Enter a valid email address."];
+    private string? ConfirmationError(string value) => value == _model.Password ? null : L["Passwords do not match."];
     private async Task SaveTabbedAsync()
     {
         if (Blocked || _validating || _confirmDiscard || _frame is null) return;

@@ -3,66 +3,75 @@
 @using CorporateStarter.Shared.Dtos.Auth
 @using Microsoft.AspNetCore.Components.Web
 
-<PageTitle>Profile</PageTitle>
+<PageTitle>@L["Profile"]</PageTitle>
 <div class="profile-page">
-    <MudText Typo="Typo.h5" Class="mb-4">Profile</MudText>
+    <MudText Typo="Typo.h5" Class="mb-4">@L["Profile"]</MudText>
     @if (_profile is null)
     {
-        @if (_error is not null) { <MudAlert Severity="Severity.Error">@_error</MudAlert><MudButton OnClick="LoadAsync" Disabled="_busy">Retry</MudButton> }
-        else { <MudProgressCircular Indeterminate="true" aria-label="Loading profile" /> }
+        @if (_error is not null) { <MudAlert Severity="Severity.Error">@L.Text(_error)</MudAlert><MudButton OnClick="LoadAsync" Disabled="_busy">@L["Retry"]</MudButton> }
+        else { <MudProgressCircular Indeterminate="true" aria-label="@L["Loading profile"]" /> }
     }
     else
     {
         <MudPaper Outlined="true" Class="profile-panel">
             <MudTabs KeepPanelsAlive="true" @bind-ActivePanelIndex="_tab">
-                <MudTabPanel Text="Account" Disabled="_busy">
+                <MudTabPanel Text="@L["Account"]" Disabled="_busy">
                     <div class="profile-fields">
-                        <MudTextField @bind-Value="_displayName" Label="Display name" MaxLength="256" Immediate="true" Disabled="_busy" Variant="Variant.Outlined" />
-                        <MudTextField Value="@_profile.Account.Login" Label="Login" ReadOnly="true" Variant="Variant.Outlined" />
-                        <MudTextField Value="@_profile.Account.Email" Label="Email" ReadOnly="true" Variant="Variant.Outlined" />
-                        <MudTextField Value="@(_profile.PersonName ?? "Not linked")" Label="Person" ReadOnly="true" Variant="Variant.Outlined" />
-                        @if (_profile.CompanyName is not null) { <MudText>Company: @_profile.CompanyName</MudText> }
-                        @if (_profile.PositionName is not null) { <MudText>Position: @_profile.PositionName</MudText> }
-                        <MudText Typo="Typo.subtitle2">Roles</MudText>
-                        @if (_profile.Account.Roles.Count == 0) { <MudText>No roles assigned.</MudText> }
+                        <MudTextField @bind-Value="_displayName" Label="@L["Display name"]" MaxLength="256" Immediate="true" Disabled="_busy" Variant="Variant.Outlined" />
+                        <MudTextField Value="@_profile.Account.Login" Label="@L["Login"]" ReadOnly="true" Variant="Variant.Outlined" />
+                        <MudTextField Value="@_profile.Account.Email" Label="@L["Email"]" ReadOnly="true" Variant="Variant.Outlined" />
+                        <MudTextField Value="@(_profile.PersonName ?? "Not linked")" Label="@L["Person"]" ReadOnly="true" Variant="Variant.Outlined" />
+                        @if (_profile.CompanyName is not null) { <MudText>@L.Format("Company: {0}", _profile.CompanyName)</MudText> }
+                        @if (_profile.PositionName is not null) { <MudText>@L.Format("Position: {0}", _profile.PositionName)</MudText> }
+                        <MudText Typo="Typo.subtitle2">@L["Roles"]</MudText>
+                        @if (_profile.Account.Roles.Count == 0) { <MudText>@L["No roles assigned."]</MudText> }
                         else { <ul>@foreach (var role in _profile.Account.Roles) { <li>@role.Name</li> }</ul> }
-                        <MudText Typo="Typo.caption">Login, email, linked person and roles are managed by an administrator.</MudText>
-                        <MudButton Color="Color.Primary" Variant="Variant.Filled" Disabled="_busy" OnClick="SaveAccountAsync">Save account</MudButton>
+                        <MudText Typo="Typo.caption">@L["Login, email, linked person and roles are managed by an administrator."]</MudText>
+                        <MudButton Color="Color.Primary" Variant="Variant.Filled" Disabled="_busy" OnClick="SaveAccountAsync">@L["Save account"]</MudButton>
                     </div>
                 </MudTabPanel>
-                <MudTabPanel Text="Appearance" Disabled="_busy">
+                <MudTabPanel Text="@L["Appearance"]" Disabled="_busy">
                     <div class="profile-fields">
-                        <MudSelect T="string" @bind-Value="_theme" Label="Theme" Variant="Variant.Outlined" Disabled="_busy">
-                            <MudSelectItem Value='@("System")'>System</MudSelectItem>
-                            <MudSelectItem Value='@("Light")'>Light</MudSelectItem>
-                            <MudSelectItem Value='@("Dark")'>Dark</MudSelectItem>
+                        <LanguagePicker Disabled="_busy" />
+                        <MudText Typo="Typo.caption">@L["Language changes immediately. Save appearance to keep it in your profile."]</MudText>
+                        <MudSelect T="string" @bind-Value="_theme" Label="@L["Theme"]" Variant="Variant.Outlined" Disabled="_busy">
+                            <MudSelectItem Value='@("System")'>@L["System"]</MudSelectItem>
+                            <MudSelectItem Value='@("Light")'>@L["Light"]</MudSelectItem>
+                            <MudSelectItem Value='@("Dark")'>@L["Dark"]</MudSelectItem>
                         </MudSelect>
-                        <MudSelect T="int" @bind-Value="_pageSize" Label="Default rows per page" Variant="Variant.Outlined" Disabled="_busy">
+                        <MudSelect T="int" @bind-Value="_pageSize" Label="@L["Default rows per page"]" Variant="Variant.Outlined" Disabled="_busy">
                             <MudSelectItem Value="10">10</MudSelectItem><MudSelectItem Value="20">20</MudSelectItem><MudSelectItem Value="50">50</MudSelectItem>
                         </MudSelect>
-                        <MudSelect T="string" @bind-Value="_timeZone" Label="Time zone" Variant="Variant.Outlined" Disabled="_busy">
-                            <MudSelectItem Value='@("UTC")'>UTC</MudSelectItem><MudSelectItem Value='@("System")'>Device time zone</MudSelectItem>
+                        <MudSelect T="string" @bind-Value="_timeZone" Label="@L["Time zone"]" Variant="Variant.Outlined" Disabled="_busy">
+                            <MudSelectItem Value='@("UTC")'>UTC</MudSelectItem><MudSelectItem Value='@("System")'>@L["Device time zone"]</MudSelectItem>
                         </MudSelect>
-                        <MudText Typo="Typo.caption">Applies to date display in audit lists and details. Date filters and search use UTC. The default page size applies when a table opens.</MudText>
-                        <MudButton Color="Color.Primary" Variant="Variant.Filled" Disabled="_busy" OnClick="SaveAppearanceAsync">Save appearance</MudButton>
+                        <MudText Typo="Typo.caption">@L["Applies to date display in audit lists and details. Date filters and search use UTC. The default page size applies when a table opens."]</MudText>
+                        <MudButton Color="Color.Primary" Variant="Variant.Filled" Disabled="_busy" OnClick="SaveAppearanceAsync">@L["Save appearance"]</MudButton>
                     </div>
                 </MudTabPanel>
-                <MudTabPanel Text="Security" Disabled="_busy">
+                <MudTabPanel Text="@L["Security"]" Disabled="_busy">
                     <div class="profile-fields">
-                        <MudText Typo="Typo.h6">Change password</MudText>
-                        <MudText Typo="Typo.body2">@_profile.PasswordRules</MudText>
-                        <MudTextField @bind-Value="_currentPassword" Label="Current password" InputType="InputType.Password" autocomplete="current-password" Immediate="true" MaxLength="128" Disabled="@(_busy || _passwordUncertain)" Variant="Variant.Outlined" />
-                        <MudTextField @bind-Value="_newPassword" Label="New password" InputType="InputType.Password" autocomplete="new-password" Immediate="true" MaxLength="128" Disabled="@(_busy || _passwordUncertain)" Variant="Variant.Outlined" />
-                        <MudTextField @bind-Value="_confirmation" Label="Confirm new password" InputType="InputType.Password" autocomplete="new-password" Immediate="true" MaxLength="128" Disabled="@(_busy || _passwordUncertain)" Variant="Variant.Outlined" />
-                        <MudAlert Severity="Severity.Info">Changing your password signs you out on all devices, including this one.</MudAlert>
-                        <MudButton Color="Color.Primary" Variant="Variant.Filled" Disabled="@(_busy || _passwordUncertain)" OnClick="ChangePasswordAsync">Change password</MudButton>
-                        @if (_passwordUncertain) { <MudButton OnClick="SignOutAsync" Disabled="_busy">Sign out and sign in again</MudButton> }
+                        <MudText Typo="Typo.h6">@L["Change password"]</MudText>
+                        <MudText Typo="Typo.body2">@L.Format("Password requirements: {0}–{1} characters.", _profile.PasswordPolicy.MinimumLength, _profile.PasswordPolicy.MaximumLength)</MudText>
+                        <ul>
+                            @if (_profile.PasswordPolicy.RequireUppercase) { <li>@L["Uppercase letter"]</li> }
+                            @if (_profile.PasswordPolicy.RequireLowercase) { <li>@L["Lowercase letter"]</li> }
+                            @if (_profile.PasswordPolicy.RequireDigit) { <li>@L["Digit"]</li> }
+                            @if (_profile.PasswordPolicy.RequireNonAlphanumeric) { <li>@L["Special character"]</li> }
+                        </ul>
+                        <MudText>@L["Avoid your login, email and recently used passwords."]</MudText>
+                        <MudTextField @bind-Value="_currentPassword" Label="@L["Current password"]" InputType="InputType.Password" autocomplete="current-password" Immediate="true" MaxLength="128" Disabled="@(_busy || _passwordUncertain)" Variant="Variant.Outlined" />
+                        <MudTextField @bind-Value="_newPassword" Label="@L["New password"]" InputType="InputType.Password" autocomplete="new-password" Immediate="true" MaxLength="128" Disabled="@(_busy || _passwordUncertain)" Variant="Variant.Outlined" />
+                        <MudTextField @bind-Value="_confirmation" Label="@L["Confirm new password"]" InputType="InputType.Password" autocomplete="new-password" Immediate="true" MaxLength="128" Disabled="@(_busy || _passwordUncertain)" Variant="Variant.Outlined" />
+                        <MudAlert Severity="Severity.Info">@L["Changing your password signs you out on all devices, including this one."]</MudAlert>
+                        <MudButton Color="Color.Primary" Variant="Variant.Filled" Disabled="@(_busy || _passwordUncertain)" OnClick="ChangePasswordAsync">@L["Change password"]</MudButton>
+                        @if (_passwordUncertain) { <MudButton OnClick="SignOutAsync" Disabled="_busy">@L["Sign out and sign in again"]</MudButton> }
                     </div>
                 </MudTabPanel>
             </MudTabs>
-            @if (_busy) { <MudProgressLinear Indeterminate="true" aria-label="Saving profile" /> }
-            @if (_error is not null) { <MudAlert Severity="Severity.Error" Class="ma-4" role="alert">@_error</MudAlert> }
-            @if (_message is not null) { <MudAlert Severity="Severity.Success" Class="ma-4" role="status">@_message</MudAlert> }
+            @if (_busy) { <MudProgressLinear Indeterminate="true" aria-label="@L["Saving profile"]" /> }
+            @if (_error is not null) { <MudAlert Severity="Severity.Error" Class="ma-4" role="alert">@L.Text(_error)</MudAlert> }
+            @if (_message is not null) { <MudAlert Severity="Severity.Success" Class="ma-4" role="status">@L.Text(_message)</MudAlert> }
         </MudPaper>
     }
 </div>

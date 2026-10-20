@@ -17,7 +17,8 @@ namespace CorporateStarter.Client.UI.Components.Lookups
         private readonly HashSet<string> _collapsed = [];
         private IEnumerable<SelectionOption> Visible => Options.Where(x =>
             x.Label.Contains(_search.Trim(), StringComparison.OrdinalIgnoreCase) ||
-            x.Group.Contains(_search.Trim(), StringComparison.OrdinalIgnoreCase))
+            x.Group.Contains(_search.Trim(), StringComparison.OrdinalIgnoreCase) ||
+            L[x.Group].Contains(_search.Trim(), StringComparison.OrdinalIgnoreCase))
             .OrderBy(x => x.Group).ThenBy(x => x.Label);
         // Group operations use the complete branch, independently of the search filter.
         private SelectionOption[] GroupOptions(string group) => Options.Where(x => x.Group == group).ToArray();

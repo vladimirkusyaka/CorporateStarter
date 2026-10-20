@@ -2,7 +2,7 @@
 @using CorporateStarter.Client.UI.Components.Tables
 @using CorporateStarter.Shared.Dtos.MasterData.Positions
 
-<PageTitle>Positions</PageTitle>
+<PageTitle>@L["Positions"]</PageTitle>
 <ReferenceTable TItem="PositionListItemDto" TColumn="Column" Client="Client" Columns="Columns"
-    ItemId="@(x => x.Id)" ItemName="@(x => x.Name)" Title="Positions" Singular="position"
+    ItemId="@(x => x.Id)" ItemName="@(x => x.Name)" Title="@L["Positions"]" Singular="position"
     OpenEditor="OpenEditorAsync" SavedId="@(value => (value as PositionDetailsDto)?.Id)" />
