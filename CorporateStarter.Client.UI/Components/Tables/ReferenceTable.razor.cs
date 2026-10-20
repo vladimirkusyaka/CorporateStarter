@@ -45,6 +45,16 @@ public partial class ReferenceTable<TItem, TColumn> : IDisposable where TColumn 
             ApplyPendingSelection();
     }
 
+    private async Task RefreshAsync()
+    {
+        if (_disposed || _loading || _creating || _querying) return;
+
+        // Refresh resets filters explicitly; normal loads must preserve paging and filters.
+        _queryState.ClearFilters();
+        _queryState.PageIndex = 0;
+        await LoadAsync();
+    }
+
     protected Task LoadAsync() => LoadAsync(preserveSelection: false);
 
     private async Task LoadAsync(bool preserveSelection, bool selectFirstIfMissing = false)

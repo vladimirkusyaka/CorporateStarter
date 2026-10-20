@@ -42,7 +42,7 @@
             }
             <MudTooltip Text="@(L.Format("Refresh {0}", L[Title]))">
                 <MudIconButton Icon="@Icons.Material.Filled.Refresh" Variant="Variant.Outlined"
-                               Color="Color.Primary" Disabled="@(_loading || _creating || _querying)" OnClick="LoadAsync"
+                               Color="Color.Primary" Disabled="@(_loading || _creating || _querying)" OnClick="RefreshAsync"
                                Class="reference-refresh" aria-label="@(L.Format("Refresh {0}", L[Title]))" />
             </MudTooltip>
         </div>
@@ -139,9 +139,9 @@
                         </label>
                         <label class="reference-page-number">
                             @L["Page"] <input type="text" inputmode="numeric" maxlength="10" aria-label="@L["Page number"]"
-                                        title="@L["Enter a page number and press Enter"]" @bind="PageNumberText" @bind:event="oninput"
-                                        @onkeydown="PageNumberKeyDownAsync" @onblur="CommitPageNumberAsync"
-                                        disabled="@(_loading || _querying || _creating)" />
+                                              title="@L["Enter a page number and press Enter"]" @bind="PageNumberText" @bind:event="oninput"
+                                              @onkeydown="PageNumberKeyDownAsync" @onblur="CommitPageNumberAsync"
+                                              disabled="@(_loading || _querying || _creating)" />
                             @L.Format("of {0} · {1} records", TotalPages, _totalCount)
                         </label>
                         <button type="button" @onclick="PreviousPageAsync" disabled="@(_loading || _querying || _creating || CurrentPage == 0)">@L["Previous"]</button>

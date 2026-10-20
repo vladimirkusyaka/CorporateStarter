@@ -174,6 +174,39 @@ public sealed class TableComponentTests
         Assert.Empty(renderer.Errors);
     }
 
+    [Fact]
+    public async Task Refresh_clears_filters_and_selection_but_preserves_sort_and_page_size()
+    {
+        var client = new FakeTableClient { TotalRows = 100 };
+        await using var services = CreateServices();
+        await using var renderer = new TestRenderer(services);
+        var table = await Mount(renderer, client);
+        await renderer.Dispatcher.InvokeAsync(async () =>
+        {
+            var state = (TableQueryState<Column, TableColumnFilter>)table.GetType()
+                .GetField("_queryState", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(table)!;
+            state.PageSize = 10;
+            state.ToggleSort(Column.Name);
+            state.SetFilter(Column.Name, new TableColumnFilter { Text = "Alpha" });
+            state.SetFilter(Column.Status, new TableColumnFilter { Values = ["Active"] });
+            state.PageIndex = 3;
+            Invoke(table, "SelectRow", client.Items[0], new MouseEventArgs());
+            var before = client.QueryCalls;
+            await (Task)Invoke(table, "RefreshAsync")!;
+            Assert.Equal(before + 1, client.QueryCalls);
+            Assert.Equal(1, client.LastQuery!.PageNumber);
+            Assert.Empty(client.LastQuery.Filters);
+            Assert.Equal(10, client.LastQuery.PageSize);
+            Assert.Equal("name", Assert.Single(client.LastQuery.Sorts).Field);
+            Assert.Empty(Read<IReadOnlySet<Guid>>(table, "_selectedIds"));
+            Assert.Null(client.LastFind);
+            await (Task)Invoke(table, "NextPageAsync")!;
+            Assert.Equal(2, client.LastQuery.PageNumber);
+            Assert.Equal(before + 2, client.QueryCalls);
+        });
+        Assert.Empty(renderer.Errors);
+    }
+
     internal static ServiceProvider CreateServices(Action<IServiceCollection>? configure = null)
     {
         var services = new ServiceCollection();
