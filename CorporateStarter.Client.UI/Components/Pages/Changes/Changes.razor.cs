@@ -16,11 +16,11 @@ public partial class Changes
         new(Column.Date, "createdAtUtc", "Date (filter: UTC)", x => Preferences.Format(x.CreatedAtUtc)),
         new(Column.Entity, "entityName", "Entity", x => x.EntityName),
         new(Column.Record, "entityDisplayName", "Record", x => x.EntityDisplayName ?? x.EntityId),
-        new(Column.RecordId, "entityId", "Record ID", x => x.EntityId),
+  //      new(Column.RecordId, "entityId", "Record ID", x => x.EntityId),
         new(Column.Action, "action", "Action", x => x.Action),
         new(Column.User, "userEmail", "User", x => x.UserEmail),
-        new(Column.Correlation, "correlationId", "Correlation ID", x => x.CorrelationId),
-        new(Column.Id, "id", "Change ID", x => x.Id.ToString())
+  //      new(Column.Correlation, "correlationId", "Correlation ID", x => x.CorrelationId),
+  //      new(Column.Id, "id", "Change ID", x => x.Id.ToString())
     ];
     private Task<IDialogReference> OpenAsync(ChangeListItemDto item)
     {

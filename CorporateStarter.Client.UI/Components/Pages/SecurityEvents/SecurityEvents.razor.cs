@@ -18,10 +18,10 @@ public partial class SecurityEvents
         new(Column.Severity,"severity","Severity",x => x.Severity),
         new(Column.Outcome,"outcome","Outcome",x => x.Outcome),
         new(Column.User,"subjectUserDisplayName","User",x => x.SubjectUserDisplayName ?? x.SubjectUserEmail ?? x.SubjectUserId?.ToString()),
-        new(Column.UserId,"subjectUserId","User ID",x => x.SubjectUserId?.ToString()),
+   //     new(Column.UserId,"subjectUserId","User ID",x => x.SubjectUserId?.ToString()),
         new(Column.Ip,"ipAddress","IP address",x => x.IpAddress),
-        new(Column.Correlation,"correlationId","Correlation ID",x => x.CorrelationId),
-        new(Column.Id,"id","Event ID",x => x.Id.ToString())
+   //     new(Column.Correlation,"correlationId","Correlation ID",x => x.CorrelationId),
+   //     new(Column.Id,"id","Event ID",x => x.Id.ToString())  
     ];
     private Task<IDialogReference> OpenAsync(SecurityEventRowDto item)
     {
